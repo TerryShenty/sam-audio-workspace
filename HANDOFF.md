@@ -26,3 +26,5 @@ Send the researcher `preparation-console.log`, `installation.log`, `MACHINE_REPO
 
 ## Maintainer acceptance still required
 Clean Linux dependency installation/imports; exact source/fast-path selection; raw media/GT/crop-to-cache integration; MSDWild/EasyCom validation export; real GPU short train/validate/checkpoint/resume; W&B upload and restore. These are maintainer tasks, not work delegated to the colleague. The initial clean installation test reached its 20-minute limit while downloading PyTorch; it has NOT passed. A persistent CPU preparation job and dependent two-L40S short test are queued. The GPU test checks real updates, checkpoint restart and conditional audio generation on a small SOLOs TRAIN subset; it does not certify the complete AVSpeech data/validation workflow. Installation and multi-GPU results will be published after verification.
+
+Completed data archives can be reused on retry after their file sizes and SHA256 are rechecked. This does not bypass unfinished HF media/GT or certify the training pipeline.

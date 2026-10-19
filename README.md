@@ -4,13 +4,13 @@ For server operators: see [HANDOFF.md](HANDOFF.md). A single preparation command
 
 **Preparation release — not yet GPU-certified.**
 
-Code, environment inventory, data download/check tools and W&B integration are included in `workspace-source-bdbcacc467f14269.tar.gz`. No training data, model weights or credentials are included.
+Code, environment inventory, data download/check tools and W&B integration are included in `workspace-source-08f7172cef7994f2.tar.gz`. No training data, model weights or credentials are included.
 
 ```bash
 git clone https://github.com/TerryShenty/sam-audio-workspace.git
 cd sam-audio-workspace
 sha256sum -c SHA256SUMS
-tar -xzf workspace-source-bdbcacc467f14269.tar.gz
+tar -xzf workspace-source-08f7172cef7994f2.tar.gz
 cd training
 ```
 
@@ -78,3 +78,5 @@ The source bundle is content-addressed and SHA256-verified. The root README cont
 - SOURCE_MANIFEST.json enumerates included source/config/dependency files with SHA256.
 - Longleaf decord metadata identifies a cp36 wheel; new installs resolve official Linux wheels. Existing production was not modified.
 - Full clean Linux install, real GPU train/eval/resume, pretrained-model download, AVSpeech raw-to-cache preparation and validation bundle remain unverified/incomplete. No claim of complete one-command training.
+
+Download recovery update: completed selected-release archives now have immutable-revision receipts. Reruns rehash outputs before skipping downloads. Incomplete archives still restart; full HTTP byte-range recovery is not claimed. Pending GPU acceptance remains on the earlier pinned source.

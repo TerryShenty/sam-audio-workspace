@@ -20,17 +20,20 @@
     "syntax": "PASS",
     "GPU": "NOT RUN",
     "anonymous_bootstrap": "PASS: real download/hash/extraction/HF status",
-    "pypi_versions": "221 pinned versions exist; dependency resolution and installation not yet verified"
+    "pypi_versions": "221 pinned versions exist; dependency resolution and installation not yet verified",
+    "release_receipts": "2 PASS: rehash reuse, changed content/revision/selection rejected"
   },
   "visibility": "public",
   "dataset": "TerryShenty/avspeech-93942",
-  "source_archive": "workspace-source-bdbcacc467f14269.tar.gz",
-  "source_sha256": "bdbcacc467f142691c6f8299e4eeef898fb1dc4bffdfe1c395d818832d11bca6",
+  "source_archive": "workspace-source-08f7172cef7994f2.tar.gz",
+  "source_sha256": "08f7172cef7994f24f7431df38354551989da62d29bd3eac6e61104ba312c195",
   "preparation_fixes": [
     "repeatable source preparation",
     "local venv launcher",
     "vendored editable install",
     "real module import checks",
     "source inventory"
-  ]
+  ],
+  "pending_cpu_job": 5799067,
+  "pending_gpu_job": 5799098
 }
