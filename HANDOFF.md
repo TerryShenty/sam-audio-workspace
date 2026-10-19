@@ -34,3 +34,5 @@ Checkpoint uploader now writes a size/SHA256 manifest and verifies SDK-downloade
 Cached trainer initializes tuning on CPU and detaches unused frozen encoders before moving the training model to GPU; codec is retained separately for validation. Two ordering/error tests pass; actual CUDA memory/real entry-point acceptance remains pending. Existing pending smoke test is still pinned to56ecd and does not certify this release.
 
 CPU export/preflight now validate all catalog/component/GT links against the file list, reject empty targets/prompts, duplicate identities, conflicting variants and noncanonical destinations. Seven contract/export fixture tests pass; these do not establish real tensor correctness or raw-to-cache readiness. Training entry does not yet automatically orchestrate the full CPU preflight.
+
+Training terminal status repair: setup/training exceptions now write FAILED and finish W&B with exit_code=1. Tracking cleanup errors do not replace the original training error. Three mocked lifecycle tests pass; live GPU and W&B acceptance remain pending.
