@@ -2,13 +2,13 @@
 
 **Preparation release — not yet GPU-certified.**
 
-Code, environment inventory, data download/check tools and W&B integration are included in `training-source.tar.gz`. No training data, model weights or credentials are included.
+Code, environment inventory, data download/check tools and W&B integration are included in `workspace-source-bdbcacc467f14269.tar.gz`. No training data, model weights or credentials are included.
 
 ```bash
 git clone https://github.com/TerryShenty/sam-audio-workspace.git
 cd sam-audio-workspace
 sha256sum -c SHA256SUMS
-tar -xzf training-source.tar.gz
+tar -xzf workspace-source-bdbcacc467f14269.tar.gz
 cd training
 ```
 
@@ -63,8 +63,16 @@ On the destination server:
 ```bash
 curl -fL https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/bootstrap.py -o /tmp/sam-audio-bootstrap.py && python3 /tmp/sam-audio-bootstrap.py --directory ./sam-audio-delivery
 ```
-This downloads a SHA256-verified pinned code archive, reports GPU/driver and required tools, and checks the live HF release at an immutable commit. It does NOT start training or download terabytes. Use `--install` with a new directory for an **experimental** isolated Python 3.12 install. Dependency failures are saved to installation.log. No sudo or cleanup. It cannot install the host NVIDIA driver, grant gated-model access or sign in to W&B on behalf of the server owner.
+This downloads a SHA256-verified pinned code archive, reports GPU/driver and required tools, and checks the live HF release at an immutable commit. It does NOT start training or download terabytes. Use `--install` with the same directory for an **experimental** isolated Python 3.12 install. Dependency failures are saved to installation.log. No sudo or cleanup. It cannot install the host NVIDIA driver, grant gated-model access or sign in to W&B on behalf of the server owner.
 
-The installed source archive remains pinned to the preparation commit above; it still contains the earlier data-location notes. The updated location in this root README and MACHINE_REPORT supersedes those notes.
+The source bundle is content-addressed and SHA256-verified. The root README contains the current HF release location.
 
 2026-10-19 checks: anonymous public bootstrap download, archive SHA/extraction and live HF metadata lookup PASS. All 221 PyPI version pins exist; this does not prove dependency resolution, native binary compatibility or GPU operation.
+
+## Preparation verification update
+- Bootstrap is repeatable for byte-identical source and preserves an existing virtual environment; edited source triggers a clear stop without overwrite.
+- setup installs the included package and imports the actual training/validation modules, rather than only checking version numbers.
+- run.sh uses the local virtual environment automatically.
+- SOURCE_MANIFEST.json enumerates included source/config/dependency files with SHA256.
+- Longleaf decord metadata identifies a cp36 wheel; new installs resolve official Linux wheels. Existing production was not modified.
+- Full clean Linux install, real GPU train/eval/resume, pretrained-model download, AVSpeech raw-to-cache preparation and validation bundle remain unverified/incomplete. No claim of complete one-command training.
