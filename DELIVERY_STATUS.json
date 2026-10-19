@@ -23,12 +23,13 @@
     "pypi_versions": "221 pinned versions exist; dependency resolution and installation not yet verified",
     "release_receipts": "2 PASS: rehash reuse, changed content/revision/selection rejected",
     "checkpoint_archive": "6 PASS: integrity and mocked SDK success/failure; live W&B/model resume NOT TESTED",
-    "model_setup": "2 PASS mocked ordering/error tests; CUDA memory not measured"
+    "model_setup": "2 PASS mocked ordering/error tests; CUDA memory not measured",
+    "bundle_linkage": "7 PASS fixture contract/export tests; no real tensor or cohort acceptance"
   },
   "visibility": "public",
   "dataset": "TerryShenty/avspeech-93942",
-  "source_archive": "workspace-source-9d25471951fa23af.tar.gz",
-  "source_sha256": "9d25471951fa23af8fdbd5780299b33fac54bb7c73e4a012d34418cce1c283e6",
+  "source_archive": "workspace-source-2d49d79c553b5c40.tar.gz",
+  "source_sha256": "2d49d79c553b5c403f1e3c9cc5a8051122b399166936d7fc47f7eab4215d1be0",
   "preparation_fixes": [
     "repeatable source preparation",
     "local venv launcher",

@@ -5,8 +5,8 @@ No sudo, GPU allocation, training, dataset bulk download or deletion.
 import argparse, hashlib, json, os, platform, shutil, subprocess, sys, tarfile, urllib.request, tempfile, time
 from pathlib import Path
 COMMIT = 'main'
-SHA = '9d25471951fa23af8fdbd5780299b33fac54bb7c73e4a012d34418cce1c283e6'
-ARCHIVE = 'workspace-source-9d25471951fa23af.tar.gz'
+SHA = '2d49d79c553b5c403f1e3c9cc5a8051122b399166936d7fc47f7eab4215d1be0'
+ARCHIVE = 'workspace-source-2d49d79c553b5c40.tar.gz'
 BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/' + COMMIT
 DATASET = 'TerryShenty/avspeech-93942'
 def fetch(url):
