@@ -30,3 +30,5 @@ Clean Linux dependency installation/imports; exact source/fast-path selection; r
 Completed data archives can be reused on retry after their file sizes and SHA256 are rechecked. This does not bypass unfinished HF media/GT or certify the training pipeline.
 
 Checkpoint uploader now writes a size/SHA256 manifest and verifies SDK-downloaded content before a success receipt. Failed upload/corrupt downloads mark the upload run failed. Six local tests pass, including mocked SDK errors; live W&B and model resume remain untested. Download verification may use SDK cache and needs temporary disk space. Pending GPU tests remain pinned to earlier56ecd source.
+
+Cached trainer initializes tuning on CPU and detaches unused frozen encoders before moving the training model to GPU; codec is retained separately for validation. Two ordering/error tests pass; actual CUDA memory/real entry-point acceptance remains pending. Existing pending smoke test is still pinned to56ecd and does not certify this release.

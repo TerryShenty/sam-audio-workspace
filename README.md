@@ -4,13 +4,13 @@ For server operators: see [HANDOFF.md](HANDOFF.md). A single preparation command
 
 **Preparation release — not yet GPU-certified.**
 
-Code, environment inventory, data download/check tools and W&B integration are included in `workspace-source-d8bc6cebdc8e6893.tar.gz`. No training data, model weights or credentials are included.
+Code, environment inventory, data download/check tools and W&B integration are included in `workspace-source-9d25471951fa23af.tar.gz`. No training data, model weights or credentials are included.
 
 ```bash
 git clone https://github.com/TerryShenty/sam-audio-workspace.git
 cd sam-audio-workspace
 sha256sum -c SHA256SUMS
-tar -xzf workspace-source-d8bc6cebdc8e6893.tar.gz
+tar -xzf workspace-source-9d25471951fa23af.tar.gz
 cd training
 ```
 
