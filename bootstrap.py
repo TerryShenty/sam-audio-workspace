@@ -6,7 +6,7 @@ import argparse, hashlib, json, os, platform, shutil, subprocess, sys, tarfile, 
 from pathlib import Path
 COMMIT = '5f44a86b8cdbb538d62863d4159590aea58c4136'
 SHA = '11241e9530b0f461569d8b6066a328b042ad336b7a1f94ba7e521869d8ef0f78'
-BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-training/' + COMMIT
+BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/' + COMMIT
 DATASET = 'TerryShenty/avspeech-93942'
 def fetch(url):
     with urllib.request.urlopen(url, timeout=60) as r: return r.read()

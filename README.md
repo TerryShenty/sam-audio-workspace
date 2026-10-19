@@ -1,18 +1,18 @@
-# SAM Audio training delivery
+# SAM Audio workspace
 
 **Preparation release — not yet GPU-certified.**
 
 Code, environment inventory, data download/check tools and W&B integration are included in `training-source.tar.gz`. No training data, model weights or credentials are included.
 
 ```bash
-git clone https://github.com/TerryShenty/sam-audio-training.git
-cd sam-audio-training
+git clone https://github.com/TerryShenty/sam-audio-workspace.git
+cd sam-audio-workspace
 sha256sum -c SHA256SUMS
 tar -xzf training-source.tar.gz
 cd training
 ```
 
-# SAM Audio portable training — preparation release
+# SAM Audio portable workspace — preparation release
 
 **Not yet certified for end-to-end AVSpeech training.** This is an isolated delivery branch; running Longleaf production is untouched. It contains code, not data, checkpoints or credentials.
 
@@ -33,7 +33,7 @@ AVSpeech selection currently has 93,942 videos, 256,708 targets and 390,402 prom
 The newly discovered public release is https://huggingface.co/datasets/TerryShenty/avspeech-93942 . At commit 2cb6d0877146f46049edad3b7d6aaa47f90576b8 it is UPLOADING: 390,402 prompts, 611 fully available videos, 2,183 GT groups. The public organization sam-audio-research has no listed AVSpeech dataset at this check. Public visibility and personal/organization ownership are separate concepts. Do not confuse this release with the original-source or cold-archive repositories.
 
 ## Intended deployment
-1. Clone this repository. Public visibility has been requested; until the GitHub identity check is completed it remains private.
+1. Clone this public repository; no GitHub invitation is needed.
 2. Install on Linux with Python 3.12 and an NVIDIA driver compatible with the chosen PyTorch wheel. `bash setup.sh` is an experimental installation attempt and stops on dependency errors.
 3. Download the finalized HF release to a disk selected by its owner; verify hashes. Budget for media, extraction, caches and checkpoints rather than just archive size.
 4. Produce and verify the cached bundle described below; run a short train/validate/save/resume check before a long run.
@@ -59,10 +59,12 @@ Original SAM Audio LICENSE is retained. Dataset and pretrained-weight licenses/a
 
 ## Single-command preparation entry
 
-After this GitHub repository is public, on the destination server:
+On the destination server:
 ```bash
-curl -fL https://raw.githubusercontent.com/TerryShenty/sam-audio-training/main/bootstrap.py -o /tmp/sam-audio-bootstrap.py && python3 /tmp/sam-audio-bootstrap.py --directory ./sam-audio-delivery
+curl -fL https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/bootstrap.py -o /tmp/sam-audio-bootstrap.py && python3 /tmp/sam-audio-bootstrap.py --directory ./sam-audio-delivery
 ```
 This downloads a SHA256-verified pinned code archive, reports GPU/driver and required tools, and checks the live HF release at an immutable commit. It does NOT start training or download terabytes. Use `--install` with a new directory for an **experimental** isolated Python 3.12 install. Dependency failures are saved to installation.log. No sudo or cleanup. It cannot install the host NVIDIA driver, grant gated-model access or sign in to W&B on behalf of the server owner.
 
 The installed source archive remains pinned to the preparation commit above; it still contains the earlier data-location notes. The updated location in this root README and MACHINE_REPORT supersedes those notes.
+
+2026-10-19 checks: anonymous public bootstrap download, archive SHA/extraction and live HF metadata lookup PASS. All 221 PyPI version pins exist; this does not prove dependency resolution, native binary compatibility or GPU operation.

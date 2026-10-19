@@ -1,6 +1,6 @@
 {
   "status": "PREPARATION_RELEASE_NOT_GPU_CERTIFIED",
-  "github": "https://github.com/TerryShenty/sam-audio-training",
+  "github": "https://github.com/TerryShenty/sam-audio-workspace",
   "production_changed": false,
   "reference_job": "5571917",
   "reference_python": "3.12.2",
@@ -9,15 +9,19 @@
   "pending": [
     "fresh Linux install",
     "remote production source parity and fast-path portability",
-    "final public org HF data release",
     "raw AVSpeech to verified cached bundle",
     "MSDWild/EasyCom validation export",
     "GPU forward/backward, validation, full resume",
-    "W&B delivery artifact restore test"
+    "W&B delivery artifact restore test",
+    "HF release media still UPLOADING"
   ],
   "local_checks": {
     "downloader_tests": "3 PASS",
     "syntax": "PASS",
-    "GPU": "NOT RUN"
-  }
+    "GPU": "NOT RUN",
+    "anonymous_bootstrap": "PASS: real download/hash/extraction/HF status",
+    "pypi_versions": "221 pinned versions exist; dependency resolution and installation not yet verified"
+  },
+  "visibility": "public",
+  "dataset": "TerryShenty/avspeech-93942"
 }
