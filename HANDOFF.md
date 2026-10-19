@@ -1,0 +1,28 @@
+# Server handoff
+
+**Current release: preparation/testing only. Do not schedule a full experiment yet.**
+
+## What the operator runs
+Choose an absolute folder on a disk with sufficient space. No GitHub login or invitation is needed.
+
+```bash
+curl -fL --retry 3 https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/start.sh -o /tmp/sam-workspace-start.sh && bash /tmp/sam-workspace-start.sh /data/sam-workspace
+```
+
+Replace only `/data/sam-workspace` with your writable disk directory. The entry downloads and verifies the code, creates an isolated Python environment, installs dependencies, imports the actual modules, and records the HF release status. It does not modify an existing system Python, use sudo, submit jobs, delete data or start a long GPU run. Repeat the same command after an interrupted installation. Edited/different source is protected: choose a new workspace when upgrading to a different source bundle.
+
+## One-time server prerequisites
+Linux x86_64; Python 3.12; git; FFmpeg; curl; outbound HTTPS. GPU execution later requires an NVIDIA GPU and compatible driver. Drivers and site permissions cannot be bundled inside Python. If these are absent, the entry names the missing requirement before installation. No administrator password should be shared with the researcher.
+
+## Data and results
+- Public data: https://huggingface.co/datasets/TerryShenty/avspeech-93942 . It is still UPLOADING; do not infer completion from the dataset title. Full release has 93,942 videos, 256,708 targets and 390,402 prompts.
+- This command only reads release metadata, not terabytes of media. A finalized media-to-cache workflow and real validation export are still required before enabling full training.
+- W&B destination: `terryshen066-fudan-university/sam-audio`. The operator should log in with their own account invited to that team, or supply an authorized key through the server's secret manager. Never commit or send keys through GitHub/chat. Existing W&B login may be reused only if it can write to that team.
+- Pretrained base weights are downloaded separately under their access/license terms. They are not contained in this code package.
+- No automatic server cleanup. Keep the last complete resume checkpoint and best checkpoints until uploaded artifacts have been verified and successfully restored.
+
+## If preparation stops
+Send the researcher `preparation-console.log`, `installation.log`, `MACHINE_REPORT.json` and `ENVIRONMENT_REPORT.json` when present, after checking for private server paths. Do not send credentials, `.netrc`, environment dumps or unrelated logs. No need to manually rerun individual pip commands or debug Python packages.
+
+## Maintainer acceptance still required
+Clean Linux dependency installation/imports; exact source/fast-path selection; raw media/GT/crop-to-cache integration; MSDWild/EasyCom validation export; real GPU short train/validate/checkpoint/resume; W&B upload and restore. These are maintainer tasks, not work delegated to the colleague. Longleaf CPU job 5787767 tests a new environment using only system Python/FFmpeg modules, without reusing the training venv. Its submission alone is not a passing result.

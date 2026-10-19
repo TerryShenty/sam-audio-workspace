@@ -1,5 +1,7 @@
 # SAM Audio workspace
 
+For server operators: see [HANDOFF.md](HANDOFF.md). A single preparation command and required credentials are listed there. This release is not yet accepted for full experiments.
+
 **Preparation release — not yet GPU-certified.**
 
 Code, environment inventory, data download/check tools and W&B integration are included in `workspace-source-bdbcacc467f14269.tar.gz`. No training data, model weights or credentials are included.
