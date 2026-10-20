@@ -5,8 +5,8 @@
   "production_changed": false,
   "scope": "Code-only preparation; no automatic full training or dataset publication",
   "local_tests": {
-    "source": 47,
-    "bootstrap": 3
+    "source": 55,
+    "bootstrap": 4
   },
   "environment": {
     "python": "3.12.2",
@@ -35,7 +35,11 @@
       "easycom_rows": 207,
       "media_preparation": "PASS",
       "publicly_downloadable": false,
-      "complete_feature_and_scoring_acceptance": "NOT_ACCEPTED"
+      "complete_feature_and_scoring_acceptance": "NOT_ACCEPTED",
+      "public_repository": "sam-audio-research/sam-audio-validation-285",
+      "publication": "AWAITING_EXPLICIT_APPROVAL",
+      "preparation": "WIRED_IN_ONE_COMMAND_INDEPENDENT_OF_TRAIN_UPLOAD",
+      "formal_cohort_gate": "EXACT_IDENTITY_PROMPT_NOISE_DURATION_FINGERPRINT_UNIT_TESTED"
     }
   },
   "wandb": {
@@ -59,7 +63,7 @@
   ],
   "configuration_difference": "Portable BF16/global batch32 versus historical SOLOs INT8/global batch64",
   "automatic_cleanup": false,
-  "source_archive": "workspace-source-dc50716bc7efc953.tar.gz",
-  "source_sha256": "dc50716bc7efc9534666399ec5743dca27e14b4a95b9d68928f9c2d6402b7ba6",
-  "source_files": 97
+  "source_archive": "workspace-source-43baed3e33c24831.tar.gz",
+  "source_sha256": "43baed3e33c2483197fe5917ede0ffd80aeec0f2561c66668f45c9661ee37755",
+  "source_files": 103
 }

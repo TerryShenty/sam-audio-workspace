@@ -5,8 +5,8 @@ No sudo, GPU allocation, training, dataset bulk download or deletion.
 import argparse, hashlib, json, os, platform, shutil, subprocess, sys, tarfile, urllib.request, tempfile, time
 from pathlib import Path
 COMMIT = 'main'
-SHA = 'dc50716bc7efc9534666399ec5743dca27e14b4a95b9d68928f9c2d6402b7ba6'
-ARCHIVE = 'workspace-source-dc50716bc7efc953.tar.gz'
+SHA = '43baed3e33c2483197fe5917ede0ffd80aeec0f2561c66668f45c9661ee37755'
+ARCHIVE = 'workspace-source-43baed3e33c24831.tar.gz'
 BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/' + COMMIT
 DATASET = 'TerryShenty/avspeech-93942'
 def fetch(url):
@@ -29,6 +29,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--directory', type=Path, default=Path('sam-audio-delivery'))
     p.add_argument('--install', action='store_true', help='Attempt experimental Linux reference installation; not GPU-certified')
+    p.add_argument('--prepare-validation', action='store_true', help='Download and verify the fixed MSDWild78 + EasyCom207 media independently of AVSpeech readiness')
     o=p.parse_args(); root=o.directory.resolve()
     if sys.version_info < (3, 12):
         raise SystemExit('Use Python 3.12 or newer for the preparation entry (installation uses 3.12).')
@@ -58,6 +59,12 @@ def main():
     except Exception as e: report['dataset_lookup_error']=str(e)
     (root/'MACHINE_REPORT.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2));print('Source prepared at:',root/'training')
+    if o.prepare_validation:
+        result=subprocess.run([sys.executable,str(root/'training/tools/download_validation_data.py'),
+                               '--output',str(root/'validation')])
+        if result.returncode:
+            raise SystemExit('Validation preparation incomplete. See the release publication status; '
+                             'no training started. Environment-only inspection remains available without --prepare-validation.')
     if not o.install: print('Inspection complete. Use --install with this directory to attempt reference installation.');return
     if platform.system()!='Linux' or platform.machine() not in ['x86_64','amd64']:
         raise SystemExit('Reference installation requires Linux x86_64; host report saved')

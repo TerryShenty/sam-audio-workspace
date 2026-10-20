@@ -3,7 +3,7 @@
 set -euo pipefail
 if [[ "${1:-}" == "--help" || $# -ne 1 ]]; then
   echo 'Usage: bash start.sh /absolute/path/to/workspace'
-  echo 'Installs an isolated environment, checks code and HF release, saves logs.'
+  echo 'Prepares MSDWild78 + EasyCom207 validation media and an isolated environment.'
   echo 'Requires Linux x86_64, Python 3.12, git, FFmpeg, curl and outbound HTTPS.'
   echo 'Preparation only: full training delivery has not passed acceptance yet.'
   exit 0
@@ -22,7 +22,7 @@ TASK_BOOTSTRAP=$(mktemp)
 trap 'rm -f "$TASK_BOOTSTRAP"' EXIT
 curl -fL --retry 3 https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/bootstrap.py -o "$TASK_BOOTSTRAP"
 set +e
-"$TASK_PYTHON" "$TASK_BOOTSTRAP" --directory "$TASK_DIR" --install 2>&1 | tee -a "$TASK_LOG"
+"$TASK_PYTHON" "$TASK_BOOTSTRAP" --directory "$TASK_DIR" --prepare-validation --install 2>&1 | tee -a "$TASK_LOG"
 TASK_RC=${PIPESTATUS[0]}
 set -e
 if (( TASK_RC != 0 )); then
@@ -30,4 +30,4 @@ if (( TASK_RC != 0 )); then
   echo 'Retry this same command after the reported issue is fixed. No training was launched.'
   exit "$TASK_RC"
 fi
-printf '%s\n' 'Environment preparation finished. Training is NOT enabled until the published acceptance checklist passes.'
+printf '%s\n' 'Validation media and environment prepared. GPU feature caches and training acceptance are still required.'

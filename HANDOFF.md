@@ -10,7 +10,7 @@ Choose a writable absolute directory on a disk with enough free space:
 curl -fL --retry 3 https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/start.sh -o /tmp/sam-workspace-start.sh && bash /tmp/sam-workspace-start.sh /data/sam-workspace
 ```
 
-Replace only the final path. No GitHub login is required. This downloads and verifies the code, installs an isolated Python environment, checks actual imports and records HF data status. It does not use sudo, change system Python, download the complete media, launch a long experiment or delete data. Retry the same command after an interrupted installation. Use a new directory when changing source versions; existing modified source is protected.
+Replace only the final path. No GitHub login is required. This downloads and verifies the code, prepares the fixed real validation media independently of AVSpeech upload progress, installs an isolated Python environment, checks actual imports and records HF data status. It does not use sudo, change system Python, download the complete media, launch a long experiment or delete data. Retry the same command after an interrupted installation. Use a new directory when changing source versions; existing modified source is protected.
 
 ## One-time server prerequisites
 
@@ -40,7 +40,7 @@ No automatic server cleanup is enabled. Keep data and checkpoints until the nece
 
 ## Maintainer acceptance
 
-Passed: 47 source tests and three bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
+Passed: 55 source tests and four bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
 
 Remaining: a complete clean installation; latest code on GPU; two-rank train/validation and complete resume; AVSpeech feature-cache integration; full real validation features/scoring; live metric logging; downloaded-checkpoint continuation; automatic best/last retention; and an integrated command that completes these stages. The pending two-A100 test uses a preceding immutable source and cannot certify later scheduling/logging changes.
 
@@ -49,3 +49,9 @@ The portable BF16/global-batch-32 path differs from the historical SOLOs INT8/gl
 ## If preparation stops
 
 Send `preparation-console.log`, `installation.log`, `MACHINE_REPORT.json` and `ENVIRONMENT_REPORT.json` when present, after reviewing private paths. Do not send credentials, `.netrc`, environment dumps or unrelated logs. The maintainer should repair the entry and supply a verified release; the colleague should not need to debug packages manually.
+
+## Fixed validation workflow
+
+The one-command entry now prepares MSDWild78 + EasyCom207 first, independently of AVSpeech upload completeness. It downloads a pinned media archive, verifies every file and the original cohort identities, prompts, noise seeds and durations. The configured destination is the public organization repository `sam-audio-research/sam-audio-validation-285`; publication is still awaiting explicit approval, so no immutable revision is available yet. Until a verified revision is published and pinned, preparation stops with an explicit message rather than silently using different or incomplete validation data. Environment-only preparation remains available through `bootstrap.py --install` without `--prepare-validation`.
+
+Formal `train_delivery.py` runs check the complete 285-row cohort before GPU initialization. They validate every half epoch and retain separate MSDWild and EasyCom summaries. Tiny maintainer tests must explicitly set `engineering_validation_subset: true` and are recorded as `ENGINEERING_SUBSET`; they cannot establish complete-cohort acceptance. The old AVSpeech100 and SOLOs/URMP validation are excluded. Downloaded raw media still require the pinned GPU feature-cache stage; that integration and real full-cohort scoring remain pending.
