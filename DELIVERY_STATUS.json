@@ -5,22 +5,24 @@
   "production_changed": false,
   "scope": "Code-only preparation; no automatic full training or dataset publication",
   "local_tests": {
-    "source": 55,
+    "source": 67,
     "bootstrap": 4
   },
   "environment": {
     "python": "3.12.2",
     "torch": "2.13.0+cu130",
     "dependency_and_decoder_repair": "PASS_EXISTING_ISOLATED_LINUX_ENV",
-    "fresh_install": "NOT_ACCEPTED",
+    "fresh_install": "FULL_PYTHON_ENVIRONMENT_NOT_ACCEPTED",
     "xformers_native_extension": "ABI_WARNING_NOT_ACCEPTED",
     "actual_audio_video_decode": "PASS_CPU_23_AUDIO_5_VIDEO_SHARED_FFMPEG",
-    "static_ffmpeg_module": "INSUFFICIENT_NATIVE_LIBRARIES_REPRODUCED"
+    "static_ffmpeg_module": "INSUFFICIENT_NATIVE_LIBRARIES_REPRODUCED",
+    "shared_ffmpeg_provisioning": "PASS_FRESH_PREFIX_127_PINNED_PACKAGES_REPEAT_INSTALL_23_AUDIO_5_VIDEO"
   },
   "runtime": {
     "single_a100_older_engineering_harness": "PASS_TRAIN_RESUME_INFERENCE",
     "two_rank_latest_entry": "PASS_ACTUAL_AVSPEECH_ENGINEERING_SUBSET",
-    "half_epoch_validation": "PASS_MSDWILD1_EASYCOM1_STEP4_AND7"
+    "half_epoch_validation": "PASS_MSDWILD1_EASYCOM1_STEP4_AND7",
+    "automatic_collective_launcher": "REGRESSION_PASS_GPU_ACCEPTANCE_PENDING"
   },
   "data": {
     "training_repository": "TerryShenty/avspeech-93942",
@@ -49,22 +51,22 @@
     "project": "sam-audio",
     "engineering_upload_download_hash": "PASS_INCLUDING_FRESH_CACHE",
     "downloaded_checkpoint_gpu_continuation": "NOT_TESTED",
-    "per_dataset_live_scoring_upload": "ONLINE_LOGGED_ENGINEERING; INDEPENDENT_READBACK_PENDING",
+    "per_dataset_live_scoring_upload": "PASS_INDEPENDENT_CLOUD_READBACK_ALL_ENGINEERING_METRICS_COUNTS_COORDINATES",
     "score_archive_and_destination": "UNIT_TESTED",
     "automatic_best_last_retention": "NOT_ACCEPTED"
   },
   "remaining": [
-    "complete clean installation and shared FFmpeg provisioning",
+    "complete clean Python environment installation",
     "integrated raw-media GPU cache preparation",
     "full285 real validation features and scoring",
-    "independent W&B metric readback",
     "downloaded W&B checkpoint continuation",
     "automatic best/last retention",
-    "integrated one-command workflow"
+    "integrated one-command workflow",
+    "automatic multi-GPU transport launcher runtime acceptance"
   ],
   "configuration_difference": "Portable BF16/global batch32 versus historical SOLOs INT8/global batch64",
   "automatic_cleanup": false,
-  "source_archive": "workspace-source-1f29fc7c28c1f80b.tar.gz",
-  "source_sha256": "1f29fc7c28c1f80bcb0c5ff2565b53ae5380a5b98c7621787d9b62eb20b4c0b8",
-  "source_files": 104
+  "source_archive": "workspace-source-116595d08bcf2ae3.tar.gz",
+  "source_sha256": "116595d08bcf2ae3f2d3f1cb1e6a25119f8c29716e9851827d008272690e7630",
+  "source_files": 110
 }

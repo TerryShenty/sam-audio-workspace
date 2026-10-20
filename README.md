@@ -8,13 +8,13 @@ Code and environment preparation for a portable research workflow. **The complet
 curl -fL --retry 3 https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/start.sh -o /tmp/sam-workspace-start.sh && bash /tmp/sam-workspace-start.sh /data/sam-workspace
 ```
 
-Replace `/data/sam-workspace` with a writable directory on a sufficiently large disk. The command verifies the source, prepares the fixed real validation media, installs an isolated environment, checks imports and inspects Hugging Face release metadata. It does not yet download the complete dataset or start training. Linux x86_64, Python 3.12, git, FFmpeg with shared libraries, curl and outbound HTTPS are required. GPU execution also requires a compatible NVIDIA driver.
+Replace `/data/sam-workspace` with a writable directory on a sufficiently large disk. The command verifies the source, prepares the fixed real validation media, installs an isolated environment, checks imports and inspects Hugging Face release metadata. It does not yet download the complete dataset or start training. Linux x86_64, Python 3.12, git, curl and outbound HTTPS are required. GPU execution also requires a compatible NVIDIA driver.
 
 See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json](DELIVERY_STATUS.json) for acceptance boundaries.
 
 ## Evidence and remaining work
 
-- 55 source regression tests and four bootstrap tests pass.
+- 67 source regression tests and four bootstrap tests pass.
 - The Linux dependency repair passed real CPU video decoding, dependency checks and repeated invocation. It corrects metadata in the known decord wheel without changing its native binary. This was tested in an existing isolated environment; a complete fresh-machine installation remains unverified.
 - A small single-A100 engineering test completed training, a new-process checkpoint restore and a further update, followed by finite inference. It used an older harness and a small SOLOs subset.
 - Engineering checkpoints were uploaded to W&B and downloaded into fresh caches, with file sizes and SHA256 verified. Continuing training from those downloaded checkpoints is still pending.
@@ -28,7 +28,7 @@ Portable BF16/global batch 32 differs from production SOLOs INT8/global batch 64
 
 [Selected AVSpeech data](https://huggingface.co/datasets/TerryShenty/avspeech-93942) is a separate HF repository. Check an immutable release manifest before using it; upload completeness must not be assumed. Raw media is not a ready training cache.
 
-The default W&B destination is `terryshen066-fudan-university/sam-audio`. The operator must authenticate with an account authorized to write there. Scores include dataset counts, aligned SI-SDR, SI-SDR and SI-SDRi, together with checkpoint and training-step coordinates. Checkpoint archives retain summaries and per-sample scores. Actual engineering half-epoch and epoch scores have been logged online. Full-cohort scoring and downloaded-checkpoint continuation remain pending.
+The default W&B destination is `terryshen066-fudan-university/sam-audio`. The operator must authenticate with an account authorized to write there. Scores include dataset counts, aligned SI-SDR, SI-SDR and SI-SDRi, together with checkpoint and training-step coordinates. Checkpoint archives retain summaries and per-sample scores. Actual engineering half-epoch and epoch scores have been logged online and independently matched against local results. Full-cohort scoring and downloaded-checkpoint continuation remain pending.
 
 Resume requires the pinned base model plus saved training state. No automatic server cleanup is enabled. Original SAM Audio licensing is retained; dataset and pretrained-model access and licenses are separate.
 
@@ -42,4 +42,6 @@ Formal `train_delivery.py` runs check the complete 285-row cohort before GPU ini
 
 Setup now decodes a generated PCM WAV and H264 video through torchaudio, TorchCodec AudioDecoder/VideoDecoder and decord. A successful import or working static `ffmpeg` command alone is insufficient. A real pilot exposed missing shared FFmpeg libraries; a CPU regression reproduced the failure and verified the existing shared runtime on 23 audio files and five videos before any replacement GPU test.
 
-For an existing separate shared FFmpeg installation, `SAM_FFMPEG_PREFIX=/path/to/ffmpeg` is supported by `setup.sh` and `run.sh`; its `lib/` directory is configured before Python starts. This optional hook does not install FFmpeg or prove a fresh server is ready. The tested A100 node also required `NCCL_P2P_DISABLE=1`; automatic communication diagnosis remains to be integrated, and that setting is not claimed optimal for every server.
+Setup automatically installs a pinned shared FFmpeg 7.1.1 runtime under `training/.runtime`, without sudo or changes to system packages. The installer verifies exact package sizes and SHA256 values, prevents concurrent installations and reuses matching completed installs. It also supports separate download and offline CPU-install phases on managed clusters. A fresh runtime install, repeat invocation and actual decoding of 23 audio files and five videos passed on Linux. That test reused the isolated Python environment; it does not certify the complete fresh Python installation. An existing shared runtime may instead be selected with `SAM_FFMPEG_PREFIX=/path/to/ffmpeg`.
+
+The multi-GPU launcher now runs a bounded allreduce/DDP/two-update probe before training. If the default transport fails, it first terminates the entire probe process group, then may try disabling NCCL P2P. Explicit operator settings are preserved. Missing rank receipts or both failures stop startup; training itself is never automatically retried. Regression tests passed, but this new automatic launcher still awaits its own GPU test. The earlier A100 diagnosis established the workaround only on that tested environment, not as a universally optimal setting.

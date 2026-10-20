@@ -14,7 +14,7 @@ Replace only the final path. No GitHub login is required. This downloads and ver
 
 ## One-time server prerequisites
 
-Linux x86_64, Python 3.12, git, FFmpeg with shared libraries, curl and outbound HTTPS. Training requires compatible NVIDIA hardware and driver. The entry reports missing prerequisites; Python packages cannot install the host driver or grant server permissions.
+Linux x86_64, Python 3.12, git, curl and outbound HTTPS. Training requires compatible NVIDIA hardware and driver. The entry reports missing prerequisites; Python packages cannot install the host driver or grant server permissions.
 
 The operator uses their own W&B account with write access to `terryshen066-fudan-university/sam-audio`. The training logger and artifact uploader share this default destination. An existing login is sufficient only if it has that access. Never put API keys in GitHub or chat. W&B records results; it does not grant access to the GPU server.
 
@@ -30,7 +30,7 @@ Pretrained base weights are obtained separately under their access terms. Resume
 
 ## Results and recovery
 
-The logger is configured to record each dataset separately, with sample count, aligned SI-SDR, SI-SDR and SI-SDRi, plus checkpoint and global training step. Per-sample results are retained with summaries in checkpoint archives. These changes are unit tested; live full-cohort logging remains unverified.
+The logger is configured to record each dataset separately, with sample count, aligned SI-SDR, SI-SDR and SI-SDRi, plus checkpoint and global training step. Per-sample results are retained with summaries in checkpoint archives. Independent cloud readback matched all metrics, counts and coordinates of both engineering validation records. Live full-cohort logging remains unverified.
 
 `tools/upload_results.py` verifies the uploaded engineering artifact by downloading it and checking its content manifest. Independent receipts preserve both best and last references. `tools/restore_checkpoint.py` requires an immutable artifact version and a trusted upload receipt, verifies every file and refuses to overwrite an existing destination. Real engineering uploads and fresh-cache restores passed; GPU continuation from downloaded files is still pending.
 
@@ -40,9 +40,9 @@ No automatic server cleanup is enabled. Keep data and checkpoints until the nece
 
 ## Maintainer acceptance
 
-Passed: 55 source tests and four bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
+Passed: 67 source tests and four bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
 
-Remaining: a complete clean installation and shared-FFmpeg provisioning; integrated AVSpeech feature-cache preparation; full real validation features/scoring; independent W&B metric readback and downloaded-checkpoint continuation; automatic best/last retention; and an integrated command that completes these stages. The current public training entry has passed the two-rank engineering pilot, including its explicit subset gate and half-epoch schedule.
+Remaining: a complete clean Python installation; integrated AVSpeech feature-cache preparation; full real validation features/scoring; downloaded-checkpoint continuation; automatic best/last retention; and an integrated command that completes these stages. The current public training entry has passed the two-rank engineering pilot, including its explicit subset gate and half-epoch schedule.
 
 The portable BF16/global-batch-32 path differs from the historical SOLOs INT8/global-batch-64 path. An xformers native ABI warning remains unresolved; no claim is made that its native extensions work.
 
@@ -60,4 +60,6 @@ Formal `train_delivery.py` runs check the complete 285-row cohort before GPU ini
 
 Setup now decodes a generated PCM WAV and H264 video through torchaudio, TorchCodec AudioDecoder/VideoDecoder and decord. A successful import or working static `ffmpeg` command alone is insufficient. A real pilot exposed missing shared FFmpeg libraries; a CPU regression reproduced the failure and verified the existing shared runtime on 23 audio files and five videos before any replacement GPU test.
 
-For an existing separate shared FFmpeg installation, `SAM_FFMPEG_PREFIX=/path/to/ffmpeg` is supported by `setup.sh` and `run.sh`; its `lib/` directory is configured before Python starts. This optional hook does not install FFmpeg or prove a fresh server is ready. The tested A100 node also required `NCCL_P2P_DISABLE=1`; automatic communication diagnosis remains to be integrated, and that setting is not claimed optimal for every server.
+Setup automatically installs a pinned shared FFmpeg 7.1.1 runtime under `training/.runtime`, without sudo or changes to system packages. The installer verifies exact package sizes and SHA256 values, prevents concurrent installations and reuses matching completed installs. It also supports separate download and offline CPU-install phases on managed clusters. A fresh runtime install, repeat invocation and actual decoding of 23 audio files and five videos passed on Linux. That test reused the isolated Python environment; it does not certify the complete fresh Python installation. An existing shared runtime may instead be selected with `SAM_FFMPEG_PREFIX=/path/to/ffmpeg`.
+
+The multi-GPU launcher now runs a bounded allreduce/DDP/two-update probe before training. If the default transport fails, it first terminates the entire probe process group, then may try disabling NCCL P2P. Explicit operator settings are preserved. Missing rank receipts or both failures stop startup; training itself is never automatically retried. Regression tests passed, but this new automatic launcher still awaits its own GPU test. The earlier A100 diagnosis established the workaround only on that tested environment, not as a universally optimal setting.

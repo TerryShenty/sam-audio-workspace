@@ -5,8 +5,8 @@ No sudo, GPU allocation, training, dataset bulk download or deletion.
 import argparse, hashlib, json, os, platform, shutil, subprocess, sys, tarfile, urllib.request, tempfile, time
 from pathlib import Path
 COMMIT = 'main'
-SHA = '1f29fc7c28c1f80bcb0c5ff2565b53ae5380a5b98c7621787d9b62eb20b4c0b8'
-ARCHIVE = 'workspace-source-1f29fc7c28c1f80b.tar.gz'
+SHA = '116595d08bcf2ae3f2d3f1cb1e6a25119f8c29716e9851827d008272690e7630'
+ARCHIVE = 'workspace-source-116595d08bcf2ae3.tar.gz'
 BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/' + COMMIT
 DATASET = 'TerryShenty/avspeech-93942'
 def fetch(url):
@@ -68,13 +68,15 @@ def main():
     if not o.install: print('Inspection complete. Use --install with this directory to attempt reference installation.');return
     if platform.system()!='Linux' or platform.machine() not in ['x86_64','amd64']:
         raise SystemExit('Reference installation requires Linux x86_64; host report saved')
-    missing=[x for x in ['python3.12','git','ffmpeg'] if not report['tools'][x]]
+    missing=[x for x in ['python3.12','git'] if not report['tools'][x]]
     if missing: raise SystemExit('Ask server owner to supply: '+', '.join(missing)+'. No sudo attempted.')
-    print('Installing isolated reference venv. Known decord compatibility issue may stop this attempt.',flush=True)
+    print('Installing pinned shared media runtime and isolated reference venv; full acceptance remains pending.',flush=True)
     with (root/'installation.log').open('w') as log:
         result=subprocess.run(['bash','setup.sh'],cwd=root/'training',stdout=log,stderr=subprocess.STDOUT)
     if result.returncode: raise SystemExit('Installation failed; inspect '+str(root/'installation.log')+'. Training not started.')
-    result=subprocess.run([str(root/'training/.venv/bin/python'),'tools/preflight.py','--output',str(root/'ENVIRONMENT_REPORT.json')],cwd=root/'training')
+    result=subprocess.run(['bash','-c',
+        'source tools/media_env.sh; exec .venv/bin/python tools/preflight.py --output "$1"',
+        'runtime-preflight',str(root/'ENVIRONMENT_REPORT.json')],cwd=root/'training')
     if result.returncode: raise SystemExit('Environment check failed. Training not started.')
     print('Dependency checks passed. GPU train/eval/resume and complete dataset/cache acceptance STILL REQUIRED.')
 if __name__=='__main__':
