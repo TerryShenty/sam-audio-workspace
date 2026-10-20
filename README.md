@@ -1,33 +1,33 @@
 # SAM Audio workspace
 
-See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json](DELIVERY_STATUS.json) for acceptance boundaries. Code only: no datasets, weights or credentials are included.
+Code and environment preparation for a portable research workflow. **The complete training handoff has not passed acceptance yet.** This repository contains no datasets, model weights or credentials.
 
 ## One-command preparation
 
 ```bash
-curl -fL https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/bootstrap.py -o /tmp/sam-audio-bootstrap.py && python3 /tmp/sam-audio-bootstrap.py --directory ./sam-audio-delivery
+curl -fL --retry 3 https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/start.sh -o /tmp/sam-workspace-start.sh && bash /tmp/sam-workspace-start.sh /data/sam-workspace
 ```
 
-Add `--install` for isolated Linux Python 3.12 environment installation. The bootstrap verifies a pinned source archive and inspects data readiness. This is **preparation, not complete automatic production training**. The server owner must supply disk space, a compatible NVIDIA driver, model access and their own authorized W&B login.
+Replace `/data/sam-workspace` with a writable directory on a sufficiently large disk. The command verifies the source, installs an isolated environment, checks imports and inspects Hugging Face release metadata. It does not yet download the complete dataset or start training. Linux x86_64, Python 3.12, git, FFmpeg, curl and outbound HTTPS are required. GPU execution also requires a compatible NVIDIA driver.
 
-## Verified and remaining
+See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json](DELIVERY_STATUS.json) for acceptance boundaries.
 
-- 42 source regression tests; dependency coverage and actual CPU video-decoding probes included.
-- A bounded Linux CPU test reinstalled the original decord 0.6.0 wheel, ran the automatic metadata-only correction, passed actual decoding and pip dependency checks, then passed a repeat invocation. Original metadata is backed up; the native binary is unchanged. This is a narrowly guarded workaround, not general ABI certification or a complete fresh-machine installation test.
-- A separate single-A100 engineering test completed two training updates, saved and restored in a new process, continued one update and produced finite conditional inference output. It used a small SOLOs subset and older engineering harness, **not the latest full delivery entry**.
-- Full AVSpeech raw-to-cache integration, latest entry-point GPU execution, multi-rank resume, real MSDWild/EasyCom scoring and live W&B artifact restoration remain unaccepted. Do not launch a full experiment from partial data.
-- Validation metadata preserves the original per-sample noise seeds and 10/20-second durations. The intended real validation cohort is MSDWild 78 + EasyCom 207; planning/export code alone is not scoring acceptance.
+## Evidence and remaining work
 
-Portable BF16/global batch 32 differs from production SOLOs INT8/global batch 64. The xformers native-extension compatibility warning is unresolved; a successful bounded SAM path does not certify that extension.
+- 47 source regression tests and three bootstrap tests pass.
+- The Linux dependency repair passed real CPU video decoding, dependency checks and repeated invocation. It corrects metadata in the known decord wheel without changing its native binary. This was tested in an existing isolated environment; a complete fresh-machine installation remains unverified.
+- A small single-A100 engineering test completed training, a new-process checkpoint restore and a further update, followed by finite inference. It used an older harness and a small SOLOs subset.
+- Engineering checkpoints were uploaded to W&B and downloaded into fresh caches, with file sizes and SHA256 verified. Continuing training from those downloaded checkpoints is still pending.
+- Three actual HF AVSpeech composites, eight targets and all 13 associated prompts passed download and CPU media/GT checks. Their GPU encoding, training and scoring remain pending.
+- All 78 MSDWild and 207 EasyCom validation rows have a prepared media package. It is **not in the public repository**. Full validation feature preparation and GPU scoring remain unaccepted.
+- The two-A100 entry-point training/resume test, half-epoch validation runtime, automatic best/last retention and the complete one-command workflow remain unaccepted.
+
+Portable BF16/global batch 32 differs from production SOLOs INT8/global batch 64. The xformers native-extension ABI warning remains unresolved; the bounded successful SAM path does not certify that extension.
 
 ## Data and results
 
-The selected-data release is https://huggingface.co/datasets/TerryShenty/avspeech-93942 . Inspect its current immutable manifest before use; upload completeness must not be assumed. Raw media is not a ready training cache.
+[Selected AVSpeech data](https://huggingface.co/datasets/TerryShenty/avspeech-93942) is a separate HF repository. Check an immutable release manifest before using it; upload completeness must not be assumed. Raw media is not a ready training cache.
 
-W&B destination: entity `terryshen066-fudan-university`, project `sam-audio`. The runner logs in with their own authorized account. Keep secrets out of this repository. Checkpoint upload/download verification tooling preserves separate receipts for best and last artifacts; live end-to-end restoration remains to be tested. Resume checkpoints require the pinned base model in addition to saved trainable parameters and training state. No automatic server cleanup is enabled.
+The default W&B destination is `terryshen066-fudan-university/sam-audio`. The operator must authenticate with an account authorized to write there. Scores include dataset counts, aligned SI-SDR, SI-SDR and SI-SDRi, together with checkpoint and training-step coordinates. Checkpoint archives retain summaries and per-sample scores. These logging changes are unit tested; live end-to-end scoring/upload is still pending.
 
-Source archive: `workspace-source-2014117cf5e7718c.tar.gz`. Verify with `sha256sum -c SHA256SUMS`; source contents have an additional SHA256 manifest. Historical notes inside the source bundle describe earlier tests; this README and HANDOFF provide the current acceptance status.
-
-Original SAM Audio license is retained. Dataset and pretrained-model access and licenses remain separate.
-
-Latest preparation changes: immutable W&B restore utility has passed real download/hash verification for engineering checkpoints (GPU continuation pending). Offline best-checkpoint selection requires explicit cohort counts and a dataset-equal criterion. Half-epoch save/validation triggering is now wired and unit tested; GPU execution of this change is pending. The queued short test remains pinned to the preceding source, so its results cannot certify these new changes.
+Resume requires the pinned base model plus saved training state. No automatic server cleanup is enabled. Original SAM Audio licensing is retained; dataset and pretrained-model access and licenses are separate.

@@ -1,49 +1,51 @@
 # Server handoff
 
-**Current release: preparation/testing only. Do not schedule a full experiment yet.**
+**Current release: preparation and testing only. Do not start a full experiment yet.**
 
 ## What the operator runs
-Choose an absolute folder on a disk with sufficient space. No GitHub login or invitation is needed.
+
+Choose a writable absolute directory on a disk with enough free space:
 
 ```bash
 curl -fL --retry 3 https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/start.sh -o /tmp/sam-workspace-start.sh && bash /tmp/sam-workspace-start.sh /data/sam-workspace
 ```
 
-Replace only `/data/sam-workspace` with your writable disk directory. The entry downloads and verifies the code, creates an isolated Python environment, installs dependencies, imports the actual modules, and records the HF release status. It does not modify an existing system Python, use sudo, submit jobs, delete data or start a long GPU run. Repeat the same command after an interrupted installation. Edited/different source is protected: choose a new workspace when upgrading to a different source bundle.
+Replace only the final path. No GitHub login is required. This downloads and verifies the code, installs an isolated Python environment, checks actual imports and records HF data status. It does not use sudo, change system Python, download the complete media, launch a long experiment or delete data. Retry the same command after an interrupted installation. Use a new directory when changing source versions; existing modified source is protected.
 
 ## One-time server prerequisites
-Linux x86_64; Python 3.12; git; FFmpeg; curl; outbound HTTPS. GPU execution later requires an NVIDIA GPU and compatible driver. Drivers and site permissions cannot be bundled inside Python. If these are absent, the entry names the missing requirement before installation. No administrator password should be shared with the researcher.
 
-## Data and results
-- Public data: https://huggingface.co/datasets/TerryShenty/avspeech-93942 . It is still UPLOADING; do not infer completion from the dataset title. Full release has 93,942 videos, 256,708 targets and 390,402 prompts.
-- This command only reads release metadata, not terabytes of media. A finalized media-to-cache workflow and real validation export are still required before enabling full training.
-- W&B destination: `terryshen066-fudan-university/sam-audio`. The operator should log in with their own account invited to that team, or supply an authorized key through the server's secret manager. Never commit or send keys through GitHub/chat. Existing W&B login may be reused only if it can write to that team.
-- Pretrained base weights are downloaded separately under their access/license terms. They are not contained in this code package.
-- No automatic server cleanup. Keep the last complete resume checkpoint and best checkpoints until uploaded artifacts have been verified and successfully restored.
+Linux x86_64, Python 3.12, git, FFmpeg, curl and outbound HTTPS. Training requires compatible NVIDIA hardware and driver. The entry reports missing prerequisites; Python packages cannot install the host driver or grant server permissions.
+
+The operator uses their own W&B account with write access to `terryshen066-fudan-university/sam-audio`. The training logger and artifact uploader share this default destination. An existing login is sufficient only if it has that access. Never put API keys in GitHub or chat. W&B records results; it does not grant access to the GPU server.
+
+## Data readiness
+
+Training source: [TerryShenty/avspeech-93942](https://huggingface.co/datasets/TerryShenty/avspeech-93942). The intended release contains 93,942 composites, 256,708 targets and 390,402 prompt rows. Publication has been in progress; inspect a pinned manifest, not just the repository title.
+
+A pilot of three actual HF composites, eight targets and 13 prompt rows passed download integrity and CPU media/GT checks. The portable GPU feature-cache and training chain for this pilot has not run yet.
+
+Validation is real MSDWild 78 plus EasyCom 207. A complete media package has been audited and prepared separately, but is **not publicly downloadable through this handoff yet**. It preserves prompts, original per-sample noise seeds and 10/20-second durations. Media availability does not establish validation feature or scoring acceptance. The training dataset is not a substitute for this held-out cohort.
+
+Pretrained base weights are obtained separately under their access terms. Resume checkpoints contain trainable parameters and optimizer, scheduler, RNG and data-position state; they also require the pinned base model and matching configuration.
+
+## Results and recovery
+
+The logger is configured to record each dataset separately, with sample count, aligned SI-SDR, SI-SDR and SI-SDRi, plus checkpoint and global training step. Per-sample results are retained with summaries in checkpoint archives. These changes are unit tested; live full-cohort logging remains unverified.
+
+`tools/upload_results.py` verifies the uploaded engineering artifact by downloading it and checking its content manifest. Independent receipts preserve both best and last references. `tools/restore_checkpoint.py` requires an immutable artifact version and a trusted upload receipt, verifies every file and refuses to overwrite an existing destination. Real engineering uploads and fresh-cache restores passed; GPU continuation from downloaded files is still pending.
+
+`tools/select_best_checkpoint.py` supports an explicit equal-weight mean across datasets, requires complete expected cohort counts and retained matching checkpoints, and rejects missing or nonfinite scores. Automatic best-retention integration is not finished. Half-epoch save/validation triggering is implemented and unit tested, with runtime verification pending.
+
+No automatic server cleanup is enabled. Keep data and checkpoints until the necessary artifacts have been verified and successfully used for recovery.
+
+## Maintainer acceptance
+
+Passed: 47 source tests and three bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
+
+Remaining: a complete clean installation; latest code on GPU; two-rank train/validation and complete resume; AVSpeech feature-cache integration; full real validation features/scoring; live metric logging; downloaded-checkpoint continuation; automatic best/last retention; and an integrated command that completes these stages. The pending two-A100 test uses a preceding immutable source and cannot certify later scheduling/logging changes.
+
+The portable BF16/global-batch-32 path differs from the historical SOLOs INT8/global-batch-64 path. An xformers native ABI warning remains unresolved; no claim is made that its native extensions work.
 
 ## If preparation stops
-Send the researcher `preparation-console.log`, `installation.log`, `MACHINE_REPORT.json` and `ENVIRONMENT_REPORT.json` when present, after checking for private server paths. Do not send credentials, `.netrc`, environment dumps or unrelated logs. No need to manually rerun individual pip commands or debug Python packages.
 
-## Maintainer acceptance still required
-Clean Linux dependency installation/imports; exact source/fast-path selection; raw media/GT/crop-to-cache integration; MSDWild/EasyCom validation export; real GPU short train/validate/checkpoint/resume; W&B upload and restore. These are maintainer tasks, not work delegated to the colleague. The initial clean installation test reached its 20-minute limit while downloading PyTorch; it has NOT passed. A persistent CPU preparation job and dependent two-L40S short test are queued. The GPU test checks real updates, checkpoint restart and conditional audio generation on a small SOLOs TRAIN subset; it does not certify the complete AVSpeech data/validation workflow. Installation and multi-GPU results will be published after verification.
-
-Completed data archives can be reused on retry after their file sizes and SHA256 are rechecked. This does not bypass unfinished HF media/GT or certify the training pipeline.
-
-Checkpoint uploader now writes a size/SHA256 manifest and verifies SDK-downloaded content before a success receipt. Failed upload/corrupt downloads mark the upload run failed. Six local tests pass, including mocked SDK errors; live W&B and model resume remain untested. Download verification may use SDK cache and needs temporary disk space. Pending GPU tests remain pinned to earlier56ecd source.
-
-Cached trainer initializes tuning on CPU and detaches unused frozen encoders before moving the training model to GPU; codec is retained separately for validation. Two ordering/error tests pass; actual CUDA memory/real entry-point acceptance remains pending. Existing pending smoke test is still pinned to56ecd and does not certify this release.
-
-CPU export/preflight now validate all catalog/component/GT links against the file list, reject empty targets/prompts, duplicate identities, conflicting variants and noncanonical destinations. Seven contract/export fixture tests pass; these do not establish real tensor correctness or raw-to-cache readiness. Training entry does not yet automatically orchestrate the full CPU preflight.
-
-Training terminal status repair: setup/training exceptions now write FAILED and finish W&B with exit_code=1. Tracking cleanup errors do not replace the original training error. Three mocked lifecycle tests pass; live GPU and W&B acceptance remain pending.
-
-Validation compatibility: manifest must retain original noise_seed and latent_frames. Original packed forward-feature files supported with SHA256 verification. 20s inputs are no longer silently treated as10s. Real GPU evaluation remains untested; missing78 historical MSDWild feature files still block complete cohort export. Selected media recovery is verified separately, not model acceptance.
-
-CPU export producer: tools/validation_export_plan.py translates historical285 inputs to relative bundle paths and explicit source/destination mapping. Exact78/207 cohort, original feature hashes, seeds and duration required. --plan-only is explicitly unverified. Export fragment must join training files and a source audit before export_bundle; it is not an automatic complete pipeline. Tiny full-export integration passes; real78missing features still block acceptance.
-
-## Dependency repair and bounded runtime evidence
-The installer includes explicit peft/accelerate dependencies and checks declared dependency coverage before installing. The official decord0.6.0 Linux wheel has an internal cp36 tag inconsistent with its py3 filename. The installer applies a metadata-only correction only to the known native-library SHA, after real CPU video decode, with backups, post-repair decode, rollback and unchanged binary checks. pip check remains mandatory. This automated repair was tested on Linux Python3.12 after reinstalling the original wheel; repeated invocation passed.
-A separate isolated single-A100 engineering test completed two updates, restarted to step3 with optimizer/scheduler/EMA/RNG/data identity, and decoded finite conditional inference, with about7.9GiB peak memory. It used the older engineering harness and32SOLOs TRAIN targets: it does not certify the latest full entry, multi-rank recovery, heldout validation or AVSpeech data. xformers native extensions still warn about ABI mismatch and are not claimed working. Best/last upload receipts are retained separately; live W&B roundtrip remains untested.
-
-## Latest acceptance update
-No full experiment yet. The earlier CPU/dependent GPU installation chain has ended; one separate two-A100 short test is waiting for resources. Environment repair and small single-A100 train/resume passed. Real W&B upload and fresh-cache persistent restore passed for engineering final and step2 checkpoints, with immutable versions and SHA256 receipts; GPU continuation from downloaded files remains pending. New restore_checkpoint.py, select_best_checkpoint.py and half-epoch save scheduling are included. Half-epoch runtime, full real validation, best retention orchestration and full AVSpeech data-to-cache remain unaccepted. 42 source tests plus bootstrap checks pass. Earlier queue descriptions above are historical.
+Send `preparation-console.log`, `installation.log`, `MACHINE_REPORT.json` and `ENVIRONMENT_REPORT.json` when present, after reviewing private paths. Do not send credentials, `.netrc`, environment dumps or unrelated logs. The maintainer should repair the entry and supply a verified release; the colleague should not need to debug packages manually.

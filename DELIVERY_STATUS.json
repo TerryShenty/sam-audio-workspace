@@ -1,57 +1,65 @@
 {
-  "status": "PREPARATION_RELEASE_NOT_GPU_CERTIFIED",
+  "status": "PREPARATION_RELEASE_FULL_DELIVERY_NOT_ACCEPTED",
   "github": "https://github.com/TerryShenty/sam-audio-workspace",
-  "production_changed": false,
-  "reference_job": "5571917",
-  "reference_python": "3.12.2",
-  "reference_torch": "2.13.0+cu130",
-  "live_pip_check": "FAIL: decord 0.6.0 unsupported",
-  "pending": [
-    "fresh Linux install",
-    "remote production source parity and fast-path portability",
-    "raw AVSpeech to verified cached bundle",
-    "MSDWild/EasyCom validation export",
-    "GPU forward/backward, validation, full resume",
-    "W&B delivery artifact restore test",
-    "HF release media still UPLOADING"
-  ],
-  "local_checks": {
-    "downloader_tests": "3 PASS",
-    "syntax": "PASS",
-    "GPU": "NOT RUN",
-    "anonymous_bootstrap": "PASS: real download/hash/extraction/HF status",
-    "pypi_versions": "221 pinned versions exist; dependency resolution and installation not yet verified",
-    "release_receipts": "2 PASS: rehash reuse, changed content/revision/selection rejected",
-    "checkpoint_archive": "6 PASS: integrity and mocked SDK success/failure; live W&B/model resume NOT TESTED",
-    "model_setup": "2 PASS mocked ordering/error tests; CUDA memory not measured",
-    "bundle_linkage": "9 fixture tests; explicit seed/duration and packed-feature integrity added",
-    "training_lifecycle": "3 PASS mocked terminal status/error propagation; live W&B/distributed fault handling NOT TESTED",
-    "validation_protocol": "Explicit original noise_seed and 250/500/750 latent frames; original packed-feature SHA checked; real tensor/GPU evaluation NOT TESTED",
-    "validation_export": "3 normalization tests + 1 complete exporter fixture PASS; actual285 PLAN_ONLY,78features missing"
-  },
   "visibility": "public",
-  "dataset": "TerryShenty/avspeech-93942",
-  "source_archive": "workspace-source-af06b0113c40bde1.tar.gz",
-  "source_sha256": "af06b0113c40bde10adbc6d902a9d1f8caeccc0c2612b4ab24ce8c2daf718c01",
-  "preparation_fixes": [
-    "repeatable source preparation",
-    "local venv launcher",
-    "vendored editable install",
-    "real module import checks",
-    "source inventory"
+  "production_changed": false,
+  "scope": "Code-only preparation; no automatic full training or dataset publication",
+  "local_tests": {
+    "source": 47,
+    "bootstrap": 3
+  },
+  "environment": {
+    "python": "3.12.2",
+    "torch": "2.13.0+cu130",
+    "dependency_and_decoder_repair": "PASS_EXISTING_ISOLATED_LINUX_ENV",
+    "fresh_install": "NOT_ACCEPTED",
+    "xformers_native_extension": "ABI_WARNING_NOT_ACCEPTED"
+  },
+  "runtime": {
+    "single_a100_older_engineering_harness": "PASS_TRAIN_RESUME_INFERENCE",
+    "two_rank_latest_entry": "NOT_TESTED",
+    "half_epoch_validation": "UNIT_TESTED_RUNTIME_PENDING"
+  },
+  "data": {
+    "training_repository": "TerryShenty/avspeech-93942",
+    "complete_release": "CHECK_IMMUTABLE_MANIFEST_DO_NOT_ASSUME",
+    "actual_hf_pilot": {
+      "composites": 3,
+      "targets": 8,
+      "prompt_rows": 13,
+      "download_cpu_audit": "PASS",
+      "gpu_pipeline": "NOT_TESTED"
+    },
+    "validation": {
+      "msdwild_rows": 78,
+      "easycom_rows": 207,
+      "media_preparation": "PASS",
+      "publicly_downloadable": false,
+      "complete_feature_and_scoring_acceptance": "NOT_ACCEPTED"
+    }
+  },
+  "wandb": {
+    "entity": "terryshen066-fudan-university",
+    "project": "sam-audio",
+    "engineering_upload_download_hash": "PASS_INCLUDING_FRESH_CACHE",
+    "downloaded_checkpoint_gpu_continuation": "NOT_TESTED",
+    "per_dataset_live_scoring_upload": "NOT_TESTED",
+    "score_archive_and_destination": "UNIT_TESTED",
+    "automatic_best_last_retention": "NOT_ACCEPTED"
+  },
+  "remaining": [
+    "complete clean installation",
+    "actual HF pilot encoding and cache export",
+    "two-rank train and full checkpoint resume",
+    "real validation features and scoring",
+    "latest half-epoch and metric changes on GPU",
+    "downloaded W&B checkpoint continuation",
+    "automatic best/last retention",
+    "integrated one-command workflow"
   ],
-  "pending_cpu_job": 5799067,
-  "pending_gpu_job": 5799098,
-  "dependency_metadata_repair": "Linux reinstall/decode/pipcheck/idempotency PASS; known binary only",
-  "single_a100_engineering": "PASS older harness 32TRAIN targets; full delivery NOT ACCEPTED",
-  "xformers_native_extension": "ABI warning; not accepted",
-  "live_wandb": "NOT_TESTED",
-  "latest_preparation": {
-    "source_tests": 42,
-    "wandb_content_roundtrip": "PASS_ENGINEERING_ONLY",
-    "wandb_model_resume": "NOT_TESTED",
-    "half_epoch_trigger": "UNIT_TESTED_RUNTIME_PENDING",
-    "best_selection": "UNIT_TESTED_NOT_AUTOMATIC_RETENTION",
-    "full_delivery": "NOT_ACCEPTED"
-  }
+  "configuration_difference": "Portable BF16/global batch32 versus historical SOLOs INT8/global batch64",
+  "automatic_cleanup": false,
+  "source_archive": "workspace-source-dc50716bc7efc953.tar.gz",
+  "source_sha256": "dc50716bc7efc9534666399ec5743dca27e14b4a95b9d68928f9c2d6402b7ba6",
+  "source_files": 97
 }
