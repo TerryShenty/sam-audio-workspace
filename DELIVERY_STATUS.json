@@ -41,5 +41,9 @@
     "source inventory"
   ],
   "pending_cpu_job": 5799067,
-  "pending_gpu_job": 5799098
+  "pending_gpu_job": 5799098,
+  "dependency_metadata_repair": "Linux reinstall/decode/pipcheck/idempotency PASS; known binary only",
+  "single_a100_engineering": "PASS older harness 32TRAIN targets; full delivery NOT ACCEPTED",
+  "xformers_native_extension": "ABI warning; not accepted",
+  "live_wandb": "NOT_TESTED"
 }

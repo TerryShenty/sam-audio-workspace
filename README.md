@@ -1,82 +1,31 @@
 # SAM Audio workspace
 
-For server operators: see [HANDOFF.md](HANDOFF.md). A single preparation command and required credentials are listed there. This release is not yet accepted for full experiments.
+See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json](DELIVERY_STATUS.json) for acceptance boundaries. Code only: no datasets, weights or credentials are included.
 
-**Preparation release — not yet GPU-certified.**
+## One-command preparation
 
-Code, environment inventory, data download/check tools and W&B integration are included in `workspace-source-2d49d79c553b5c40.tar.gz`. No training data, model weights or credentials are included.
-
-```bash
-git clone https://github.com/TerryShenty/sam-audio-workspace.git
-cd sam-audio-workspace
-sha256sum -c SHA256SUMS
-tar -xzf workspace-source-2d49d79c553b5c40.tar.gz
-cd training
-```
-
-# SAM Audio portable workspace — preparation release
-
-**Not yet certified for end-to-end AVSpeech training.** This is an isolated delivery branch; running Longleaf production is untouched. It contains code, not data, checkpoints or credentials.
-
-## What is included
-- Training source, standalone distributed entry point (no Slurm required).
-- Reference Linux Python 3.12.2 environment inventory from running SOLOs job 5571917, captured 2026-10-19. Torch reports 2.13.0+cu130.
-- Resumable SHA256-verified data downloader, manifest checks, preflight and tests.
-- W&B rank-zero metric logging and explicit checkpoint artifact uploader.
-- Experimental selected-AVSpeech download helper, copied from the data release workflow.
-
-## Important acceptance gaps
-The existing environment can run production, but a fresh Linux installation has NOT been validated. Its pip check reports decord 0.6.0 unsupported. The freeze is evidence, not a certified installation lock. CUDA driver, decoder support and full train/validation/resume must be tested on the destination GPU.
-
-The portable baseline uses BF16/global batch 32. Current SOLOs production uses INT8 frozen linear layers, attention/FFN LoRA and global batch 64. They are **not identical implementations**. Source parity and production fast-path portability remain pending; do not compare throughput as if identical.
-
-AVSpeech selection currently has 93,942 videos, 256,708 targets and 390,402 prompts. Media upload is ongoing. Raw HF media is NOT the cached bundle consumed by train_delivery.py; cache construction and the real validation export are remaining integration work. Never start training from a partial upload.
-
-The newly discovered public release is https://huggingface.co/datasets/TerryShenty/avspeech-93942 . At commit 2cb6d0877146f46049edad3b7d6aaa47f90576b8 it is UPLOADING: 390,402 prompts, 611 fully available videos, 2,183 GT groups. The public organization sam-audio-research has no listed AVSpeech dataset at this check. Public visibility and personal/organization ownership are separate concepts. Do not confuse this release with the original-source or cold-archive repositories.
-
-## Intended deployment
-1. Clone this public repository; no GitHub invitation is needed.
-2. Install on Linux with Python 3.12 and an NVIDIA driver compatible with the chosen PyTorch wheel. `bash setup.sh` is an experimental installation attempt and stops on dependency errors.
-3. Download the finalized HF release to a disk selected by its owner; verify hashes. Budget for media, extraction, caches and checkpoints rather than just archive size.
-4. Produce and verify the cached bundle described below; run a short train/validate/save/resume check before a long run.
-5. `wandb login` with the runner's OWN invited team account. Never put API keys in GitHub.
-6. `GPUS=4 bash run.sh --data-root /data/bundle --model /models/large-tv --output runs/new-run` only after acceptance. GPU count and batch must match the measured hardware.
-
-W&B defaults: entity `terryshen066-fudan-university`, project `sam-audio`, online mode. Without integration, scores remain local; this package integrates metric logging, but artifact upload is currently explicit:
-`python tools/upload_results.py --run-dir runs/new-run --checkpoint final.pt`.
-Retain the last complete resume checkpoint and a best checkpoint per declared validation criterion. The native checkpoint stores trainable weights plus optimizer/scheduler/EMA/RNG/data position; it also requires the pinned original base model (facebook/sam-audio-large-tv, revision b9fc94687ec044c570cbe30b8c28100cd056f1cb). It is not a standalone full base-model copy. Do not delete server files until artifacts have been verified and restored successfully. No automatic cleanup is enabled.
-
-## Cached bundle contract
-`bundle.json`: status VERIFIED_EXPORT, train_catalog, train_components, validation_manifest (relative paths).
-Validation manifest: stores mapping name to path/signature; items with original stable index, dataset, store, refs, gt_audio, mixture_audio. This scaffold's validation adapter uses 10-second examples; AVSpeech temporal media may be 20 seconds. Training crop/GT alignment must be explicitly prepared, not assumed.
-For the new AVSpeech run, use the declared real MSDWild/EasyCom validation splits. Do not reuse the old SOLOs/URMP cohort accidentally.
-
-## Local checks
-`python3 -m unittest discover -s tests -v`
-`python3 -m compileall -q src tools`
-These validate Python syntax and downloader behavior only, not GPU training.
-
-## License
-Original SAM Audio LICENSE is retained. Dataset and pretrained-weight licenses/access conditions remain separate. Dependencies retain their respective licenses.
-
-## Single-command preparation entry
-
-On the destination server:
 ```bash
 curl -fL https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/bootstrap.py -o /tmp/sam-audio-bootstrap.py && python3 /tmp/sam-audio-bootstrap.py --directory ./sam-audio-delivery
 ```
-This downloads a SHA256-verified pinned code archive, reports GPU/driver and required tools, and checks the live HF release at an immutable commit. It does NOT start training or download terabytes. Use `--install` with the same directory for an **experimental** isolated Python 3.12 install. Dependency failures are saved to installation.log. No sudo or cleanup. It cannot install the host NVIDIA driver, grant gated-model access or sign in to W&B on behalf of the server owner.
 
-The source bundle is content-addressed and SHA256-verified. The root README contains the current HF release location.
+Add `--install` for isolated Linux Python 3.12 environment installation. The bootstrap verifies a pinned source archive and inspects data readiness. This is **preparation, not complete automatic production training**. The server owner must supply disk space, a compatible NVIDIA driver, model access and their own authorized W&B login.
 
-2026-10-19 checks: anonymous public bootstrap download, archive SHA/extraction and live HF metadata lookup PASS. All 221 PyPI version pins exist; this does not prove dependency resolution, native binary compatibility or GPU operation.
+## Verified and remaining
 
-## Preparation verification update
-- Bootstrap is repeatable for byte-identical source and preserves an existing virtual environment; edited source triggers a clear stop without overwrite.
-- setup installs the included package and imports the actual training/validation modules, rather than only checking version numbers.
-- run.sh uses the local virtual environment automatically.
-- SOURCE_MANIFEST.json enumerates included source/config/dependency files with SHA256.
-- Longleaf decord metadata identifies a cp36 wheel; new installs resolve official Linux wheels. Existing production was not modified.
-- Full clean Linux install, real GPU train/eval/resume, pretrained-model download, AVSpeech raw-to-cache preparation and validation bundle remain unverified/incomplete. No claim of complete one-command training.
+- 32 source regression tests; dependency coverage and actual CPU video-decoding probes included.
+- A bounded Linux CPU test reinstalled the original decord 0.6.0 wheel, ran the automatic metadata-only correction, passed actual decoding and pip dependency checks, then passed a repeat invocation. Original metadata is backed up; the native binary is unchanged. This is a narrowly guarded workaround, not general ABI certification or a complete fresh-machine installation test.
+- A separate single-A100 engineering test completed two training updates, saved and restored in a new process, continued one update and produced finite conditional inference output. It used a small SOLOs subset and older engineering harness, **not the latest full delivery entry**.
+- Full AVSpeech raw-to-cache integration, latest entry-point GPU execution, multi-rank resume, real MSDWild/EasyCom scoring and live W&B artifact restoration remain unaccepted. Do not launch a full experiment from partial data.
+- Validation metadata preserves the original per-sample noise seeds and 10/20-second durations. The intended real validation cohort is MSDWild 78 + EasyCom 207; planning/export code alone is not scoring acceptance.
 
-Download recovery update: completed selected-release archives now have immutable-revision receipts. Reruns rehash outputs before skipping downloads. Incomplete archives still restart; full HTTP byte-range recovery is not claimed. Pending GPU acceptance remains on the earlier pinned source.
+Portable BF16/global batch 32 differs from production SOLOs INT8/global batch 64. The xformers native-extension compatibility warning is unresolved; a successful bounded SAM path does not certify that extension.
+
+## Data and results
+
+The selected-data release is https://huggingface.co/datasets/TerryShenty/avspeech-93942 . Inspect its current immutable manifest before use; upload completeness must not be assumed. Raw media is not a ready training cache.
+
+W&B destination: entity `terryshen066-fudan-university`, project `sam-audio`. The runner logs in with their own authorized account. Keep secrets out of this repository. Checkpoint upload/download verification tooling preserves separate receipts for best and last artifacts; live end-to-end restoration remains to be tested. Resume checkpoints require the pinned base model in addition to saved trainable parameters and training state. No automatic server cleanup is enabled.
+
+Source archive: `workspace-source-7f9b083fc6bdb72b.tar.gz`. Verify with `sha256sum -c SHA256SUMS`; source contents have an additional SHA256 manifest. Historical notes inside the source bundle describe earlier tests; this README and HANDOFF provide the current acceptance status.
+
+Original SAM Audio license is retained. Dataset and pretrained-model access and licenses remain separate.
