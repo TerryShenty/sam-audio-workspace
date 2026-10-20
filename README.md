@@ -14,7 +14,7 @@ See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json
 
 ## Evidence and remaining work
 
-- 78 source regression tests and seven bootstrap tests pass.
+- 85 source regression tests and seven bootstrap tests pass.
 - The Linux dependency repair passed real CPU video decoding, dependency checks and repeated invocation. It corrects metadata in the known decord wheel without changing its native binary. A subsequent Linux test installed both a new Python virtual environment and a new shared FFmpeg prefix, repeated setup, and passed dependency/import/native-decoding checks. It reused package download bytes only, not an installed environment. GPU execution from that fresh environment remains unverified.
 - A small single-A100 engineering test completed training, a new-process checkpoint restore and a further update, followed by finite inference. It used an older harness and a small SOLOs subset.
 - Engineering checkpoints were uploaded to W&B and downloaded into fresh caches, with file sizes and SHA256 verified. Continuing training from those downloaded checkpoints is still pending.
@@ -55,3 +55,10 @@ The helper keeps separate best/last receipts, verifies unchanged local content b
 
 
 After an independently prepared dataset/cache and environment are ready, run.sh now invokes a completion wrapper. On standalone servers it waits for all training processes to exit before verified best/last archival. Explicit offline logging or a Slurm GPU allocation produces a deferred archival record; those cases still require a subsequent transfer phase. This integration passed local subprocess regressions and real existing-receipt reconciliation, but has not yet passed its own GPU/fresh-upload end-to-end test. The one-command preparation entry above still does not launch a full experiment.
+
+
+## Preparing selected AVSpeech audio
+
+After `tools/download_selected_avspeech.py` has verified a pinned selection, `tools/prepare_selected_media.py --media /path/to/download --output /path/to/prepared` verifies its media against the download receipts, decodes the existing lossless target/residual audio, and checks that their sum matches the original mixture. It preserves every selected prompt and its category, subtype, target identity and provenance. Completed composites are checked before reuse; interrupted staging files are retained, and changed inputs or outputs cannot silently pass. Hashing and decoding must run on CPU before a Slurm GPU allocation.
+
+The generic tool passed a real Linux CPU test on three HF composites, eight targets and 13 prompts: all 16 decoded target/residual waveforms exactly matched the earlier accepted preparation, and repeat invocation reused all three composites without decoding. Seven additional local regressions cover interruption, corruption and completeness. This remains an explicitly marked engineering subset. It does not prepare GPU features, GT-span anchors, full training data or launch training; those stages and their integration into the top-level command remain pending.

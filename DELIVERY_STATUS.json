@@ -5,7 +5,7 @@
   "production_changed": false,
   "scope": "Code-only preparation; no automatic full training or dataset publication",
   "local_tests": {
-    "source": 78,
+    "source": 85,
     "bootstrap": 7
   },
   "environment": {
@@ -48,7 +48,9 @@
       "publication": "AWAITING_EXPLICIT_APPROVAL",
       "preparation": "WIRED_IN_ONE_COMMAND_INDEPENDENT_OF_TRAIN_UPLOAD",
       "formal_cohort_gate": "EXACT_IDENTITY_PROMPT_NOISE_DURATION_FINGERPRINT_UNIT_TESTED"
-    }
+    },
+    "selected_media_preparation": "PASS_REAL_CPU_HF3_TARGETS8_PROMPTS13_16_WAVEFORMS_EQUAL_REPEAT_ZERO_DECODE",
+    "selected_media_preparation_scope": "ENGINEERING_SUBSET_NOT_GPU_CACHE_GT_ANCHORS_OR_FULL_PIPELINE"
   },
   "wandb": {
     "entity": "terryshen066-fudan-university",

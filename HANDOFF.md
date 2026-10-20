@@ -40,7 +40,7 @@ No automatic server cleanup is enabled. Keep data and checkpoints until the nece
 
 ## Maintainer acceptance
 
-Passed: 78 source tests and seven bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
+Passed: 85 source tests and seven bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
 
 Remaining: GPU execution from the fresh environment; integrated AVSpeech feature-cache preparation; full real validation features/scoring; downloaded-checkpoint continuation; automatic best/last retention; and an integrated command that completes these stages. The current public training entry has passed the two-rank engineering pilot, including its explicit subset gate and half-epoch schedule.
 
@@ -77,3 +77,10 @@ The helper keeps separate best/last receipts, verifies unchanged local content b
 run.sh now waits for the training process group to finish, checks a fresh successful terminal receipt, and calls tools/finalize_run.py. On a standalone server in online W&B mode this invokes verified best/last archival. A per-output lock rejects duplicate launches. Failed or interrupted training does not trigger archival; upload errors preserve the training result and a separate workflow report. Historical invocation reports remain available.
 
 On Slurm GPU allocations, finalization records ARCHIVAL_DEFERRED before checkpoint hashing or transfer. Run tools/finalize_run.py --run-dir on the transfer facility after allocation termination. Explicit offline/disabled W&B mode also records a deferred result. No file cleanup is enabled. This orchestration passed seven local regressions, including real subprocess exit/failure and stale-receipt refusal; actual existing pilot receipts reconciled twice without new uploads. The new wrapper has not run GPU training and its fresh live-upload path remains unaccepted. Publishing this code does not establish GPU or fresh-upload acceptance.
+
+
+## Preparing selected AVSpeech audio
+
+After `tools/download_selected_avspeech.py` has verified a pinned selection, `tools/prepare_selected_media.py --media /path/to/download --output /path/to/prepared` verifies its media against the download receipts, decodes the existing lossless target/residual audio, and checks that their sum matches the original mixture. It preserves every selected prompt and its category, subtype, target identity and provenance. Completed composites are checked before reuse; interrupted staging files are retained, and changed inputs or outputs cannot silently pass. Hashing and decoding must run on CPU before a Slurm GPU allocation.
+
+The generic tool passed a real Linux CPU test on three HF composites, eight targets and 13 prompts: all 16 decoded target/residual waveforms exactly matched the earlier accepted preparation, and repeat invocation reused all three composites without decoding. Seven additional local regressions cover interruption, corruption and completeness. This remains an explicitly marked engineering subset. It does not prepare GPU features, GT-span anchors, full training data or launch training; those stages and their integration into the top-level command remain pending.
