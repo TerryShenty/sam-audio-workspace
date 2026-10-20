@@ -5,8 +5,8 @@ No sudo, GPU allocation, training, dataset bulk download or deletion.
 import argparse, hashlib, json, os, platform, re, shutil, subprocess, sys, tarfile, urllib.request, tempfile, time
 from pathlib import Path
 COMMIT = 'main'
-SHA = '04330c464c2917bfac60e971030f04a44257512807d486f953f22073398815dd'
-ARCHIVE = 'workspace-source-04330c464c2917bf.tar.gz'
+SHA = '8cfb2ece9b2600ec03d8904c2534bfab55a3aafb45e4fa4b7ff70d7d4df2fb20'
+ARCHIVE = 'workspace-source-8cfb2ece9b2600ec.tar.gz'
 BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/' + COMMIT
 DATASET = 'TerryShenty/avspeech-93942'
 def fetch(url):
@@ -30,7 +30,7 @@ def main():
     p.add_argument('--directory', type=Path, default=Path('sam-audio-delivery'))
     p.add_argument('--install', action='store_true', help='Attempt experimental Linux reference installation; not GPU-certified')
     p.add_argument('--prepare-validation', action='store_true', help='Download and verify the fixed MSDWild78 + EasyCom207 media independently of AVSpeech readiness')
-    p.add_argument('--prepare-avspeech', action='store_true', help='After installation, download a pinned selection and prepare CPU audio; no GPU cache or training')
+    p.add_argument('--prepare-avspeech', action='store_true', help='After installation, download a pinned selection and prepare CPU audio and GT support; no GPU cache or training')
     p.add_argument('--avspeech-revision', help='Immutable 40-character selected-release commit')
     selection=p.add_mutually_exclusive_group()
     selection.add_argument('--avspeech-ids', nargs='+', help='Explicit engineering subset composite IDs')

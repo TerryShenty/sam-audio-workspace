@@ -14,7 +14,7 @@ See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json
 
 ## Evidence and remaining work
 
-- 101 source regression tests and eleven bootstrap tests pass.
+- 105 source regression tests and eleven bootstrap tests pass.
 - The Linux dependency repair passed real CPU video decoding, dependency checks and repeated invocation. It corrects metadata in the known decord wheel without changing its native binary. A subsequent Linux test installed both a new Python virtual environment and a new shared FFmpeg prefix, repeated setup, and passed dependency/import/native-decoding checks. It reused package download bytes only, not an installed environment. GPU execution from that fresh environment remains unverified.
 - A small single-A100 engineering test completed training, a new-process checkpoint restore and a further update, followed by finite inference. It used an older harness and a small SOLOs subset.
 - Engineering checkpoints were uploaded to W&B and downloaded into fresh caches, with file sizes and SHA256 verified. Continuing training from those downloaded checkpoints is still pending.
@@ -66,7 +66,7 @@ The generic tool passed a real Linux CPU test on three HF composites, eight targ
 
 ## Combined download and CPU preparation
 
-`tools/prepare_avspeech_workflow.py --directory /data/selection --revision COMMIT --ids ID1 ID2` combines immutable HF selection download with CPU audio preparation. Use `--all` instead of `--ids` only when every video, target and prompt in that frozen release is available. A workspace stays bound to its original selection. A failed download cannot trigger decoding, and failed or stale CPU receipts cannot report readiness. Repeating checks existing content before reuse; no server files are deleted.
+`tools/prepare_avspeech_workflow.py --directory /data/selection --revision COMMIT --ids ID1 ID2` combines immutable HF selection download with CPU audio preparation and verified source-placement GT support. Use `--all` instead of `--ids` only when every video, target and prompt in that frozen release is available. A workspace stays bound to its original selection. A failed download cannot trigger decoding, and failed or stale CPU/GT receipts cannot report readiness. Each successful CPU phase produces `support/train_rows.json` with the original prompts and verified GT intervals; GPU cache and GPU anchor acceptance remain pending. Repeating checks existing content before reuse; no server files are deleted.
 
 Managed clusters can run `--phase download` on their transfer facility followed by `--phase prepare` on a CPU allocation. These real split phases passed on the three-video pilot, including a second CPU invocation that reused all completed composites. The transfer phase reused existing verified media and contacted HF for the pinned metadata; it was not an empty-cache bulk-download test. The combined standalone mode passed local control-flow regressions only.
 
@@ -78,4 +78,4 @@ The root bootstrap accepts `--install --prepare-avspeech --avspeech-revision COM
 
 The tool checks frozen recipes, download receipts, prepared target/residual hashes and exact zeros outside temporal support. Original recipe identities and archived JSON hashes are recorded separately because public archival replaces host paths with provenance URIs. Changed media, redirected GT paths or modified prompts invalidate readiness.
 
-A real Linux CPU test passed on three HF composites, eight targets and all 13 prompts, including a repeat invocation and an injected out-of-support waveform rejection. All 13 official anchor tensors exactly matched the historical AVSpeech conditioning implementation. Eight new regressions bring the source suite to 101 tests. This tool is separately callable: automatic workflow integration, GPU forward with these anchors and formal GT-conditioned training remain untested. It does not certify full training readiness.
+A real Linux CPU test passed on three HF composites, eight targets and all 13 prompts, including a repeat invocation and an injected out-of-support waveform rejection. All 13 official anchor tensors exactly matched the historical AVSpeech conditioning implementation. The tool remains separately callable and is now run automatically after audio preparation. A new real CPU integration test completed both stages and a repeat invocation in seven seconds, matching all 13 prompt records and all eight targets against the accepted standalone result. Four coordinator regressions bring the source suite to 105 tests. This new test reused verified downloaded media; it did not repeat the download or exercise GPU forward or formal GT-conditioned training. It does not certify full training readiness.

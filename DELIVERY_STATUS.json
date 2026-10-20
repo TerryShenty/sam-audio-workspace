@@ -5,7 +5,7 @@
   "production_changed": false,
   "scope": "Code-only preparation; no automatic full training or dataset publication",
   "local_tests": {
-    "source": 101,
+    "source": 105,
     "bootstrap": 11
   },
   "environment": {
@@ -51,14 +51,14 @@
     },
     "selected_media_preparation": "PASS_REAL_CPU_HF3_TARGETS8_PROMPTS13_16_WAVEFORMS_EQUAL_REPEAT_ZERO_DECODE",
     "selected_media_preparation_scope": "ENGINEERING_SUBSET_NOT_GPU_CACHE_GT_ANCHORS_OR_FULL_PIPELINE",
-    "download_prepare_workflow": "PASS_REAL_TRANSFER_REUSE_TO_CPU_PREPARE_REPEAT_HF3_TARGET8_PROMPT13",
+    "download_prepare_workflow": "DOWNLOAD_PREVIOUSLY_ACCEPTED; CPU_MEDIA_AND_GT_COORDINATOR_REAL_REPEAT_PASS; GPU_CACHE_PENDING",
     "combined_standalone_preparation": "LOCAL_CONTROL_FLOW_PASS_REAL_COMBINED_EXECUTION_PENDING",
     "bootstrap_media_wiring": "MOCKED_STAGE_AND_REAL_SHELL_REGRESSIONS_PASS_NOT_FRESH_MACHINE_ACCEPTED",
     "training_gt_support": {
       "cpu": "PASS_REAL_3_VIDEOS_8_TARGETS_13_PROMPTS_REPEAT_OFFICIAL_ANCHORS_EQUAL_LEGACY",
       "rule": "TEN_SECOND_SOURCE_PLACEMENT_NOT_VAD",
       "gpu_forward": "NOT_TESTED",
-      "automatic_integration": "NOT_IMPLEMENTED",
+      "automatic_integration": "PASS_REAL_CPU_MEDIA_THEN_GT_REPEAT_3_VIDEOS_8_TARGETS_13_PROMPTS",
       "validation": "UNCHANGED"
     }
   },
