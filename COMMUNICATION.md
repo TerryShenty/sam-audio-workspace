@@ -54,6 +54,16 @@ non-final gradient-accumulation microsteps. Disabling initial synchronization
 without verifying every rank's actual parameter/buffer contents is not included
 in this release; it can silently start inconsistent replicas.
 
+## Native two-L40S measurement
+
+A native two-card host now passed repeated actual SAM training at roughly
+0.30–0.31 seconds/update after warmup. Its 128 MiB broadcast/all-reduce payload rates
+were 4.10/3.59 GB/s, while normal DDP initialization took 1.38–1.47 seconds. A guarded
+skip-initialization candidate preserved exact saved state but established no
+steady-training gain; default initialization remains enabled. See
+[PERFORMANCE.md](PERFORMANCE.md) for protocol, repetitions and limitations.
+These native results do not establish a fast inter-server link.
+
 ## Current limits and next useful tests
 
 No accepted H200 run, 4/8-card GPU run, fast-fabric scaling measurement or

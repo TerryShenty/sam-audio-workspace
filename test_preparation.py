@@ -21,7 +21,7 @@ class BootstrapTests(unittest.TestCase):
     def extract(self):
         return b.extract_verified(self.archive,self.root/'source')
     def test_all_real_release_files(self):
-        self.assertEqual(len(b.verify_source(self.extract())),154)
+        self.assertEqual(len(b.verify_source(self.extract())),157)
     def test_repeat_and_changed_source_rejected(self):
         source=self.extract();self.assertEqual(source,self.extract())
         (source/'start.sh').write_text('changed')

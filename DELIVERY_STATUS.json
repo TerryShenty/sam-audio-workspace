@@ -35,8 +35,10 @@
     "Prepared-bundle CLI: actual two-rank GT update, full285 scoring, complete saved state, independent W&B metric readback and automatic finalization",
     "Earlier integrated engineering workflow: three full285 validations, automatic best/last upload, independent download and effective two-rank optimizer continuation",
     "Current standalone entry: real download and CPU preparation, including pinned offline T5/tokenizer identity",
-    "Same-entry fresh training/public285 features and new0→9, three full285 passes, complete CPU checkpoint state, 30 cloud fields and automatic best/last archive",
-    "Two distinct physical cloud nodes L40S48/L4048: real0→2/save/new-process2→3 plus complete saved-state CPU audit"
+    "Same-entry fresh training/public285 features and new0\u21929, three full285 passes, complete CPU checkpoint state, 30 cloud fields and automatic best/last archive",
+    "Two distinct physical cloud nodes L40S48/L4048: real0\u21922/save/new-process2\u21923 plus complete saved-state CPU audit",
+    "Native2L40S same-host actual SAM: five bounded arms, two112-update repetitions, complete saved-state audits and exact28-step candidate/baseline saved-state equality",
+    "Independent immutable final9 checkpoint: actual different resolved model path, strict identical base, both ranks real9\u219210, complete CPU state and original checkpoint unchanged"
   ],
   "current_standalone": {
     "worker_source_files": 146,
@@ -56,19 +58,18 @@
     ]
   },
   "remaining": [
-    "Published release anonymous immutable verification",
-    "Separate terminal-checkpoint model-path relocation candidate GPU and CPU acceptance; candidate excluded here",
     "Actual1/4/8-card and H200 hardware tests, fast-network scaling and multi-node full285",
     "Single uninterrupted cold invocation on an empty ordinary server",
-    "Full-corpus/30–50second training resource and quality acceptance"
+    "Full-corpus/30\u201350second training resource and quality acceptance"
   ],
   "limits": [
     "Engineering profile only; full93942 long production training is not launched or validated",
-    "Two A10040GB single-node workflow and two48GB L40S/L40 physical-node save/resume are measured; other layouts and30–50s examples remain untested",
+    "Two A10040GB single-node workflow and two48GB L40S/L40 physical-node save/resume are measured; other layouts and30\u201350s examples remain untested",
     "HF access approval for facebook/sam-audio-large-tv and the runner own W&B credentials are required",
     "xformers native ABI warning remains; the tested SAM path uses SDPA",
     "CPU state audits check structure/finiteness and CPU RNG restoration; they do not prove CUDA RNG replay or optimizer parameter-name mapping",
-    "Cluster GPU work defers network archival to a transfer facility; ordinary-server immediate archival is not a newly accepted full-flow test"
+    "Cluster GPU work defers network archival to a transfer facility; ordinary-server immediate archival is not a newly accepted full-flow test",
+    "Native L40S speed uses cached HF13GT10/20s and does not establish peak/global-optimal/production/H200/fast-fabric scaling performance"
   ],
   "automatic_cleanup": false,
   "multinode": {
@@ -79,11 +80,69 @@
       "L40S48",
       "L4048"
     ],
-    "actual_updates": "0→2; new-process2→3",
+    "actual_updates": "0\u21922; new-process2\u21923",
     "checkpoint_cpu_audit": "PASS",
     "communication": "Cross-region TCP, about12MB/s observed; not efficient-cluster acceptance",
     "cloud_metrics": "NOT_TESTED_OFFLINE_ENGINEERING",
     "full285": "NOT_TESTED_ACROSS_NODES"
   },
-  "source_runtime_basis": "Exact GPU-accepted152 worker code; metadata/docs differ; pending153 relocation change excluded"
+  "source_runtime_basis": "Accepted152 multi-node and speed runtime plus the separately GPU/CPU-accepted153 terminal model-path relocation fix; no speed candidate enabled",
+  "native_speed": {
+    "status": "PASS_NATIVE_TWO_L40S_REPEATED_REAL_SAM_SPEED_AND_SAVED_STATE",
+    "evidence": "PERFORMANCE.json",
+    "repeated_baseline": {
+      "runs": 2,
+      "updates_per_run": 112,
+      "warmup_updates_per_run": 14,
+      "timed_updates": 196,
+      "timed_real_targets": 364,
+      "timed_seconds": 59.877334031960345,
+      "seconds_per_update": 0.3054966022038793,
+      "targets_per_second": 6.079094967817205,
+      "run_throughput_spread_percent": 3.0525927705897793
+    },
+    "runtime_optimization_enabled": false
+  },
+  "relocated_checkpoint_resume": {
+    "status": "PASS_REAL_RELOCATED_TERMINAL_ARTIFACT_RESUME",
+    "hardware": "Two A10040GB on one server",
+    "worker_source_manifest_sha256": "61c211d4ea79b115132c7ac1479dc25250d13ea9be8d8bb4389c1fef859d4e2f",
+    "checkpoint_origin": "Independently downloaded immutable final9 from new standalone public-input workflow",
+    "original_sha256": "4344375ea27d50b26e0588c3690ccc635ceb785ed2254b23cfc641ad968444e7",
+    "new_checkpoint": {
+      "size": 427500063,
+      "sha256": "8e8a3f94bf25434a10b425f1e96ce0c4a0cf957a226dc225d0df44ab81b93648"
+    },
+    "actual_updates": "9 to 10 on both ranks",
+    "actual_nonzero_adam_delta": 1.52587890625e-05,
+    "gpu_stage_seconds": 147.12193019199185,
+    "cpu_state_seconds": 7.1498635318130255,
+    "cpu_report": {
+      "status": "PASS_CPU_CHECKPOINT_STATE",
+      "step": 10,
+      "epoch": 1,
+      "next_update": 3,
+      "world_size": 2,
+      "model_tensors": 484,
+      "trainable_elements": 42668032,
+      "optimizer_tensors": 484,
+      "ema_tensors": 484,
+      "scheduler_step": 10,
+      "rng_ranks": 2,
+      "scope": "Independent immutable standalone artifact original9 to actual relocation10; no newvalidation/upload",
+      "limits": [
+        "Structure/finite/coverage checks, not CUDA RNG replay",
+        "Optimizer tensor shape multiset, not model-to-ID name association",
+        "Does not establish effective resumed GPU optimization"
+      ]
+    },
+    "changed_model_tensors": 484,
+    "original_checkpoint_unchanged": true,
+    "scope": "Explicit constant scheduler warmup50 budget extension; strict matching model/config/T5 identity after an actual different resolved model directory. No new validation or archive.",
+    "limits": [
+      "CPU RNG restore; CUDA RNG stored only",
+      "Optimizer shape multiset not model-name/ID",
+      "GPU restore sampled equality plus separate actual update proof"
+    ]
+  }
 }

@@ -15,6 +15,7 @@ multi-server cluster, but the deployment still needs to be checked.
 |---|---|---|
 | One server, two A100 40GB | New training and all 285 validation features; nine GT updates; three full validations; complete checkpoint CPU audit; cloud metric readback; automatic best/last archival | Engineering selection and 10/20-second examples; CPU/transfer/GPU phases separated |
 | Two different physical servers, one L40S 48GB and one L40 48GB | Global world size 2; actual 10/20-second updates 0→2; checkpoint; new-process 2→3 update; full saved-state CPU audit | Mixed-hardware functional test over a slow link; no cross-node full285/W&B acceptance or scaling claim |
+| One server, two L40S 48GB | Real 3/28-step correctness checks and two 112-update runs, full saved-state CPU audits; roughly 0.30–0.31 seconds/update after warmup | Same public HF13/BF16/global2 selection; no new full285 or GPU resume in these speed runs; see [PERFORMANCE.md](PERFORMANCE.md) |
 | One server, 1, 4 or 8 selected GPUs | CPU tests for planning, batching, coverage, receipts and strict resume guards | Actual GPU execution at these counts is not accepted |
 | H200, 12 GPUs, more nodes, RDMA/InfiniBand | No direct hardware acceptance | Do not infer from A100/L40 results |
 
@@ -99,7 +100,8 @@ L40S has 48GB GDDR6 ECC and no NVLink, according to the
 [NVIDIA specification](https://www.nvidia.com/en-us/data-center/l40s/).
 The tested A100 cards have 40GB per device. Capacity alone does not predict
 training speed: local PCIe topology, peer access, memory bandwidth and the
-selected workload matter. The current evidence does not compare two L40S cards
-against two A100 cards on an otherwise identical single-server SAM run.
+selected workload matter. Native two-L40S repeated speed measurements now exist in
+[PERFORMANCE.md](PERFORMANCE.md), with earlier same-recipe A100 short windows as
+context. They are not a controlled repeated hardware A/B or a global optimum.
 
 See [COMMUNICATION.md](COMMUNICATION.md) before choosing a multi-server rental.

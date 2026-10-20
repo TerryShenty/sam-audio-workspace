@@ -8,6 +8,8 @@ new-process resume on one L40S 48GB and one L40 48GB in different physical serve
 
 See [HARDWARE.md](HARDWARE.md) for GPU selection and the precise tested scope.
 Having twelve or several dozen GPUs does not require using all of them.
+Native two-L40S training speed and its repeated measured limits are documented
+in [PERFORMANCE.md](PERFORMANCE.md).
 
 ## Start on one server
 
@@ -128,9 +130,16 @@ warning remains; the tested SAM path uses SDPA.
 
 ## Release boundary
 
-The multi-node runtime here is the exact code used by the accepted two-server
-save/resume experiment, with documentation and destination metadata updated.
-See [COMMUNICATION.md](COMMUNICATION.md) for the measured slow-link limitation.
-The separate fix for extending a terminal checkpoint after relocating its model
-directory is still awaiting GPU acceptance and is **not included** in this
-release. Keep model paths consistent for the documented resume procedure.
+The two-server save/resume and native two-L40S speed experiments used the accepted
+152-file worker. This release adds its separately GPU- and CPU-verified terminal
+checkpoint relocation fix. After an independently downloaded final checkpoint was
+moved to a workspace with a different model directory, both A100 ranks restored
+step 9 and performed a real step 10. The strict loader must verify identical SAM
+weights/config and T5 identities; changing a path alone never authorizes a different
+model. Full saved model, Adam, EMA, scheduler, data position and two-rank RNG state
+passed CPU inspection, and the original checkpoint stayed unchanged.
+
+This is an explicit constant-scheduler/warmup-50 engineering continuation, not
+elastic world-size resume or a changed training recipe. Normal strict resume is
+unchanged. See DELIVERY_STATUS.json for the exact scope and
+[COMMUNICATION.md](COMMUNICATION.md) for the earlier slow-link limitation.

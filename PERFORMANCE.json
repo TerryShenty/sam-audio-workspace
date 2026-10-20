@@ -1,0 +1,839 @@
+{
+  "status": "PASS_NATIVE_TWO_L40S_REPEATED_REAL_SAM_SPEED_AND_SAVED_STATE",
+  "date_utc": "2026-10-20",
+  "topology": "One physical server, two native L40S48GB CUDA devices; PCIe NODE topology; no NVLink claim",
+  "worker_source_manifest_sha256": "9d3363c1e6a5bcd1c3a9ec46330942ea1b4cb56000d3a50c9818f0e7003ddf0e",
+  "bundle_manifest_sha256": "d331ecebb35228b5d2ce92f1d21ce085e5c6434d0f75c4bceb8d2ffe4a5c3179",
+  "recipe": {
+    "data": "Public HF13 engineering GT selection;10/20-second examples",
+    "precision": "BF16",
+    "world_size": 2,
+    "microbatch": 1,
+    "global_batch": 2,
+    "seed": 2026,
+    "compile": false,
+    "gradient_checkpointing": false,
+    "fused_adamw": true
+  },
+  "environment": {
+    "torch": "2.13.0",
+    "torchaudio": "2.11.0",
+    "torchvision": "0.28.0",
+    "triton": "3.7.1",
+    "transformers": "5.16.1"
+  },
+  "reuse": [
+    "Previously verified SAM/T5 bytes and public-data feature bundle copied to the authorized test server"
+  ],
+  "fresh": [
+    "Python/native environment on the paid server",
+    "Every training process and saved checkpoint"
+  ],
+  "runs": [
+    {
+      "name": "baseline3_v1",
+      "mode": "baseline",
+      "updates": 3,
+      "timed_updates": 0,
+      "timed_windows": 0,
+      "timed_seconds": 0,
+      "timed_real_targets": 0,
+      "seconds_per_update": null,
+      "targets_per_second": null,
+      "audio_seconds_per_second": null,
+      "whole_process_seconds": 92.22608957000193,
+      "torch_peak_bytes": [
+        9853013504,
+        9853013504
+      ],
+      "full_state": {
+        "status": "PASS_CPU_CHECKPOINT_STATE",
+        "step": 3,
+        "epoch": 0,
+        "next_update": 3,
+        "world_size": 2,
+        "model_tensors": 484,
+        "trainable_elements": 42668032,
+        "optimizer_tensors": 484,
+        "ema_tensors": 484,
+        "scheduler_step": 3,
+        "rng_ranks": 2,
+        "scope": "NATIVE_SINGLE_HOST_TWO_L40S_PERFORMANCE_STATE",
+        "limits": [
+          "Structure/finite/coverage checks, not CUDA RNG replay",
+          "Optimizer tensor shape multiset, not model-to-ID name association",
+          "Does not establish effective resumed GPU optimization"
+        ]
+      },
+      "checkpoint": {
+        "size": 427490529,
+        "sha256": "64f7395e290a082491ff615e64cf2bc2028af15c264795223ee6b2ae691a9a11"
+      },
+      "windows": [],
+      "ddp_construct_seconds": [
+        1.470558492001146,
+        1.4700210910086753
+      ],
+      "actual_state_check_seconds": [
+        5.109863454010338,
+        10.160318263995578
+      ],
+      "model_ready_seconds": [
+        62.3937611910078,
+        57.21352355199633
+      ]
+    },
+    {
+      "name": "baseline28_a",
+      "mode": "baseline",
+      "updates": 28,
+      "timed_updates": 21,
+      "timed_windows": 3,
+      "timed_seconds": 6.408718072998454,
+      "timed_real_targets": 39,
+      "seconds_per_update": 0.30517705109516446,
+      "targets_per_second": 6.085460392510765,
+      "audio_seconds_per_second": 74.89797406167095,
+      "whole_process_seconds": 97.92823568600579,
+      "torch_peak_bytes": [
+        9859954176,
+        9859953664
+      ],
+      "full_state": {
+        "status": "PASS_CPU_CHECKPOINT_STATE",
+        "step": 28,
+        "epoch": 4,
+        "next_update": 0,
+        "world_size": 2,
+        "model_tensors": 484,
+        "trainable_elements": 42668032,
+        "optimizer_tensors": 484,
+        "ema_tensors": 484,
+        "scheduler_step": 28,
+        "rng_ranks": 2,
+        "scope": "NATIVE_SINGLE_HOST_TWO_L40S_PERFORMANCE_STATE",
+        "limits": [
+          "Structure/finite/coverage checks, not CUDA RNG replay",
+          "Optimizer tensor shape multiset, not model-to-ID name association",
+          "Does not establish effective resumed GPU optimization"
+        ]
+      },
+      "checkpoint": {
+        "size": 427498783,
+        "sha256": "ae8a0a49c5abfc8facf2618dc950944c36a5336ed2d0393daaed1103be23ba6b"
+      },
+      "windows": [
+        {
+          "event": "throughput_window",
+          "seconds": 2.157429555009003,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03288590398733504,
+          "loss": 0.2870470743912917,
+          "fm_loss": 0.2870470743912917,
+          "weighted_referring_loss": 0.0,
+          "step": 14
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.131401234990335,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03401896501600277,
+          "loss": 0.3046109859759991,
+          "fm_loss": 0.3046109859759991,
+          "weighted_referring_loss": 0.0,
+          "step": 21
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.119887282999116,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.04531173099530861,
+          "loss": 0.2398682924417349,
+          "fm_loss": 0.2398682924417349,
+          "weighted_referring_loss": 0.0,
+          "step": 28
+        }
+      ],
+      "ddp_construct_seconds": [
+        1.4420682810014114,
+        1.4415222289972007
+      ],
+      "actual_state_check_seconds": [
+        5.104122382996138,
+        5.769390247005504
+      ],
+      "model_ready_seconds": [
+        59.976259346003644,
+        59.244050272987806
+      ]
+    },
+    {
+      "name": "verified28_a",
+      "mode": "verified_equal",
+      "updates": 28,
+      "timed_updates": 21,
+      "timed_windows": 3,
+      "timed_seconds": 6.4438889709999785,
+      "timed_real_targets": 39,
+      "seconds_per_update": 0.3068518557619037,
+      "targets_per_second": 6.052245806145211,
+      "audio_seconds_per_second": 74.48917915255645,
+      "whole_process_seconds": 96.05828179999662,
+      "torch_peak_bytes": [
+        9862708736,
+        9862708736
+      ],
+      "full_state": {
+        "status": "PASS_CPU_CHECKPOINT_STATE",
+        "step": 28,
+        "epoch": 4,
+        "next_update": 0,
+        "world_size": 2,
+        "model_tensors": 484,
+        "trainable_elements": 42668032,
+        "optimizer_tensors": 484,
+        "ema_tensors": 484,
+        "scheduler_step": 28,
+        "rng_ranks": 2,
+        "scope": "NATIVE_SINGLE_HOST_TWO_L40S_PERFORMANCE_STATE",
+        "limits": [
+          "Structure/finite/coverage checks, not CUDA RNG replay",
+          "Optimizer tensor shape multiset, not model-to-ID name association",
+          "Does not establish effective resumed GPU optimization"
+        ]
+      },
+      "checkpoint": {
+        "size": 427498783,
+        "sha256": "a00fa79b062a3bfab04230200ca8ab6ac6b8d1baf51bc05efda257db1b1c18c3"
+      },
+      "windows": [
+        {
+          "event": "throughput_window",
+          "seconds": 2.145965340998373,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03200739801104646,
+          "loss": 0.2870470743912917,
+          "fm_loss": 0.2870470743912917,
+          "weighted_referring_loss": 0.0,
+          "step": 14
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1541531450056937,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.035922536975704134,
+          "loss": 0.3046109859759991,
+          "fm_loss": 0.3046109859759991,
+          "weighted_referring_loss": 0.0,
+          "step": 21
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.143770484995912,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.040779121991363354,
+          "loss": 0.2398682924417349,
+          "fm_loss": 0.2398682924417349,
+          "weighted_referring_loss": 0.0,
+          "step": 28
+        }
+      ],
+      "ddp_construct_seconds": [
+        0.020904738004901446,
+        0.02135918999556452
+      ],
+      "actual_state_check_seconds": [
+        6.264314008003566,
+        4.618055594997713
+      ],
+      "model_ready_seconds": [
+        59.232844625003054,
+        60.82574511200073
+      ]
+    },
+    {
+      "name": "baseline112_a",
+      "mode": "baseline",
+      "updates": 112,
+      "timed_updates": 98,
+      "timed_windows": 14,
+      "timed_seconds": 30.388750205005636,
+      "timed_real_targets": 182,
+      "seconds_per_update": 0.31008928780617995,
+      "targets_per_second": 5.989058410504192,
+      "audio_seconds_per_second": 73.71148812928237,
+      "whole_process_seconds": 126.9864671940013,
+      "torch_peak_bytes": [
+        9859954176,
+        9859954176
+      ],
+      "full_state": {
+        "status": "PASS_CPU_CHECKPOINT_STATE",
+        "step": 112,
+        "epoch": 16,
+        "next_update": 0,
+        "world_size": 2,
+        "model_tensors": 484,
+        "trainable_elements": 42668032,
+        "optimizer_tensors": 484,
+        "ema_tensors": 484,
+        "scheduler_step": 112,
+        "rng_ranks": 2,
+        "scope": "NATIVE_SINGLE_HOST_TWO_L40S_PERFORMANCE_STATE",
+        "limits": [
+          "Structure/finite/coverage checks, not CUDA RNG replay",
+          "Optimizer tensor shape multiset, not model-to-ID name association",
+          "Does not establish effective resumed GPU optimization"
+        ]
+      },
+      "checkpoint": {
+        "size": 427501661,
+        "sha256": "3c4e0c25f190bc104898c593ac1a79b4133cc0370c5d82d501dd149573475ef6"
+      },
+      "windows": [
+        {
+          "event": "throughput_window",
+          "seconds": 2.1688840050046565,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03469437194871716,
+          "loss": 0.3046109859759991,
+          "fm_loss": 0.3046109859759991,
+          "weighted_referring_loss": 0.0,
+          "step": 21
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.150408510991838,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.04790890800359193,
+          "loss": 0.2398682924417349,
+          "fm_loss": 0.2398682924417349,
+          "weighted_referring_loss": 0.0,
+          "step": 28
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1750679389951983,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03238784697896335,
+          "loss": 0.2784925607534555,
+          "fm_loss": 0.2784925607534555,
+          "weighted_referring_loss": 0.0,
+          "step": 35
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1965885369863827,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03590280600474216,
+          "loss": 0.22575974464416504,
+          "fm_loss": 0.22575974464416504,
+          "weighted_referring_loss": 0.0,
+          "step": 42
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1709569829981774,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.024861123994924128,
+          "loss": 0.31425010240994966,
+          "fm_loss": 0.31425010240994966,
+          "weighted_referring_loss": 0.0,
+          "step": 49
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1684576220141025,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03402830599225126,
+          "loss": 0.2426758179297814,
+          "fm_loss": 0.2426758179297814,
+          "weighted_referring_loss": 0.0,
+          "step": 56
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.124950515004457,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.030619586003012955,
+          "loss": 0.3407118870661809,
+          "fm_loss": 0.3407118870661809,
+          "weighted_referring_loss": 0.0,
+          "step": 63
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.160709832009161,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03509773703990504,
+          "loss": 0.21040861423198992,
+          "fm_loss": 0.21040861423198992,
+          "weighted_referring_loss": 0.0,
+          "step": 70
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.267297503000009,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.042085958033567294,
+          "loss": 0.28995803686288685,
+          "fm_loss": 0.28995803686288685,
+          "weighted_referring_loss": 0.0,
+          "step": 77
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1571998660074314,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.0330096620018594,
+          "loss": 0.27909313715421236,
+          "fm_loss": 0.27909313715421236,
+          "weighted_referring_loss": 0.0,
+          "step": 84
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.169713312003296,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03216012101620436,
+          "loss": 0.24514955740708572,
+          "fm_loss": 0.24514955740708572,
+          "weighted_referring_loss": 0.0,
+          "step": 91
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.162552362991846,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03191283601336181,
+          "loss": 0.20105814933776855,
+          "fm_loss": 0.20105814933776855,
+          "weighted_referring_loss": 0.0,
+          "step": 98
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.152769713997259,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.042238986992742866,
+          "loss": 0.24658832183251014,
+          "fm_loss": 0.24658832183251014,
+          "weighted_referring_loss": 0.0,
+          "step": 105
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1631935030018212,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03865874199254904,
+          "loss": 0.2283485119159405,
+          "fm_loss": 0.2283485119159405,
+          "weighted_referring_loss": 0.0,
+          "step": 112
+        }
+      ],
+      "ddp_construct_seconds": [
+        1.4710906910040649,
+        1.470737697003642
+      ],
+      "actual_state_check_seconds": [
+        5.693825049995212,
+        5.090958096989198
+      ],
+      "model_ready_seconds": [
+        62.45353016699664,
+        63.05932268500328
+      ]
+    },
+    {
+      "name": "baseline112_b",
+      "mode": "baseline",
+      "updates": 112,
+      "timed_updates": 98,
+      "timed_windows": 14,
+      "timed_seconds": 29.48858382695471,
+      "timed_real_targets": 182,
+      "seconds_per_update": 0.30090391660157867,
+      "targets_per_second": 6.171879974569642,
+      "audio_seconds_per_second": 75.96159968701099,
+      "whole_process_seconds": 121.70341143599944,
+      "torch_peak_bytes": [
+        9859954176,
+        9859954176
+      ],
+      "full_state": {
+        "status": "PASS_CPU_CHECKPOINT_STATE",
+        "step": 112,
+        "epoch": 16,
+        "next_update": 0,
+        "world_size": 2,
+        "model_tensors": 484,
+        "trainable_elements": 42668032,
+        "optimizer_tensors": 484,
+        "ema_tensors": 484,
+        "scheduler_step": 112,
+        "rng_ranks": 2,
+        "scope": "NATIVE_SINGLE_HOST_TWO_L40S_PERFORMANCE_STATE",
+        "limits": [
+          "Structure/finite/coverage checks, not CUDA RNG replay",
+          "Optimizer tensor shape multiset, not model-to-ID name association",
+          "Does not establish effective resumed GPU optimization"
+        ]
+      },
+      "checkpoint": {
+        "size": 427501661,
+        "sha256": "29f14d67d3e03a9bf5226114b4c9d63e6d724e633a1f56b4bd7c9c7a849e25c9"
+      },
+      "windows": [
+        {
+          "event": "throughput_window",
+          "seconds": 2.121719143993687,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03439305398205761,
+          "loss": 0.3046109859759991,
+          "fm_loss": 0.3046109859759991,
+          "weighted_referring_loss": 0.0,
+          "step": 21
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.0922653099987656,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.046452553986455314,
+          "loss": 0.2398682924417349,
+          "fm_loss": 0.2398682924417349,
+          "weighted_referring_loss": 0.0,
+          "step": 28
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1095989019959234,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03378465402056463,
+          "loss": 0.2784925607534555,
+          "fm_loss": 0.2784925607534555,
+          "weighted_referring_loss": 0.0,
+          "step": 35
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1193605509906774,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03811562099144794,
+          "loss": 0.22575974464416504,
+          "fm_loss": 0.22575974464416504,
+          "weighted_referring_loss": 0.0,
+          "step": 42
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.114599944005022,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.0322549499978777,
+          "loss": 0.31425010240994966,
+          "fm_loss": 0.31425010240994966,
+          "weighted_referring_loss": 0.0,
+          "step": 49
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.085615172996768,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.04082521596865263,
+          "loss": 0.2426758179297814,
+          "fm_loss": 0.2426758179297814,
+          "weighted_referring_loss": 0.0,
+          "step": 56
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1066123280033935,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.029686832000152208,
+          "loss": 0.3407118870661809,
+          "fm_loss": 0.3407118870661809,
+          "weighted_referring_loss": 0.0,
+          "step": 63
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1163651370006846,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03607082300004549,
+          "loss": 0.21040861423198992,
+          "fm_loss": 0.21040861423198992,
+          "weighted_referring_loss": 0.0,
+          "step": 70
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.109848817999591,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.041085187025601044,
+          "loss": 0.28995803686288685,
+          "fm_loss": 0.28995803686288685,
+          "weighted_referring_loss": 0.0,
+          "step": 77
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.0743238180002663,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.029808800041791983,
+          "loss": 0.27909313715421236,
+          "fm_loss": 0.27909313715421236,
+          "weighted_referring_loss": 0.0,
+          "step": 84
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1270335529989097,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.031435854005394503,
+          "loss": 0.24514955740708572,
+          "fm_loss": 0.24514955740708572,
+          "weighted_referring_loss": 0.0,
+          "step": 91
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.1021675169904483,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.03246831499563996,
+          "loss": 0.20105814933776855,
+          "fm_loss": 0.20105814933776855,
+          "weighted_referring_loss": 0.0,
+          "step": 98
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.121441829993273,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.041436979998252355,
+          "loss": 0.24658832183251014,
+          "fm_loss": 0.24658832183251014,
+          "weighted_referring_loss": 0.0,
+          "step": 105
+        },
+        {
+          "event": "throughput_window",
+          "seconds": 2.0876318019872997,
+          "targets": 13,
+          "audio_seconds": 160.0,
+          "worker_read_cpu_seconds_sum": 0.035862877979525365,
+          "loss": 0.2283485119159405,
+          "fm_loss": 0.2283485119159405,
+          "weighted_referring_loss": 0.0,
+          "step": 112
+        }
+      ],
+      "ddp_construct_seconds": [
+        1.3780988590006018,
+        1.3774640989868203
+      ],
+      "actual_state_check_seconds": [
+        4.597388463997049,
+        5.232703693996882
+      ],
+      "model_ready_seconds": [
+        60.33625570299046,
+        59.70218377301353
+      ]
+    }
+  ],
+  "repeated_baseline": {
+    "runs": 2,
+    "updates_per_run": 112,
+    "warmup_updates_per_run": 14,
+    "timed_updates": 196,
+    "timed_real_targets": 364,
+    "timed_seconds": 59.877334031960345,
+    "seconds_per_update": 0.3054966022038793,
+    "targets_per_second": 6.079094967817205,
+    "run_throughput_spread_percent": 3.0525927705897793
+  },
+  "matched_candidate_state": {
+    "status": "PASS_MATCHED_SAVED_STATE_EXACT",
+    "arms": [
+      "baseline28_a",
+      "verified28_a"
+    ],
+    "compared_keys": [
+      "trainable_model",
+      "optimizer",
+      "scheduler",
+      "ema",
+      "rng_by_rank",
+      "global_step",
+      "epoch",
+      "next_update",
+      "world_size",
+      "data_identity",
+      "verified_base"
+    ],
+    "counters": {
+      "tensors": 2424,
+      "elements": 170682756,
+      "differing_tensors": 0,
+      "differing_scalars": 0
+    },
+    "cpu_seconds": 1.2893999820080353,
+    "scope": "Actual matched28-step checkpoints; not proof of other hardware or lengths"
+  },
+  "communication": {
+    "default_probe": "45-second timeout; entire process group cleaned before fallback",
+    "selected_host_setting": "NCCL_P2P_DISABLE=1",
+    "measurements": [
+      {
+        "operation": "broadcast",
+        "bytes": 16777216,
+        "repetitions": 5,
+        "seconds": [
+          0.003585815997212194,
+          0.0038305519992718473,
+          0.003857101997709833,
+          0.0035126269940519705,
+          0.0036286149988882244
+        ],
+        "median_seconds": 0.0036286149988882244,
+        "payload_GB_per_second": 4.623586686694618
+      },
+      {
+        "operation": "broadcast",
+        "bytes": 134217728,
+        "repetitions": 5,
+        "seconds": [
+          0.03258607200405095,
+          0.032832538010552526,
+          0.03275191900320351,
+          0.03269962999911513,
+          0.03240506400470622
+        ],
+        "median_seconds": 0.03269962999911513,
+        "payload_GB_per_second": 4.104564119032295
+      },
+      {
+        "operation": "all_reduce",
+        "bytes": 16777216,
+        "repetitions": 5,
+        "seconds": [
+          0.004979995006578974,
+          0.0046986899978946894,
+          0.004449262996786274,
+          0.004671430011512712,
+          0.004657719997339882
+        ],
+        "median_seconds": 0.004671430011512712,
+        "payload_GB_per_second": 3.591451859206421
+      },
+      {
+        "operation": "all_reduce",
+        "bytes": 134217728,
+        "repetitions": 5,
+        "seconds": [
+          0.037941931004752405,
+          0.03729773999657482,
+          0.0376708050025627,
+          0.03673563900520094,
+          0.037410819000797346
+        ],
+        "median_seconds": 0.037410819000797346,
+        "payload_GB_per_second": 3.5876714700402412
+      }
+    ],
+    "scope": "Synthetic collective payload timing, not full model training throughput"
+  },
+  "decision": "Keep the published default initialization synchronization. The guarded candidate reduced DDP construction but did not improve measured steady training; its required full-state hashing costs more than the saved native broadcast time.",
+  "reference": {
+    "job": "Longleaf5898550",
+    "hardware": "2A10040GB",
+    "same_recipe_scope": "HF13GT/BF16/micro1/global2",
+    "windows": [
+      {
+        "event": "throughput_window",
+        "seconds": 0.37327402498340234,
+        "targets": 2,
+        "audio_seconds": 20.0,
+        "worker_read_cpu_seconds_sum": 0.02402306196745485,
+        "loss": 0.32209116220474243,
+        "fm_loss": 0.32209116220474243,
+        "weighted_referring_loss": 0.0,
+        "step": 6
+      },
+      {
+        "event": "throughput_window",
+        "seconds": 0.3767165649915114,
+        "targets": 2,
+        "audio_seconds": 40.0,
+        "worker_read_cpu_seconds_sum": 0.024044543970376253,
+        "loss": 0.04665607586503029,
+        "fm_loss": 0.04665607586503029,
+        "weighted_referring_loss": 0.0,
+        "step": 7
+      },
+      {
+        "event": "throughput_window",
+        "seconds": 0.41943478904431686,
+        "targets": 2,
+        "audio_seconds": 20.0,
+        "worker_read_cpu_seconds_sum": 0.0008408509893342853,
+        "loss": 0.29218289256095886,
+        "fm_loss": 0.29218289256095886,
+        "weighted_referring_loss": 0.0,
+        "step": 8
+      },
+      {
+        "event": "throughput_window",
+        "seconds": 0.3742043540114537,
+        "targets": 1,
+        "audio_seconds": 20.0,
+        "worker_read_cpu_seconds_sum": 0.004110355977900326,
+        "loss": 0.02032293751835823,
+        "fm_loss": 0.02032293751835823,
+        "weighted_referring_loss": 0.0,
+        "step": 9
+      }
+    ],
+    "limits": "Four earlier single-update windows, not a matched repeated hardware A/B or proof of the fastest historical SOLOs setting; library versions and window composition are not controlled across machines."
+  },
+  "limits": [
+    "Small engineering selection; not full-corpus production throughput, model-quality acceptance or a global optimum",
+    "No new full285 scoring, artifact upload, or GPU resume in these speed arms",
+    "1/4/8-card execution, H200/12-card hardware and fast-fabric multi-node scaling remain untested",
+    "Earlier distinct-physical-node save/resume passed separately over a slow link; native speed does not transfer to that topology",
+    "No new runtime optimization is enabled by this performance update"
+  ]
+}
