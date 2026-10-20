@@ -40,7 +40,7 @@ No automatic server cleanup is enabled. Keep data and checkpoints until the nece
 
 ## Maintainer acceptance
 
-Passed: 93 source tests and eleven bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
+Passed: 101 source tests and eleven bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
 
 Remaining: GPU execution from the fresh environment; integrated AVSpeech feature-cache preparation; full real validation features/scoring; downloaded-checkpoint continuation; automatic best/last retention; and an integrated command that completes these stages. The current public training entry has passed the two-rank engineering pilot, including its explicit subset gate and half-epoch schedule.
 
@@ -93,3 +93,11 @@ The generic tool passed a real Linux CPU test on three HF composites, eight targ
 Managed clusters can run `--phase download` on their transfer facility followed by `--phase prepare` on a CPU allocation. These real split phases passed on the three-video pilot, including a second CPU invocation that reused all completed composites. The transfer phase reused existing verified media and contacted HF for the pinned metadata; it was not an empty-cache bulk-download test. The combined standalone mode passed local control-flow regressions only.
 
 The root bootstrap accepts `--install --prepare-avspeech --avspeech-revision COMMIT` plus either `--avspeech-ids ID1 ID2` or `--avspeech-all`; after environment checks it invokes this same combined tool. `start.sh` forwards these optional arguments and retains the fixed validation gate. This new bootstrap wiring passed mocked-stage/shell regressions; its full fresh-machine execution is not yet accepted. GPU feature preparation, GT-span conditioning and actual training remain separate pending stages. Nothing in this command certifies a completed training handoff.
+
+## Training GT support preparation
+
+`tools/prepare_training_spans.py --media /path/to/download --prepared /path/to/prepared --output /path/to/support` audits the original AVSpeech supervision rule on CPU: each source occupies one ten-second interval at its composite offset; simultaneous targets use the whole ten seconds. Silence within that interval is retained. This is source-placement supervision, not inferred voice activity. All prompts, categories, target identities and the rendered video/crop are preserved; validation inputs are not changed.
+
+The tool checks frozen recipes, download receipts, prepared target/residual hashes and exact zeros outside temporal support. Original recipe identities and archived JSON hashes are recorded separately because public archival replaces host paths with provenance URIs. Changed media, redirected GT paths or modified prompts invalidate readiness.
+
+A real Linux CPU test passed on three HF composites, eight targets and all 13 prompts, including a repeat invocation and an injected out-of-support waveform rejection. All 13 official anchor tensors exactly matched the historical AVSpeech conditioning implementation. Eight new regressions bring the source suite to 101 tests. This tool is separately callable: automatic workflow integration, GPU forward with these anchors and formal GT-conditioned training remain untested. It does not certify full training readiness.

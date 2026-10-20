@@ -5,7 +5,7 @@
   "production_changed": false,
   "scope": "Code-only preparation; no automatic full training or dataset publication",
   "local_tests": {
-    "source": 93,
+    "source": 101,
     "bootstrap": 11
   },
   "environment": {
@@ -53,7 +53,14 @@
     "selected_media_preparation_scope": "ENGINEERING_SUBSET_NOT_GPU_CACHE_GT_ANCHORS_OR_FULL_PIPELINE",
     "download_prepare_workflow": "PASS_REAL_TRANSFER_REUSE_TO_CPU_PREPARE_REPEAT_HF3_TARGET8_PROMPT13",
     "combined_standalone_preparation": "LOCAL_CONTROL_FLOW_PASS_REAL_COMBINED_EXECUTION_PENDING",
-    "bootstrap_media_wiring": "MOCKED_STAGE_AND_REAL_SHELL_REGRESSIONS_PASS_NOT_FRESH_MACHINE_ACCEPTED"
+    "bootstrap_media_wiring": "MOCKED_STAGE_AND_REAL_SHELL_REGRESSIONS_PASS_NOT_FRESH_MACHINE_ACCEPTED",
+    "training_gt_support": {
+      "cpu": "PASS_REAL_3_VIDEOS_8_TARGETS_13_PROMPTS_REPEAT_OFFICIAL_ANCHORS_EQUAL_LEGACY",
+      "rule": "TEN_SECOND_SOURCE_PLACEMENT_NOT_VAD",
+      "gpu_forward": "NOT_TESTED",
+      "automatic_integration": "NOT_IMPLEMENTED",
+      "validation": "UNCHANGED"
+    }
   },
   "wandb": {
     "entity": "terryshen066-fudan-university",
