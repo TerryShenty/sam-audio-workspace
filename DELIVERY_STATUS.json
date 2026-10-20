@@ -1,5 +1,5 @@
 {
-  "status": "ENGINEERING_PREVIEW_END_TO_END_ACCEPTANCE_IN_PROGRESS",
+  "status": "ENGINEERING_PREVIEW_SINGLE_NODE_WORKFLOW_AND_TWO_NODE_SAVE_RESUME_ACCEPTED",
   "updated_utc": "2026-10-20",
   "public_data_complete": true,
   "default_profile": {
@@ -34,27 +34,56 @@
     "New training GT cache; all 285 public-media validation examples freshly encoded and audited",
     "Prepared-bundle CLI: actual two-rank GT update, full285 scoring, complete saved state, independent W&B metric readback and automatic finalization",
     "Earlier integrated engineering workflow: three full285 validations, automatic best/last upload, independent download and effective two-rank optimizer continuation",
-    "Current standalone entry: real download and CPU preparation, including pinned offline T5/tokenizer identity"
+    "Current standalone entry: real download and CPU preparation, including pinned offline T5/tokenizer identity",
+    "Same-entry fresh training/public285 features and new0→9, three full285 passes, complete CPU checkpoint state, 30 cloud fields and automatic best/last archive",
+    "Two distinct physical cloud nodes L40S48/L4048: real0→2/save/new-process2→3 plus complete saved-state CPU audit"
   ],
   "current_standalone": {
-    "source_parent_files": 146,
-    "local_source_tests": 144,
-    "encoding": "RUNNING_OR_PENDING_ACCEPTANCE",
-    "export": "NOT_YET_ACCEPTED",
-    "training_and_finalization": "NOT_YET_ACCEPTED"
+    "worker_source_files": 146,
+    "encoding": "PASS",
+    "export": "PASS",
+    "training_and_finalization": "PASS",
+    "phase_separation": "CPU/transfer/GPU stages executed sequentially",
+    "reuse": [
+      "installed environment",
+      "model bytes",
+      "raw download bytes"
+    ],
+    "newly_generated": [
+      "training features",
+      "public285 validation features",
+      "training run"
+    ]
   },
   "remaining": [
-    "Finish the current same-entry new training and full285 validation encoding, export, training and finalization",
-    "Verify this published root bootstrap anonymously by immutable commit",
-    "Full ordinary-server single-invocation execution from a fresh installation has not been observed"
+    "Published release anonymous immutable verification",
+    "Separate terminal-checkpoint model-path relocation candidate GPU and CPU acceptance; candidate excluded here",
+    "Actual1/4/8-card and H200 hardware tests, fast-network scaling and multi-node full285",
+    "Single uninterrupted cold invocation on an empty ordinary server",
+    "Full-corpus/30–50second training resource and quality acceptance"
   ],
   "limits": [
     "Engineering profile only; full93942 long production training is not launched or validated",
-    "Measured on two A100 40GB GPUs with 64GB host RAM; other hardware throughput and 30-50s training examples are untested",
+    "Two A10040GB single-node workflow and two48GB L40S/L40 physical-node save/resume are measured; other layouts and30–50s examples remain untested",
     "HF access approval for facebook/sam-audio-large-tv and the runner own W&B credentials are required",
     "xformers native ABI warning remains; the tested SAM path uses SDPA",
     "CPU state audits check structure/finiteness and CPU RNG restoration; they do not prove CUDA RNG replay or optimizer parameter-name mapping",
     "Cluster GPU work defers network archival to a transfer facility; ordinary-server immediate archival is not a newly accepted full-flow test"
   ],
-  "automatic_cleanup": false
+  "automatic_cleanup": false,
+  "multinode": {
+    "worker_source_files": 152,
+    "source_manifest_sha256": "9d3363c1e6a5bcd1c3a9ec46330942ea1b4cb56000d3a50c9818f0e7003ddf0e",
+    "actual_shape": "2nodes x1GPU",
+    "hardware": [
+      "L40S48",
+      "L4048"
+    ],
+    "actual_updates": "0→2; new-process2→3",
+    "checkpoint_cpu_audit": "PASS",
+    "communication": "Cross-region TCP, about12MB/s observed; not efficient-cluster acceptance",
+    "cloud_metrics": "NOT_TESTED_OFFLINE_ENGINEERING",
+    "full285": "NOT_TESTED_ACROSS_NODES"
+  },
+  "source_runtime_basis": "Exact GPU-accepted152 worker code; metadata/docs differ; pending153 relocation change excluded"
 }

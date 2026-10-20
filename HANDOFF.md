@@ -1,13 +1,21 @@
-# Current handoff status
+# Release acceptance
 
-This is an engineering preview, not a production acceptance claim.
-See README.md for the current command and DELIVERY_STATUS.json for exact scope.
+The single-server entry has completed new training and public285 feature
+generation, independent export, nine real GT updates, three complete validations,
+CPU checkpoint audit, independent cloud-metric readback and automatic archival.
+CPU/transfer/GPU phases were separated; installed environment/model/raw bytes
+were explicitly reused. This does not claim an empty ordinary server completed
+one uninterrupted cold invocation.
 
-Both public data releases are complete. The prepared-bundle public-input GPU,
-full285 scoring, state audit and finalization have passed. The current unified
-raw-input entry has passed real download and CPU preparation; its new encoding,
-export and fresh training/finalization connection remain under acceptance.
+The included multi-node runtime has completed real SAM 0→2 training, checkpoint
+save and fresh-process 2→3 resume on two different physical servers (one L40S
+and one L40). Saved state and actual updates were audited. This is functional
+evidence, not a fast-network or H200/large-cluster performance claim.
 
-Historical accepted stages and failed predecessors remain in local audit records.
-Do not use older packaged status files as evidence about the current release.
-No private source maps, credentials or training checkpoints are included here.
+One/four/eight-card planning and strict guards have CPU coverage; those GPU
+counts are not accepted hardware tests. The model-path relocation extension
+candidate remains excluded pending its own runtime test. See DELIVERY_STATUS
+and the linked hardware/communication guides for the complete scope.
+
+The package contains no credentials, model weights, checkpoints or private
+source maps. Existing historical proof and immutable artifacts remain retained.
