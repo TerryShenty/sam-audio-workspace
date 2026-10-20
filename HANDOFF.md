@@ -40,7 +40,7 @@ No automatic server cleanup is enabled. Keep data and checkpoints until the nece
 
 ## Maintainer acceptance
 
-Passed: 78 source tests and four bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
+Passed: 78 source tests and seven bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
 
 Remaining: GPU execution from the fresh environment; integrated AVSpeech feature-cache preparation; full real validation features/scoring; downloaded-checkpoint continuation; automatic best/last retention; and an integrated command that completes these stages. The current public training entry has passed the two-rank engineering pilot, including its explicit subset gate and half-epoch schedule.
 
