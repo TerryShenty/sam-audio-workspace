@@ -37,9 +37,33 @@ class PreparationTests(unittest.TestCase):
     bootstrap.main()
    self.assertTrue(run.call_args.args[0][1].endswith('tools/download_validation_data.py'))
    self.assertIn('dataset_lookup_error',json.loads((Path(d)/'MACHINE_REPORT.json').read_text()))
+ def test_avspeech_follows_successful_environment_check(self):
+  payload=Path(bootstrap.ARCHIVE).read_bytes()
+  def fetch(url):
+   if url.endswith(bootstrap.ARCHIVE):return payload
+   raise OSError('Optional current-release lookup unavailable')
+  with tempfile.TemporaryDirectory() as d,patch.object(bootstrap,'fetch',side_effect=fetch),patch.object(bootstrap.shutil,'which',side_effect=lambda n:'/mock/'+n if n in ['python3.12','git'] else None),patch.object(bootstrap.platform,'platform',return_value='Linux-test'),patch.object(bootstrap.platform,'system',return_value='Linux'),patch.object(bootstrap.platform,'machine',return_value='x86_64'),patch.object(bootstrap.subprocess,'run',return_value=SimpleNamespace(returncode=0)) as run,patch('sys.argv',['bootstrap.py','--directory',d,'--install','--prepare-avspeech','--avspeech-revision','a'*40,'--avspeech-ids','clip']),contextlib.redirect_stdout(io.StringIO()):
+   bootstrap.main()
+   calls=[c.args[0] for c in run.call_args_list]
+   self.assertEqual(calls[0],['bash','setup.sh'])
+   self.assertIn('preflight.py',calls[1][2])
+   self.assertIn('prepare_avspeech_workflow.py',calls[2][2])
+   self.assertEqual(calls[2][-4:],['--revision','a'*40,'--ids','clip'])
+ def test_invalid_avspeech_selection_stops_before_fetch(self):
+  with tempfile.TemporaryDirectory() as d,patch.object(bootstrap,'fetch') as fetch,patch('sys.argv',['bootstrap.py','--directory',d,'--install','--prepare-avspeech','--avspeech-revision','main','--avspeech-all']),contextlib.redirect_stderr(io.StringIO()):
+   with self.assertRaises(SystemExit):bootstrap.main()
+   fetch.assert_not_called()
+ def test_environment_failure_prevents_download_and_audio_preparation(self):
+  payload=Path(bootstrap.ARCHIVE).read_bytes()
+  def fetch(url):
+   if url.endswith(bootstrap.ARCHIVE):return payload
+   raise OSError('Optional metadata unavailable')
+  with tempfile.TemporaryDirectory() as d,patch.object(bootstrap,'fetch',side_effect=fetch),patch.object(bootstrap.shutil,'which',side_effect=lambda n:'/mock/'+n if n in ['python3.12','git'] else None),patch.object(bootstrap.platform,'platform',return_value='Linux-test'),patch.object(bootstrap.platform,'system',return_value='Linux'),patch.object(bootstrap.platform,'machine',return_value='x86_64'),patch.object(bootstrap.subprocess,'run',return_value=SimpleNamespace(returncode=7)) as run,patch('sys.argv',['bootstrap.py','--directory',d,'--install','--prepare-avspeech','--avspeech-revision','a'*40,'--avspeech-all']),contextlib.redirect_stdout(io.StringIO()):
+   with self.assertRaises(SystemExit):bootstrap.main()
+   self.assertEqual(run.call_count,1)
 class ShellEntryTests(unittest.TestCase):
  """Real shell control flow with stub network/host checks; not a Linux install."""
- def run_shell(self, directory, *, missing_git=False, bootstrap_exit=0):
+ def run_shell(self, directory, *, missing_git=False, bootstrap_exit=0, options=()):
   root=Path(directory);bin_dir=root/'bin';bin_dir.mkdir()
   for name in ['mkdir','mktemp','rm','tee']:
    (bin_dir/name).symlink_to(shutil.which(name))
@@ -54,7 +78,7 @@ class ShellEntryTests(unittest.TestCase):
   env=dict(os.environ,PATH=str(bin_dir),ENTRY_TEST_RECEIPT=str(root/'called.txt'),
            ENTRY_TEST_BOOTSTRAP_EXIT=str(bootstrap_exit))
   result=subprocess.run(['/bin/bash',str(Path(__file__).with_name('start.sh').resolve()),
-                         str(root/'workspace')],env=env,text=True,capture_output=True,timeout=10)
+                         str(root/'workspace'),*options],env=env,text=True,capture_output=True,timeout=10)
   return result,root/'called.txt'
  def test_no_system_ffmpeg_reaches_automatic_preparation(self):
   with tempfile.TemporaryDirectory() as d:
@@ -76,4 +100,13 @@ class ShellEntryTests(unittest.TestCase):
    self.assertEqual(result.returncode,23)
    self.assertIn('Preparation stopped.',result.stdout)
    self.assertNotIn('Validation media and environment prepared.',result.stdout)
+ def test_selection_forwarded_without_removing_validation_gate(self):
+  options=['--prepare-avspeech','--avspeech-revision','a'*40,'--avspeech-ids','clip']
+  with tempfile.TemporaryDirectory() as d:
+   result,receipt=self.run_shell(d,options=options)
+   self.assertEqual(result.returncode,0,result.stderr)
+   args=receipt.read_text().splitlines()
+   self.assertIn('--prepare-validation',args)
+   self.assertIn('--install',args)
+   self.assertEqual(args[-len(options):],options)
 if __name__=='__main__':unittest.main()

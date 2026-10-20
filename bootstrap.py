@@ -2,11 +2,11 @@
 """Download verified preparation source, inspect host/release, optionally install.
 No sudo, GPU allocation, training, dataset bulk download or deletion.
 """
-import argparse, hashlib, json, os, platform, shutil, subprocess, sys, tarfile, urllib.request, tempfile, time
+import argparse, hashlib, json, os, platform, re, shutil, subprocess, sys, tarfile, urllib.request, tempfile, time
 from pathlib import Path
 COMMIT = 'main'
-SHA = 'c9eb22309e783b14fb97abe42eda11db707a03b162f228f8452ad4bcec4fa22d'
-ARCHIVE = 'workspace-source-c9eb22309e783b14.tar.gz'
+SHA = '2eced93e64d2d413abf7568f8deb6a72e8aa1cab3e25e39d2a6aa3613673e692'
+ARCHIVE = 'workspace-source-2eced93e64d2d413.tar.gz'
 BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/' + COMMIT
 DATASET = 'TerryShenty/avspeech-93942'
 def fetch(url):
@@ -30,7 +30,19 @@ def main():
     p.add_argument('--directory', type=Path, default=Path('sam-audio-delivery'))
     p.add_argument('--install', action='store_true', help='Attempt experimental Linux reference installation; not GPU-certified')
     p.add_argument('--prepare-validation', action='store_true', help='Download and verify the fixed MSDWild78 + EasyCom207 media independently of AVSpeech readiness')
+    p.add_argument('--prepare-avspeech', action='store_true', help='After installation, download a pinned selection and prepare CPU audio; no GPU cache or training')
+    p.add_argument('--avspeech-revision', help='Immutable 40-character selected-release commit')
+    selection=p.add_mutually_exclusive_group()
+    selection.add_argument('--avspeech-ids', nargs='+', help='Explicit engineering subset composite IDs')
+    selection.add_argument('--avspeech-all', action='store_true', help='Require every video and GT in the pinned release to be available')
     o=p.parse_args(); root=o.directory.resolve()
+    if o.prepare_avspeech:
+        if not o.install or not re.fullmatch(r'[0-9a-f]{40}',o.avspeech_revision or ''):
+            p.error('--prepare-avspeech requires --install and an immutable --avspeech-revision')
+        if not (o.avspeech_ids or o.avspeech_all):
+            p.error('--prepare-avspeech requires --avspeech-ids or --avspeech-all')
+    elif o.avspeech_revision or o.avspeech_ids or o.avspeech_all:
+        p.error('AVSpeech selection options require --prepare-avspeech')
     if sys.version_info < (3, 12):
         raise SystemExit('Use Python 3.12 or newer for the preparation entry (installation uses 3.12).')
     root.mkdir(parents=True, exist_ok=True)
@@ -45,7 +57,7 @@ def main():
                 if dest.is_symlink() or not dest.is_file() or dest.read_bytes()!=source.read_bytes():
                     raise SystemExit('Existing source differs: '+str(dest)+'. Choose a new --directory; no files overwritten.')
         else: (stage/'training').rename(target)
-    report={'code_commit':COMMIT,'source_sha256':SHA,'host':platform.platform(),'dataset':DATASET,'training_ready':False,'notes':['Fresh CPU installation passed on reference Linux; GPU and full delivery acceptance remain pending','No bulk data download or training started']}
+    report={'code_commit':COMMIT,'source_sha256':SHA,'host':platform.platform(),'dataset':DATASET,'training_ready':False,'notes':['Fresh CPU installation passed on reference Linux; GPU and full delivery acceptance remain pending','Inspection does not start training; requested preparation stages run after this report']}
     report['tools']={k:shutil.which(k) for k in ['python3.12','git','ffmpeg','nvidia-smi']}
     if report['tools']['nvidia-smi']:
         try:
@@ -75,9 +87,19 @@ def main():
         result=subprocess.run(['bash','setup.sh'],cwd=root/'training',stdout=log,stderr=subprocess.STDOUT)
     if result.returncode: raise SystemExit('Installation failed; inspect '+str(root/'installation.log')+'. Training not started.')
     result=subprocess.run(['bash','-c',
-        'source tools/media_env.sh; exec .venv/bin/python tools/preflight.py --output "$1"',
+        'source tools/media_env.sh && exec .venv/bin/python tools/preflight.py --output "$1"',
         'runtime-preflight',str(root/'ENVIRONMENT_REPORT.json')],cwd=root/'training')
     if result.returncode: raise SystemExit('Environment check failed. Training not started.')
+    if o.prepare_avspeech:
+        command=['bash','-c',
+                 'source tools/media_env.sh && exec .venv/bin/python tools/prepare_avspeech_workflow.py "$@"',
+                 'avspeech-preparation','--directory',str(root/'avspeech'),
+                 '--revision',o.avspeech_revision]
+        command += ['--all'] if o.avspeech_all else ['--ids',*o.avspeech_ids]
+        result=subprocess.run(command,cwd=root/'training')
+        if result.returncode:
+            raise SystemExit('AVSpeech CPU preparation failed; inspect avspeech/attempts logs. No training started.')
+        print('Selected AVSpeech CPU audio prepared. GPU features and GT-span conditioning remain required.')
     print('Dependency checks passed. GPU train/eval/resume and complete dataset/cache acceptance STILL REQUIRED.')
 if __name__=='__main__':
     try: main()

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # One entry for environment preparation. Never starts a long training run.
 set -euo pipefail
-if [[ "${1:-}" == "--help" || $# -ne 1 ]]; then
-  echo 'Usage: bash start.sh /absolute/path/to/workspace'
+if [[ "${1:-}" == "--help" || $# -lt 1 ]]; then
+  echo 'Usage: bash start.sh /absolute/path/to/workspace [bootstrap preparation options]'
   echo 'Prepares MSDWild78 + EasyCom207 validation media and an isolated environment.'
   echo 'Requires Linux x86_64, Python 3.12, git, curl and outbound HTTPS.'
   echo 'Setup installs the pinned shared FFmpeg runtime in the workspace.'
@@ -11,6 +11,7 @@ if [[ "${1:-}" == "--help" || $# -ne 1 ]]; then
 fi
 case "$1" in /*) ;; *) echo 'Choose an absolute workspace path.' >&2; exit 2;; esac
 TASK_DIR="$1"
+shift
 for command_name in curl git; do
   command -v "$command_name" >/dev/null || { echo "Server prerequisite missing: $command_name. Ask its owner to install it once." >&2; exit 2; }
 done
@@ -23,7 +24,7 @@ TASK_BOOTSTRAP=$(mktemp)
 trap 'rm -f "$TASK_BOOTSTRAP"' EXIT
 curl -fL --retry 3 https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/bootstrap.py -o "$TASK_BOOTSTRAP"
 set +e
-"$TASK_PYTHON" "$TASK_BOOTSTRAP" --directory "$TASK_DIR" --prepare-validation --install 2>&1 | tee -a "$TASK_LOG"
+"$TASK_PYTHON" "$TASK_BOOTSTRAP" --directory "$TASK_DIR" --prepare-validation --install "$@" 2>&1 | tee -a "$TASK_LOG"
 TASK_RC=${PIPESTATUS[0]}
 set -e
 if (( TASK_RC != 0 )); then

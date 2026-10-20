@@ -14,7 +14,7 @@ See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json
 
 ## Evidence and remaining work
 
-- 85 source regression tests and seven bootstrap tests pass.
+- 93 source regression tests and eleven bootstrap tests pass.
 - The Linux dependency repair passed real CPU video decoding, dependency checks and repeated invocation. It corrects metadata in the known decord wheel without changing its native binary. A subsequent Linux test installed both a new Python virtual environment and a new shared FFmpeg prefix, repeated setup, and passed dependency/import/native-decoding checks. It reused package download bytes only, not an installed environment. GPU execution from that fresh environment remains unverified.
 - A small single-A100 engineering test completed training, a new-process checkpoint restore and a further update, followed by finite inference. It used an older harness and a small SOLOs subset.
 - Engineering checkpoints were uploaded to W&B and downloaded into fresh caches, with file sizes and SHA256 verified. Continuing training from those downloaded checkpoints is still pending.
@@ -61,4 +61,13 @@ After an independently prepared dataset/cache and environment are ready, run.sh 
 
 After `tools/download_selected_avspeech.py` has verified a pinned selection, `tools/prepare_selected_media.py --media /path/to/download --output /path/to/prepared` verifies its media against the download receipts, decodes the existing lossless target/residual audio, and checks that their sum matches the original mixture. It preserves every selected prompt and its category, subtype, target identity and provenance. Completed composites are checked before reuse; interrupted staging files are retained, and changed inputs or outputs cannot silently pass. Hashing and decoding must run on CPU before a Slurm GPU allocation.
 
-The generic tool passed a real Linux CPU test on three HF composites, eight targets and 13 prompts: all 16 decoded target/residual waveforms exactly matched the earlier accepted preparation, and repeat invocation reused all three composites without decoding. Seven additional local regressions cover interruption, corruption and completeness. This remains an explicitly marked engineering subset. It does not prepare GPU features, GT-span anchors, full training data or launch training; those stages and their integration into the top-level command remain pending.
+The generic tool passed a real Linux CPU test on three HF composites, eight targets and 13 prompts: all 16 decoded target/residual waveforms exactly matched the earlier accepted preparation, and repeat invocation reused all three composites without decoding. Seven additional local regressions cover interruption, corruption and completeness. This remains an explicitly marked engineering subset. It does not prepare GPU features, GT-span anchors, full training data or launch training; the GPU stages and complete training integration remain pending.
+
+
+## Combined download and CPU preparation
+
+`tools/prepare_avspeech_workflow.py --directory /data/selection --revision COMMIT --ids ID1 ID2` combines immutable HF selection download with CPU audio preparation. Use `--all` instead of `--ids` only when every video, target and prompt in that frozen release is available. A workspace stays bound to its original selection. A failed download cannot trigger decoding, and failed or stale CPU receipts cannot report readiness. Repeating checks existing content before reuse; no server files are deleted.
+
+Managed clusters can run `--phase download` on their transfer facility followed by `--phase prepare` on a CPU allocation. These real split phases passed on the three-video pilot, including a second CPU invocation that reused all completed composites. The transfer phase reused existing verified media and contacted HF for the pinned metadata; it was not an empty-cache bulk-download test. The combined standalone mode passed local control-flow regressions only.
+
+The root bootstrap accepts `--install --prepare-avspeech --avspeech-revision COMMIT` plus either `--avspeech-ids ID1 ID2` or `--avspeech-all`; after environment checks it invokes this same combined tool. `start.sh` forwards these optional arguments and retains the fixed validation gate. This new bootstrap wiring passed mocked-stage/shell regressions; its full fresh-machine execution is not yet accepted. GPU feature preparation, GT-span conditioning and actual training remain separate pending stages. Nothing in this command certifies a completed training handoff.
