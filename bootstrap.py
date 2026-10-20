@@ -1,107 +1,149 @@
 #!/usr/bin/env python3
-"""Download verified preparation source, inspect host/release, optionally install.
-No sudo, GPU allocation, training, dataset bulk download or deletion.
-"""
-import argparse, hashlib, json, os, platform, re, shutil, subprocess, sys, tarfile, urllib.request, tempfile, time
-from pathlib import Path
-COMMIT = 'main'
-SHA = '8cfb2ece9b2600ec03d8904c2534bfab55a3aafb45e4fa4b7ff70d7d4df2fb20'
-ARCHIVE = 'workspace-source-8cfb2ece9b2600ec.tar.gz'
-BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/' + COMMIT
-DATASET = 'TerryShenty/avspeech-93942'
-def fetch(url):
-    for attempt in range(3):
-        try:
-            with urllib.request.urlopen(url, timeout=60) as r: return r.read()
-        except (OSError, TimeoutError):
-            if attempt == 2: raise
-            time.sleep(attempt + 1)
-def unpack(payload, root):
-    if hashlib.sha256(payload).hexdigest() != SHA: raise ValueError('Source SHA256 mismatch')
-    import io
-    with tarfile.open(fileobj=io.BytesIO(payload), mode='r:gz') as t:
-        for m in t.getmembers():
-            parts=Path(m.name).parts
-            if not parts or parts[0]!='training' or '..' in parts or m.name.startswith('/') or not (m.isfile() or m.isdir()):
-                raise ValueError('Unsafe source archive member')
-        t.extractall(root, filter='data')
-def main():
-    p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--directory', type=Path, default=Path('sam-audio-delivery'))
-    p.add_argument('--install', action='store_true', help='Attempt experimental Linux reference installation; not GPU-certified')
-    p.add_argument('--prepare-validation', action='store_true', help='Download and verify the fixed MSDWild78 + EasyCom207 media independently of AVSpeech readiness')
-    p.add_argument('--prepare-avspeech', action='store_true', help='After installation, download a pinned selection and prepare CPU audio and GT support; no GPU cache or training')
-    p.add_argument('--avspeech-revision', help='Immutable 40-character selected-release commit')
-    selection=p.add_mutually_exclusive_group()
-    selection.add_argument('--avspeech-ids', nargs='+', help='Explicit engineering subset composite IDs')
-    selection.add_argument('--avspeech-all', action='store_true', help='Require every video and GT in the pinned release to be available')
-    o=p.parse_args(); root=o.directory.resolve()
-    if o.prepare_avspeech:
-        if not o.install or not re.fullmatch(r'[0-9a-f]{40}',o.avspeech_revision or ''):
-            p.error('--prepare-avspeech requires --install and an immutable --avspeech-revision')
-        if not (o.avspeech_ids or o.avspeech_all):
-            p.error('--prepare-avspeech requires --avspeech-ids or --avspeech-all')
-    elif o.avspeech_revision or o.avspeech_ids or o.avspeech_all:
-        p.error('AVSpeech selection options require --prepare-avspeech')
-    if sys.version_info < (3, 12):
-        raise SystemExit('Use Python 3.12 or newer for the preparation entry (installation uses 3.12).')
-    root.mkdir(parents=True, exist_ok=True)
-    payload=fetch(BASE+'/'+ARCHIVE)
-    with tempfile.TemporaryDirectory(dir=root) as staging:
-        stage=Path(staging);unpack(payload,stage)
-        target=root/'training'
-        if target.exists():
-            for source in (stage/'training').rglob('*'):
-                if not source.is_file(): continue
-                dest=target/source.relative_to(stage/'training')
-                if dest.is_symlink() or not dest.is_file() or dest.read_bytes()!=source.read_bytes():
-                    raise SystemExit('Existing source differs: '+str(dest)+'. Choose a new --directory; no files overwritten.')
-        else: (stage/'training').rename(target)
-    report={'code_commit':COMMIT,'source_sha256':SHA,'host':platform.platform(),'dataset':DATASET,'training_ready':False,'notes':['Fresh CPU installation passed on reference Linux; GPU and full delivery acceptance remain pending','Inspection does not start training; requested preparation stages run after this report']}
-    report['tools']={k:shutil.which(k) for k in ['python3.12','git','ffmpeg','nvidia-smi']}
-    if report['tools']['nvidia-smi']:
-        try:
-            q=subprocess.run(['nvidia-smi','--query-gpu=name,driver_version,memory.total','--format=csv,noheader'],capture_output=True,text=True,timeout=30)
-            report['gpu']=q.stdout.strip() if q.returncode==0 else 'nvidia-smi failed'
-        except (OSError, subprocess.TimeoutExpired) as exc: report['gpu_error']=str(exc)
+"""Verify and run the pinned SAM Audio engineering preview."""
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path, PurePosixPath
+import platform
+import shutil
+import subprocess
+import sys
+import tarfile
+import tempfile
+import urllib.request
+
+ARCHIVE = 'workspace-source-433e6369b9314479.tar.gz'
+ARCHIVE_SHA256 = '433e6369b9314479b720c8862e079fcaab45e42aa4ba4aa07b755c5747088596'
+MANIFEST_SHA256 = '29dc9a18e74bf0e94cfe373b4bd666a70620d80cced9d72604921d866a8649c6'
+REPOSITORY = 'TerryShenty/sam-audio-workspace'
+ROOT = Path(__file__).resolve().parent
+
+
+def digest(path):
+    h = hashlib.sha256()
+    with path.open('rb') as f:
+        for chunk in iter(lambda: f.read(1048576), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def checked_directory(path):
+    path = path.absolute()
+    if any(p.is_symlink() for p in (path, *path.parents)):
+        raise ValueError('Directory path contains a symlink: ' + str(path))
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def verify_source(source):
+    if source.is_symlink():
+        raise ValueError('Source directory must not be a symlink')
+    manifest = source / 'SOURCE_MANIFEST.json'
+    if manifest.is_symlink() or digest(manifest) != MANIFEST_SHA256:
+        raise ValueError('Source manifest mismatch')
+    files = json.loads(manifest.read_text())
+    for name, expected in files.items():
+        rel = PurePosixPath(name)
+        if rel.is_absolute() or '..' in rel.parts or str(rel) != name:
+            raise ValueError('Unsafe manifest path')
+        path = source / name
+        if any(p.is_symlink() for p in [path, *path.parents] if p != source.parent):
+            raise ValueError('Symlink in source: ' + name)
+        if not path.is_file() or digest(path) != expected:
+            raise ValueError('Source file changed: ' + name)
+    return files
+
+
+def extract_verified(archive, destination):
+    if archive.is_symlink() or digest(archive) != ARCHIVE_SHA256:
+        raise ValueError('Source archive SHA-256 mismatch')
+    if destination.exists() or destination.is_symlink():
+        verify_source(destination)
+        return destination
+    checked_directory(destination.parent)
+    with tempfile.TemporaryDirectory(prefix='.extract-', dir=destination.parent) as tmp:
+        tmp = Path(tmp)
+        seen = set()
+        with tarfile.open(archive, 'r:gz') as tf:
+            for item in tf:
+                path = PurePosixPath(item.name)
+                if (not item.isfile() or path.is_absolute() or '..' in path.parts
+                        or len(path.parts) < 2 or path.parts[0] != 'training'
+                        or str(path) != item.name or item.name in seen):
+                    raise ValueError('Unsafe or duplicate source archive entry')
+                seen.add(item.name)
+                out = tmp.joinpath(*path.parts)
+                out.parent.mkdir(parents=True, exist_ok=True)
+                stream = tf.extractfile(item)
+                with out.open('xb') as f:
+                    shutil.copyfileobj(stream, f)
+                out.chmod(0o755 if item.mode & 0o111 else 0o644)
+        source = tmp / 'training'
+        manifest = verify_source(source)
+        if seen != {'training/' + p for p in [*manifest, 'SOURCE_MANIFEST.json']}:
+            raise ValueError('Archive contains files outside its source manifest')
+        source.rename(destination)
+    return destination
+
+
+def obtain_archive(cache):
+    bundled = ROOT / ARCHIVE
+    if bundled.exists() or bundled.is_symlink():
+        if bundled.is_symlink() or digest(bundled) != ARCHIVE_SHA256:
+            raise ValueError('Repository archive differs from its pinned hash')
+        return bundled
+    target = cache / ARCHIVE
+    if target.exists() or target.is_symlink():
+        if target.is_symlink() or digest(target) != ARCHIVE_SHA256:
+            raise ValueError('Cached archive differs; refusing to overwrite it')
+        return target
+    url = 'https://raw.githubusercontent.com/' + REPOSITORY + '/main/' + ARCHIVE
+    fd, temp = tempfile.mkstemp(prefix='.download-', dir=cache)
     try:
-        meta=json.loads(fetch('https://huggingface.co/api/datasets/'+DATASET)); rev=meta['sha']
-        report['dataset_revision']=rev
-        report['dataset_status']=json.loads(fetch('https://huggingface.co/datasets/'+DATASET+'/resolve/'+rev+'/STATUS.json'))
-    except Exception as e: report['dataset_lookup_error']=str(e)
-    (root/'MACHINE_REPORT.json').write_text(json.dumps(report,indent=2)+'\n')
-    print(json.dumps(report,indent=2));print('Source prepared at:',root/'training')
-    if o.prepare_validation:
-        result=subprocess.run([sys.executable,str(root/'training/tools/download_validation_data.py'),
-                               '--output',str(root/'validation')])
-        if result.returncode:
-            raise SystemExit('Validation preparation incomplete. See the release publication status; '
-                             'no training started. Environment-only inspection remains available without --prepare-validation.')
-    if not o.install: print('Inspection complete. Use --install with this directory to attempt reference installation.');return
-    if platform.system()!='Linux' or platform.machine() not in ['x86_64','amd64']:
-        raise SystemExit('Reference installation requires Linux x86_64; host report saved')
-    missing=[x for x in ['python3.12','git'] if not report['tools'][x]]
-    if missing: raise SystemExit('Ask server owner to supply: '+', '.join(missing)+'. No sudo attempted.')
-    print('Installing pinned shared media runtime and isolated reference venv; full acceptance remains pending.',flush=True)
-    with (root/'installation.log').open('w') as log:
-        result=subprocess.run(['bash','setup.sh'],cwd=root/'training',stdout=log,stderr=subprocess.STDOUT)
-    if result.returncode: raise SystemExit('Installation failed; inspect '+str(root/'installation.log')+'. Training not started.')
-    result=subprocess.run(['bash','-c',
-        'source tools/media_env.sh && exec .venv/bin/python tools/preflight.py --output "$1"',
-        'runtime-preflight',str(root/'ENVIRONMENT_REPORT.json')],cwd=root/'training')
-    if result.returncode: raise SystemExit('Environment check failed. Training not started.')
-    if o.prepare_avspeech:
-        command=['bash','-c',
-                 'source tools/media_env.sh && exec .venv/bin/python tools/prepare_avspeech_workflow.py "$@"',
-                 'avspeech-preparation','--directory',str(root/'avspeech'),
-                 '--revision',o.avspeech_revision]
-        command += ['--all'] if o.avspeech_all else ['--ids',*o.avspeech_ids]
-        result=subprocess.run(command,cwd=root/'training')
-        if result.returncode:
-            raise SystemExit('AVSpeech CPU preparation failed; inspect avspeech/attempts logs. No training started.')
-        print('Selected AVSpeech CPU audio prepared. GPU features and GT-span conditioning remain required.')
-    print('Dependency checks passed. GPU train/eval/resume and complete dataset/cache acceptance STILL REQUIRED.')
-if __name__=='__main__':
-    try: main()
-    except (OSError, ValueError, tarfile.TarError) as exc:
-        raise SystemExit('Preparation stopped: '+str(exc))
+        with os.fdopen(fd, 'wb') as out, urllib.request.urlopen(url, timeout=120) as response:
+            shutil.copyfileobj(response, out)
+        temp = Path(temp)
+        if digest(temp) != ARCHIVE_SHA256:
+            raise ValueError('Downloaded archive SHA-256 mismatch')
+        temp.rename(target)
+    finally:
+        Path(temp).unlink(missing_ok=True)
+    return target
+
+
+def main(argv=None):
+    p = argparse.ArgumentParser(description=__doc__, epilog='Other arguments are forwarded to the workflow, including --wandb-entity, --through and --only. No full93942 training is launched.')
+    p.add_argument('--directory', type=Path, required=True, help='Persistent source and run directory')
+    p.add_argument('--source-only', action='store_true', help='Verify source only; no install, model or data download, or GPU execution')
+    args, forwarded = p.parse_known_args(argv)
+    if not args.source_only:
+        if sys.version_info[:2] != (3, 12) or platform.system() != 'Linux' or platform.machine() != 'x86_64':
+            p.error('Execution requires Linux x86_64 and Python 3.12; --source-only works without GPU dependencies.')
+    root = checked_directory(args.directory)
+    lock_path = root / 'BOOTSTRAP.lock'
+    if lock_path.is_symlink():
+        raise ValueError('Bootstrap lock must not be a symlink')
+    with lock_path.open('a') as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        cache = checked_directory(root / '.sam-source')
+        source = extract_verified(obtain_archive(cache), cache / ARCHIVE_SHA256[:16])
+        receipt = dict(status='SOURCE_VERIFIED', archive_sha256=ARCHIVE_SHA256,
+                       source_manifest_sha256=MANIFEST_SHA256, source_files=len(verify_source(source)),
+                       source=str(source), executed_workflow=False)
+        report = root / 'BOOTSTRAP_SOURCE.json'
+        if report.is_symlink():
+            raise ValueError('Bootstrap receipt must not be a symlink')
+        report.write_text(json.dumps(receipt, indent=2) + '\n')
+        print(json.dumps(receipt), flush=True)
+        if args.source_only:
+            return 0
+        env = os.environ.copy()
+        env['PYTHON_BIN'] = sys.executable
+        return subprocess.run(['bash', str(source / 'start.sh'), '--directory',
+                               str(root / 'workspace'), *forwarded], env=env).returncode
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

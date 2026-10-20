@@ -1,81 +1,93 @@
-# SAM Audio workspace
+# SAM Audio engineering workflow
 
-Code and environment preparation for a portable research workflow. **The complete training handoff has not passed acceptance yet.** This repository contains no datasets, model weights or credentials.
+**Engineering preview — the new unified entry is still under real end-to-end acceptance.**
+Training and validation data are public. The obsolete validation `revision: null`
+block is fixed in this release. See [DELIVERY_STATUS.json](DELIVERY_STATUS.json)
+for accepted evidence and remaining work; publication does not imply production readiness.
 
-## One-command preparation
+On a Linux x86_64 server with Python 3.12 and two NVIDIA GPUs:
 
 ```bash
-curl -fL --retry 3 https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/start.sh -o /tmp/sam-workspace-start.sh && bash /tmp/sam-workspace-start.sh /data/sam-workspace
+git clone https://github.com/TerryShenty/sam-audio-workspace.git
+cd sam-audio-workspace
+bash start.sh --directory "$PWD/sam-run" --wandb-entity YOUR_WANDB_ENTITY
 ```
 
-Replace `/data/sam-workspace` with a writable directory on a sufficiently large disk. The command verifies the source, prepares the fixed real validation media, installs an isolated environment, checks imports and inspects Hugging Face release metadata. It does not yet download the complete dataset or start training. Linux x86_64, Python 3.12, git, curl and outbound HTTPS are required. GPU execution also requires a compatible NVIDIA driver.
+Use your own Hugging Face account with approved access to
+[facebook/sam-audio-large-tv](https://huggingface.co/facebook/sam-audio-large-tv)
+and your own W&B account. Authenticate with the normal `hf auth login` and
+`wandb login` tools if installed, or supply `HF_TOKEN` and `WANDB_API_KEY`
+securely in your environment. Never put credentials in this repository or a command shared with others.
+The data repositories do not require the owners' credentials.
 
-See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json](DELIVERY_STATUS.json) for acceptance boundaries.
+The default command installs the included environment if needed, downloads a fixed
+**3-video / 8-target / 13-prompt training selection** and **all 285 validation examples**,
+prepares source-placement GT spans, creates new training and validation GPU caches,
+exports a checked bundle, runs nine engineering updates with full validation at
+half/epoch/final boundaries, and finalizes best/last checkpoint archives.
+It does not launch all 93,942 training videos. Environment installation, model
+access, storage and a working W&B login are prerequisites for successful execution.
 
-## Evidence and remaining work
+The wrapper verifies a content-addressed source archive and its complete source
+manifest before executing it. Source lives under `sam-run/.sam-source/` and run
+outputs under `sam-run/workspace/`. Reuse the same command and directory to check
+completed stages and continue. Unknown compute or upload outcomes stop for
+reconciliation rather than starting a duplicate. Checkpoints are not deleted.
 
-- 105 source regression tests and eleven bootstrap tests pass.
-- The Linux dependency repair passed real CPU video decoding, dependency checks and repeated invocation. It corrects metadata in the known decord wheel without changing its native binary. A subsequent Linux test installed both a new Python virtual environment and a new shared FFmpeg prefix, repeated setup, and passed dependency/import/native-decoding checks. It reused package download bytes only, not an installed environment. GPU execution from that fresh environment remains unverified.
-- A small single-A100 engineering test completed training, a new-process checkpoint restore and a further update, followed by finite inference. It used an older harness and a small SOLOs subset.
-- Engineering checkpoints were uploaded to W&B and downloaded into fresh caches, with file sizes and SHA256 verified. Continuing training from those downloaded checkpoints is still pending.
-- Three actual HF AVSpeech composites, eight targets and all 13 associated prompts passed download and CPU media/GT checks. Their full-duration two-GPU encoding and CPU cache export passed. The current public entry also completed two-rank checkpoint save/resume and half-epoch/epoch validation on one real MSDWild and one real EasyCom row, with online W&B logging.
-- All 78 MSDWild and 207 EasyCom validation rows have a prepared media package. It is **not in the public repository**. Full validation feature preparation and GPU scoring remain unaccepted.
-- The two-A100 entry-point train/resume and half-epoch validation passed on the engineering AVSpeech pilot. Automatic best/last retention, downloaded-checkpoint continuation and the complete one-command workflow remain unaccepted.
+To verify the source download only, without installing dependencies or allocating GPUs:
 
-Portable BF16/global batch 32 differs from production SOLOs INT8/global batch 64. The xformers native-extension ABI warning remains unresolved; the bounded successful SAM path does not certify that extension.
+```bash
+bash start.sh --directory "$PWD/source-check" --source-only
+```
 
-## Data and results
+The tested resource reference is two A100 40GB GPUs and 64GB host RAM. Full285
+validation takes about ten minutes per pass in the tested environment. The BF16,
+global-batch-two engineering profile differs from SOLOs production INT8 settings.
+Longer 30–50 second training examples and other GPU types have not been accepted.
+GPU availability, driver compatibility, installation time and model downloads vary by server.
+The full public training archives total about **1.313 TB compressed**, before
+extraction, models and feature storage; the engineering selection is much smaller.
 
-[Selected AVSpeech data](https://huggingface.co/datasets/TerryShenty/avspeech-93942) is a separate HF repository. Check an immutable release manifest before using it; upload completeness must not be assumed. Raw media is not a ready training cache.
+## Cluster execution
 
-The default W&B destination is `terryshen066-fudan-university/sam-audio`. The operator must authenticate with an account authorized to write there. Scores include dataset counts, aligned SI-SDR, SI-SDR and SI-SDRi, together with checkpoint and training-step coordinates. Checkpoint archives retain summaries and per-sample scores. Actual engineering half-epoch and epoch scores have been logged online and independently matched against local results. Full-cohort scoring and downloaded-checkpoint continuation remain pending.
+Keep network transfers, hashing, preparation and export outside GPU allocations.
+These commands use the same workspace and entry, and must run sequentially:
 
-Resume requires the pinned base model plus saved training state. No automatic server cleanup is enabled. Original SAM Audio licensing is retained; dataset and pretrained-model access and licenses are separate.
+```bash
+# Data transfer facility
+bash start.sh --directory "$PWD/sam-run" --wandb-entity YOUR_WANDB_ENTITY --through download
+# CPU allocation
+bash start.sh --directory "$PWD/sam-run" --only prepare
+# Two-GPU allocation
+bash start.sh --directory "$PWD/sam-run" --only encode-training
+bash start.sh --directory "$PWD/sam-run" --only encode-validation
+# CPU allocation
+bash start.sh --directory "$PWD/sam-run" --only export
+# Two-GPU allocation
+bash start.sh --directory "$PWD/sam-run" --only train
+# Data transfer facility, after all training processes and allocation steps exit
+bash start.sh --directory "$PWD/sam-run" --only finalize
+```
 
-## Fixed validation workflow
+The wrapper does not submit scheduler jobs. Request resources using your facility's
+policy and actual representative timings. No CPU-only phase runs in a Slurm GPU
+allocation. A plain GPU server can run the default command sequentially.
 
-The one-command entry now prepares MSDWild78 + EasyCom207 first, independently of AVSpeech upload completeness. It downloads a pinned media archive, verifies every file and the original cohort identities, prompts, noise seeds and durations. The configured destination is the public organization repository `sam-audio-research/sam-audio-validation-285`; publication is still awaiting explicit approval, so no immutable revision is available yet. Until a verified revision is published and pinned, preparation stops with an explicit message rather than silently using different or incomplete validation data. Environment-only preparation remains available through `bootstrap.py --install` without `--prepare-validation`.
+Explicit `SAM_PYTHON` and `SAM_FFMPEG_PREFIX` select an existing environment.
+`--hf-hub-cache` selects a model cache. Verified raw-media/model reuse options are
+available in the extracted workflow help; all reuse is recorded. Omit them for an
+ordinary new-server download. GPU stages use the pinned offline model cache.
 
-Formal `train_delivery.py` runs check the complete 285-row cohort before GPU initialization. They validate every half epoch and retain separate MSDWild and EasyCom summaries. Tiny maintainer tests must explicitly set `engineering_validation_subset: true` and are recorded as `ENGINEERING_SUBSET`; they cannot establish complete-cohort acceptance. The old AVSpeech100 and SOLOs/URMP validation are excluded. Downloaded raw media still require the pinned GPU feature-cache stage; that integration and real full-cohort scoring remain pending.
+## Public data and scope
 
-## Native media dependency check
+- [AVSpeech 93,942-video release](https://huggingface.co/datasets/TerryShenty/avspeech-93942/tree/c8bdd1fd47e269c55f0323f54a550d77022f1e92): 256,708 targets/residual pairs and 390,402 prompts.
+- [MSDWild78 + EasyCom207 validation](https://huggingface.co/datasets/sam-audio-research/sam-audio-validation-285/tree/9b438aab4d7987166304693ad616ae3769798e3c): pinned media, GT audio and original prompts; anonymously verified.
 
-Setup now decodes a generated PCM WAV and H264 video through torchaudio, TorchCodec AudioDecoder/VideoDecoder and decord. A successful import or working static `ffmpeg` command alone is insufficient. A real pilot exposed missing shared FFmpeg libraries; a CPU regression reproduced the failure and verified the existing shared runtime on 23 audio files and five videos before any replacement GPU test.
+GT training spans describe ten-second source placement, including internal
+silence; they are not VAD labels. Validation GT audio is used for scoring, not
+model conditioning. The engineering selection remains pinned to an earlier
+immutable revision containing exactly those three selected composites.
 
-Setup automatically installs a pinned shared FFmpeg 7.1.1 runtime under `training/.runtime`, without sudo or changes to system packages. The installer verifies exact package sizes and SHA256 values, prevents concurrent installations and reuses matching completed installs. It also supports separate download and offline CPU-install phases on managed clusters. A fresh runtime install, repeat invocation and actual decoding of 23 audio files and five videos passed on Linux. A separate clean installation test then created both the Python environment and native prefix from scratch, passed repeated setup and actual fixture decoding in 4 minutes 48 seconds. Package download caches were reused; an empty network-cache installation duration and fresh-environment CUDA execution were not tested. An existing shared runtime may instead be selected with `SAM_FFMPEG_PREFIX=/path/to/ffmpeg`.
-
-The multi-GPU launcher now runs a bounded allreduce/DDP/two-update probe before training. If the default transport fails, it first terminates the entire probe process group, then may try disabling NCCL P2P. Explicit operator settings are preserved. Missing rank receipts or both failures stop startup; training itself is never automatically retried. Regression tests passed, but this new automatic launcher still awaits its own GPU test. The earlier A100 diagnosis established the workaround only on that tested environment, not as a universally optimal setting.
-
-
-## Best and last checkpoint handoff
-
-`tools/archive_best_last.py --run-dir /path/to/completed-run` inspects the terminal run and plans both roles. `--upload` executes the verified archival after training has ended. Formal selection requires complete MSDWild78 and EasyCom207 summaries and uses their equal-weight mean aligned SI-SDR. The last role comes from the recorded latest successful checkpoint, not filename ordering. Engineering subsets require an explicit flag matching their saved configuration.
-
-The helper keeps separate best/last receipts, verifies unchanged local content before reuse, and refuses to retry an unresolved upload. It never deletes server files. On Slurm, transfers must be run after the GPU allocation ends. A real engineering-pilot audit reconciled both existing cloud receipts and repeated without any new upload. The new helper's fresh live-upload path and automatic end-of-training integration still need acceptance; content verification alone is not resumed training.
-
-
-After an independently prepared dataset/cache and environment are ready, run.sh now invokes a completion wrapper. On standalone servers it waits for all training processes to exit before verified best/last archival. Explicit offline logging or a Slurm GPU allocation produces a deferred archival record; those cases still require a subsequent transfer phase. This integration passed local subprocess regressions and real existing-receipt reconciliation, but has not yet passed its own GPU/fresh-upload end-to-end test. The one-command preparation entry above still does not launch a full experiment.
-
-
-## Preparing selected AVSpeech audio
-
-After `tools/download_selected_avspeech.py` has verified a pinned selection, `tools/prepare_selected_media.py --media /path/to/download --output /path/to/prepared` verifies its media against the download receipts, decodes the existing lossless target/residual audio, and checks that their sum matches the original mixture. It preserves every selected prompt and its category, subtype, target identity and provenance. Completed composites are checked before reuse; interrupted staging files are retained, and changed inputs or outputs cannot silently pass. Hashing and decoding must run on CPU before a Slurm GPU allocation.
-
-The generic tool passed a real Linux CPU test on three HF composites, eight targets and 13 prompts: all 16 decoded target/residual waveforms exactly matched the earlier accepted preparation, and repeat invocation reused all three composites without decoding. Seven additional local regressions cover interruption, corruption and completeness. This remains an explicitly marked engineering subset. It does not prepare GPU features, GT-span anchors, full training data or launch training; the GPU stages and complete training integration remain pending.
-
-
-## Combined download and CPU preparation
-
-`tools/prepare_avspeech_workflow.py --directory /data/selection --revision COMMIT --ids ID1 ID2` combines immutable HF selection download with CPU audio preparation and verified source-placement GT support. Use `--all` instead of `--ids` only when every video, target and prompt in that frozen release is available. A workspace stays bound to its original selection. A failed download cannot trigger decoding, and failed or stale CPU/GT receipts cannot report readiness. Each successful CPU phase produces `support/train_rows.json` with the original prompts and verified GT intervals; GPU cache and GPU anchor acceptance remain pending. Repeating checks existing content before reuse; no server files are deleted.
-
-Managed clusters can run `--phase download` on their transfer facility followed by `--phase prepare` on a CPU allocation. These real split phases passed on the three-video pilot, including a second CPU invocation that reused all completed composites. The transfer phase reused existing verified media and contacted HF for the pinned metadata; it was not an empty-cache bulk-download test. The combined standalone mode passed local control-flow regressions only.
-
-The root bootstrap accepts `--install --prepare-avspeech --avspeech-revision COMMIT` plus either `--avspeech-ids ID1 ID2` or `--avspeech-all`; after environment checks it invokes this same combined tool. `start.sh` forwards these optional arguments and retains the fixed validation gate. This new bootstrap wiring passed mocked-stage/shell regressions; its full fresh-machine execution is not yet accepted. GPU feature preparation, GT-span conditioning and actual training remain separate pending stages. Nothing in this command certifies a completed training handoff.
-
-## Training GT support preparation
-
-`tools/prepare_training_spans.py --media /path/to/download --prepared /path/to/prepared --output /path/to/support` audits the original AVSpeech supervision rule on CPU: each source occupies one ten-second interval at its composite offset; simultaneous targets use the whole ten seconds. Silence within that interval is retained. This is source-placement supervision, not inferred voice activity. All prompts, categories, target identities and the rendered video/crop are preserved; validation inputs are not changed.
-
-The tool checks frozen recipes, download receipts, prepared target/residual hashes and exact zeros outside temporal support. Original recipe identities and archived JSON hashes are recorded separately because public archival replaces host paths with provenance URIs. Changed media, redirected GT paths or modified prompts invalidate readiness.
-
-A real Linux CPU test passed on three HF composites, eight targets and all 13 prompts, including a repeat invocation and an injected out-of-support waveform rejection. All 13 official anchor tensors exactly matched the historical AVSpeech conditioning implementation. The tool remains separately callable and is now run automatically after audio preparation. A new real CPU integration test completed both stages and a repeat invocation in seven seconds, matching all 13 prompt records and all eight targets against the accepted standalone result. Four coordinator regressions bring the source suite to 105 tests. This new test reused verified downloaded media; it did not repeat the download or exercise GPU forward or formal GT-conditioned training. It does not certify full training readiness.
+Existing older archives remain as historical releases. This root entry selects
+only the archive named in its current `bootstrap.py`; `training-source.tar.gz`
+and older handoff instructions are not the current execution path.

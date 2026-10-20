@@ -1,87 +1,60 @@
 {
-  "status": "PREPARATION_RELEASE_FULL_DELIVERY_NOT_ACCEPTED",
-  "github": "https://github.com/TerryShenty/sam-audio-workspace",
-  "visibility": "public",
-  "production_changed": false,
-  "scope": "Code-only preparation; no automatic full training or dataset publication",
-  "local_tests": {
-    "source": 105,
-    "bootstrap": 11
+  "status": "ENGINEERING_PREVIEW_END_TO_END_ACCEPTANCE_IN_PROGRESS",
+  "updated_utc": "2026-10-20",
+  "public_data_complete": true,
+  "default_profile": {
+    "training_videos": 3,
+    "training_targets": 8,
+    "training_prompts": 13,
+    "validation_msdwild": 78,
+    "validation_easycom": 207,
+    "optimizer_steps": 9,
+    "gpus": 2,
+    "precision": "BF16",
+    "global_batch": 2
   },
-  "environment": {
-    "python": "3.12.2",
-    "torch": "2.13.0+cu130",
-    "dependency_and_decoder_repair": "PASS_EXISTING_ISOLATED_LINUX_ENV",
-    "fresh_install": "PASS_FRESH_PYTHON_AND_NATIVE_PREFIX_REPEAT_SETUP_IMPORTS_FIXTURE_DECODING",
-    "xformers_native_extension": "ABI_WARNING_NOT_ACCEPTED",
-    "actual_audio_video_decode": "PASS_CPU_23_AUDIO_5_VIDEO_SHARED_FFMPEG",
-    "static_ffmpeg_module": "INSUFFICIENT_NATIVE_LIBRARIES_REPRODUCED",
-    "shared_ffmpeg_provisioning": "PASS_FRESH_PREFIX_127_PINNED_PACKAGES_REPEAT_INSTALL_23_AUDIO_5_VIDEO",
-    "fresh_environment_gpu_execution": "NOT_ACCEPTED",
-    "download_cache": "REUSED_PACKAGE_BYTES_NOT_INSTALLED_ENVIRONMENT",
-    "system_ffmpeg_prerequisite": "NOT_REQUIRED_AUTOMATIC_PINNED_RUNTIME",
-    "shell_entry_without_system_ffmpeg": "PASS_REAL_SHELL_WITH_STUB_NETWORK_AND_HOST_CHECKS_NOT_A_NEW_LINUX_INSTALL"
+  "training_release": {
+    "repository": "TerryShenty/avspeech-93942",
+    "revision": "c8bdd1fd47e269c55f0323f54a550d77022f1e92",
+    "videos": 93942,
+    "targets": 256708,
+    "prompts": 390402,
+    "archive_bytes": 1313119979520
   },
-  "runtime": {
-    "single_a100_older_engineering_harness": "PASS_TRAIN_RESUME_INFERENCE",
-    "two_rank_latest_entry": "PASS_ACTUAL_AVSPEECH_ENGINEERING_SUBSET",
-    "half_epoch_validation": "PASS_MSDWILD1_EASYCOM1_STEP4_AND7",
-    "automatic_collective_launcher": "REGRESSION_PASS_GPU_ACCEPTANCE_PENDING"
+  "engineering_training_revision": "2c3321bba55a1a728bbb60a8bce220738ea90613",
+  "validation_release": {
+    "repository": "sam-audio-research/sam-audio-validation-285",
+    "revision": "9b438aab4d7987166304693ad616ae3769798e3c",
+    "media_files": 414,
+    "public_anonymous_verified": true
   },
-  "data": {
-    "training_repository": "TerryShenty/avspeech-93942",
-    "complete_release": "CHECK_IMMUTABLE_MANIFEST_DO_NOT_ASSUME",
-    "actual_hf_pilot": {
-      "composites": 3,
-      "targets": 8,
-      "prompt_rows": 13,
-      "download_cpu_audit": "PASS",
-      "gpu_pipeline": "ENCODE_EXPORT_TRAIN_FULLSTATE_RESUME_AND_REAL_HELDOUT_PASS_ENGINEERING_ONLY"
-    },
-    "validation": {
-      "msdwild_rows": 78,
-      "easycom_rows": 207,
-      "media_preparation": "PASS",
-      "publicly_downloadable": false,
-      "complete_feature_and_scoring_acceptance": "NOT_ACCEPTED",
-      "public_repository": "sam-audio-research/sam-audio-validation-285",
-      "publication": "AWAITING_EXPLICIT_APPROVAL",
-      "preparation": "WIRED_IN_ONE_COMMAND_INDEPENDENT_OF_TRAIN_UPLOAD",
-      "formal_cohort_gate": "EXACT_IDENTITY_PROMPT_NOISE_DURATION_FINGERPRINT_UNIT_TESTED"
-    },
-    "selected_media_preparation": "PASS_REAL_CPU_HF3_TARGETS8_PROMPTS13_16_WAVEFORMS_EQUAL_REPEAT_ZERO_DECODE",
-    "selected_media_preparation_scope": "ENGINEERING_SUBSET_NOT_GPU_CACHE_GT_ANCHORS_OR_FULL_PIPELINE",
-    "download_prepare_workflow": "DOWNLOAD_PREVIOUSLY_ACCEPTED; CPU_MEDIA_AND_GT_COORDINATOR_REAL_REPEAT_PASS; GPU_CACHE_PENDING",
-    "combined_standalone_preparation": "LOCAL_CONTROL_FLOW_PASS_REAL_COMBINED_EXECUTION_PENDING",
-    "bootstrap_media_wiring": "MOCKED_STAGE_AND_REAL_SHELL_REGRESSIONS_PASS_NOT_FRESH_MACHINE_ACCEPTED",
-    "training_gt_support": {
-      "cpu": "PASS_REAL_3_VIDEOS_8_TARGETS_13_PROMPTS_REPEAT_OFFICIAL_ANCHORS_EQUAL_LEGACY",
-      "rule": "TEN_SECOND_SOURCE_PLACEMENT_NOT_VAD",
-      "gpu_forward": "NOT_TESTED",
-      "automatic_integration": "PASS_REAL_CPU_MEDIA_THEN_GT_REPEAT_3_VIDEOS_8_TARGETS_13_PROMPTS",
-      "validation": "UNCHANGED"
-    }
-  },
-  "wandb": {
-    "entity": "terryshen066-fudan-university",
-    "project": "sam-audio",
-    "engineering_upload_download_hash": "PASS_INCLUDING_FRESH_CACHE",
-    "downloaded_checkpoint_gpu_continuation": "NOT_TESTED",
-    "per_dataset_live_scoring_upload": "PASS_INDEPENDENT_CLOUD_READBACK_ALL_ENGINEERING_METRICS_COUNTS_COORDINATES",
-    "score_archive_and_destination": "UNIT_TESTED",
-    "automatic_best_last_retention": "NOT_ACCEPTED",
-    "best_last_archive_helper": "PASS_REAL_PILOT_EXISTING_RECEIPT_RECONCILIATION_NO_NEW_UPLOAD; GENERIC_LIVE_UPLOAD_AND_AUTOMATIC_INTEGRATION_PENDING",
-    "automatic_finalization_wrapper": "78_LOCAL_TESTS_AND_REAL_EXISTING_RECEIPT_RECONCILIATION_PASS_GPU_AND_FRESH_LIVE_UPLOAD_PENDING"
+  "accepted": [
+    "Fresh Python/native FFmpeg installation, actual decoding and subsequent GPU execution",
+    "Real interrupted public training download and receipt-based continuation",
+    "New training GT cache; all 285 public-media validation examples freshly encoded and audited",
+    "Prepared-bundle CLI: actual two-rank GT update, full285 scoring, complete saved state, independent W&B metric readback and automatic finalization",
+    "Earlier integrated engineering workflow: three full285 validations, automatic best/last upload, independent download and effective two-rank optimizer continuation",
+    "Current standalone entry: real download and CPU preparation, including pinned offline T5/tokenizer identity"
+  ],
+  "current_standalone": {
+    "source_parent_files": 146,
+    "local_source_tests": 144,
+    "encoding": "RUNNING_OR_PENDING_ACCEPTANCE",
+    "export": "NOT_YET_ACCEPTED",
+    "training_and_finalization": "NOT_YET_ACCEPTED"
   },
   "remaining": [
-    "GPU execution from the fresh installed environment",
-    "integrated raw-media GPU cache preparation",
-    "full285 real validation features and scoring",
-    "downloaded W&B checkpoint continuation",
-    "automatic best/last retention",
-    "integrated one-command workflow",
-    "automatic multi-GPU transport launcher runtime acceptance"
+    "Finish the current same-entry new training and full285 validation encoding, export, training and finalization",
+    "Verify this published root bootstrap anonymously by immutable commit",
+    "Full ordinary-server single-invocation execution from a fresh installation has not been observed"
   ],
-  "configuration_difference": "Portable BF16/global batch32 versus historical SOLOs INT8/global batch64",
+  "limits": [
+    "Engineering profile only; full93942 long production training is not launched or validated",
+    "Measured on two A100 40GB GPUs with 64GB host RAM; other hardware throughput and 30-50s training examples are untested",
+    "HF access approval for facebook/sam-audio-large-tv and the runner own W&B credentials are required",
+    "xformers native ABI warning remains; the tested SAM path uses SDPA",
+    "CPU state audits check structure/finiteness and CPU RNG restoration; they do not prove CUDA RNG replay or optimizer parameter-name mapping",
+    "Cluster GPU work defers network archival to a transfer facility; ordinary-server immediate archival is not a newly accepted full-flow test"
+  ],
   "automatic_cleanup": false
 }
