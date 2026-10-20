@@ -45,5 +45,13 @@
   "dependency_metadata_repair": "Linux reinstall/decode/pipcheck/idempotency PASS; known binary only",
   "single_a100_engineering": "PASS older harness 32TRAIN targets; full delivery NOT ACCEPTED",
   "xformers_native_extension": "ABI warning; not accepted",
-  "live_wandb": "NOT_TESTED"
+  "live_wandb": "NOT_TESTED",
+  "latest_preparation": {
+    "source_tests": 42,
+    "wandb_content_roundtrip": "PASS_ENGINEERING_ONLY",
+    "wandb_model_resume": "NOT_TESTED",
+    "half_epoch_trigger": "UNIT_TESTED_RUNTIME_PENDING",
+    "best_selection": "UNIT_TESTED_NOT_AUTOMATIC_RETENTION",
+    "full_delivery": "NOT_ACCEPTED"
+  }
 }
