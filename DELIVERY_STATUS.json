@@ -5,18 +5,20 @@
   "production_changed": false,
   "scope": "Code-only preparation; no automatic full training or dataset publication",
   "local_tests": {
-    "source": 67,
+    "source": 71,
     "bootstrap": 4
   },
   "environment": {
     "python": "3.12.2",
     "torch": "2.13.0+cu130",
     "dependency_and_decoder_repair": "PASS_EXISTING_ISOLATED_LINUX_ENV",
-    "fresh_install": "FULL_PYTHON_ENVIRONMENT_NOT_ACCEPTED",
+    "fresh_install": "PASS_FRESH_PYTHON_AND_NATIVE_PREFIX_REPEAT_SETUP_IMPORTS_FIXTURE_DECODING",
     "xformers_native_extension": "ABI_WARNING_NOT_ACCEPTED",
     "actual_audio_video_decode": "PASS_CPU_23_AUDIO_5_VIDEO_SHARED_FFMPEG",
     "static_ffmpeg_module": "INSUFFICIENT_NATIVE_LIBRARIES_REPRODUCED",
-    "shared_ffmpeg_provisioning": "PASS_FRESH_PREFIX_127_PINNED_PACKAGES_REPEAT_INSTALL_23_AUDIO_5_VIDEO"
+    "shared_ffmpeg_provisioning": "PASS_FRESH_PREFIX_127_PINNED_PACKAGES_REPEAT_INSTALL_23_AUDIO_5_VIDEO",
+    "fresh_environment_gpu_execution": "NOT_ACCEPTED",
+    "download_cache": "REUSED_PACKAGE_BYTES_NOT_INSTALLED_ENVIRONMENT"
   },
   "runtime": {
     "single_a100_older_engineering_harness": "PASS_TRAIN_RESUME_INFERENCE",
@@ -53,10 +55,11 @@
     "downloaded_checkpoint_gpu_continuation": "NOT_TESTED",
     "per_dataset_live_scoring_upload": "PASS_INDEPENDENT_CLOUD_READBACK_ALL_ENGINEERING_METRICS_COUNTS_COORDINATES",
     "score_archive_and_destination": "UNIT_TESTED",
-    "automatic_best_last_retention": "NOT_ACCEPTED"
+    "automatic_best_last_retention": "NOT_ACCEPTED",
+    "best_last_archive_helper": "PASS_REAL_PILOT_EXISTING_RECEIPT_RECONCILIATION_NO_NEW_UPLOAD; GENERIC_LIVE_UPLOAD_AND_AUTOMATIC_INTEGRATION_PENDING"
   },
   "remaining": [
-    "complete clean Python environment installation",
+    "GPU execution from the fresh installed environment",
     "integrated raw-media GPU cache preparation",
     "full285 real validation features and scoring",
     "downloaded W&B checkpoint continuation",
@@ -66,7 +69,7 @@
   ],
   "configuration_difference": "Portable BF16/global batch32 versus historical SOLOs INT8/global batch64",
   "automatic_cleanup": false,
-  "source_archive": "workspace-source-116595d08bcf2ae3.tar.gz",
-  "source_sha256": "116595d08bcf2ae3f2d3f1cb1e6a25119f8c29716e9851827d008272690e7630",
-  "source_files": 110
+  "source_archive": "workspace-source-04552d37694c4037.tar.gz",
+  "source_sha256": "04552d37694c40376980d6ca03594b0e0a87493eedde48e224118039a0bf20f2",
+  "source_files": 112
 }
