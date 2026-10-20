@@ -24,13 +24,14 @@
     "release_receipts": "2 PASS: rehash reuse, changed content/revision/selection rejected",
     "checkpoint_archive": "6 PASS: integrity and mocked SDK success/failure; live W&B/model resume NOT TESTED",
     "model_setup": "2 PASS mocked ordering/error tests; CUDA memory not measured",
-    "bundle_linkage": "7 PASS fixture contract/export tests; no real tensor or cohort acceptance",
-    "training_lifecycle": "3 PASS mocked terminal status/error propagation; live W&B/distributed fault handling NOT TESTED"
+    "bundle_linkage": "9 fixture tests; explicit seed/duration and packed-feature integrity added",
+    "training_lifecycle": "3 PASS mocked terminal status/error propagation; live W&B/distributed fault handling NOT TESTED",
+    "validation_protocol": "Explicit original noise_seed and 250/500/750 latent frames; original packed-feature SHA checked; real tensor/GPU evaluation NOT TESTED"
   },
   "visibility": "public",
   "dataset": "TerryShenty/avspeech-93942",
-  "source_archive": "workspace-source-62dce9d12285e4f3.tar.gz",
-  "source_sha256": "62dce9d12285e4f3e726a75ab340eba7c507573bc5e586a2d6a382478136b1c5",
+  "source_archive": "workspace-source-0e8ba3539673e3f9.tar.gz",
+  "source_sha256": "0e8ba3539673e3f91c05f0c4efaf2f9d20665758a96e67667da63f35f2625042",
   "preparation_fixes": [
     "repeatable source preparation",
     "local venv launcher",

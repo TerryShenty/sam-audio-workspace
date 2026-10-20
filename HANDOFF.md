@@ -36,3 +36,5 @@ Cached trainer initializes tuning on CPU and detaches unused frozen encoders bef
 CPU export/preflight now validate all catalog/component/GT links against the file list, reject empty targets/prompts, duplicate identities, conflicting variants and noncanonical destinations. Seven contract/export fixture tests pass; these do not establish real tensor correctness or raw-to-cache readiness. Training entry does not yet automatically orchestrate the full CPU preflight.
 
 Training terminal status repair: setup/training exceptions now write FAILED and finish W&B with exit_code=1. Tracking cleanup errors do not replace the original training error. Three mocked lifecycle tests pass; live GPU and W&B acceptance remain pending.
+
+Validation compatibility: manifest must retain original noise_seed and latent_frames. Original packed forward-feature files supported with SHA256 verification. 20s inputs are no longer silently treated as10s. Real GPU evaluation remains untested; missing78 historical MSDWild feature files still block complete cohort export. Selected media recovery is verified separately, not model acceptance.
