@@ -1,5 +1,5 @@
 """Run with python3 -m unittest -v test_preparation.py; no GPU or external network."""
-import contextlib, io, json, tempfile, unittest
+import contextlib, io, json, os, shutil, subprocess, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
 import bootstrap
@@ -37,4 +37,43 @@ class PreparationTests(unittest.TestCase):
     bootstrap.main()
    self.assertTrue(run.call_args.args[0][1].endswith('tools/download_validation_data.py'))
    self.assertIn('dataset_lookup_error',json.loads((Path(d)/'MACHINE_REPORT.json').read_text()))
+class ShellEntryTests(unittest.TestCase):
+ """Real shell control flow with stub network/host checks; not a Linux install."""
+ def run_shell(self, directory, *, missing_git=False, bootstrap_exit=0):
+  root=Path(directory);bin_dir=root/'bin';bin_dir.mkdir()
+  for name in ['mkdir','mktemp','rm','tee']:
+   (bin_dir/name).symlink_to(shutil.which(name))
+  scripts={
+   'git':'#!/bin/bash\nexit 0\n',
+   'curl':'#!/bin/bash\nwhile (( $# )); do\n if [[ "$1" == "-o" ]]; then printf "# stub bootstrap\\n" > "$2"; exit 0; fi\n shift\ndone\nexit 2\n',
+   'python3.12':'#!/bin/bash\nif [[ "$1" == "-c" ]]; then exit 0; fi\nprintf "%s\\n" "$@" > "$ENTRY_TEST_RECEIPT"\nexit "$ENTRY_TEST_BOOTSTRAP_EXIT"\n',
+  }
+  for name,script in scripts.items():
+   if name=='git' and missing_git:continue
+   target=bin_dir/name;target.write_text(script);target.chmod(0o755)
+  env=dict(os.environ,PATH=str(bin_dir),ENTRY_TEST_RECEIPT=str(root/'called.txt'),
+           ENTRY_TEST_BOOTSTRAP_EXIT=str(bootstrap_exit))
+  result=subprocess.run(['/bin/bash',str(Path(__file__).with_name('start.sh').resolve()),
+                         str(root/'workspace')],env=env,text=True,capture_output=True,timeout=10)
+  return result,root/'called.txt'
+ def test_no_system_ffmpeg_reaches_automatic_preparation(self):
+  with tempfile.TemporaryDirectory() as d:
+   result,receipt=self.run_shell(d)
+   self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+   self.assertIn('--prepare-validation',receipt.read_text())
+   self.assertIn('--install',receipt.read_text())
+ def test_missing_git_stops_before_bootstrap(self):
+  with tempfile.TemporaryDirectory() as d:
+   result,receipt=self.run_shell(d,missing_git=True)
+   self.assertEqual(result.returncode,2)
+   self.assertIn('Server prerequisite missing: git',result.stderr)
+   self.assertFalse(receipt.exists())
+   self.assertFalse((Path(d)/'workspace').exists())
+ def test_bootstrap_failure_propagates_and_never_reports_ready(self):
+  with tempfile.TemporaryDirectory() as d:
+   result,receipt=self.run_shell(d,bootstrap_exit=23)
+   self.assertTrue(receipt.exists(),result.stderr)
+   self.assertEqual(result.returncode,23)
+   self.assertIn('Preparation stopped.',result.stdout)
+   self.assertNotIn('Validation media and environment prepared.',result.stdout)
 if __name__=='__main__':unittest.main()

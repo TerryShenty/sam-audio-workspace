@@ -6,7 +6,7 @@
   "scope": "Code-only preparation; no automatic full training or dataset publication",
   "local_tests": {
     "source": 78,
-    "bootstrap": 4
+    "bootstrap": 7
   },
   "environment": {
     "python": "3.12.2",
@@ -18,7 +18,9 @@
     "static_ffmpeg_module": "INSUFFICIENT_NATIVE_LIBRARIES_REPRODUCED",
     "shared_ffmpeg_provisioning": "PASS_FRESH_PREFIX_127_PINNED_PACKAGES_REPEAT_INSTALL_23_AUDIO_5_VIDEO",
     "fresh_environment_gpu_execution": "NOT_ACCEPTED",
-    "download_cache": "REUSED_PACKAGE_BYTES_NOT_INSTALLED_ENVIRONMENT"
+    "download_cache": "REUSED_PACKAGE_BYTES_NOT_INSTALLED_ENVIRONMENT",
+    "system_ffmpeg_prerequisite": "NOT_REQUIRED_AUTOMATIC_PINNED_RUNTIME",
+    "shell_entry_without_system_ffmpeg": "PASS_REAL_SHELL_WITH_STUB_NETWORK_AND_HOST_CHECKS_NOT_A_NEW_LINUX_INSTALL"
   },
   "runtime": {
     "single_a100_older_engineering_harness": "PASS_TRAIN_RESUME_INFERENCE",

@@ -4,13 +4,14 @@ set -euo pipefail
 if [[ "${1:-}" == "--help" || $# -ne 1 ]]; then
   echo 'Usage: bash start.sh /absolute/path/to/workspace'
   echo 'Prepares MSDWild78 + EasyCom207 validation media and an isolated environment.'
-  echo 'Requires Linux x86_64, Python 3.12, git, FFmpeg, curl and outbound HTTPS.'
+  echo 'Requires Linux x86_64, Python 3.12, git, curl and outbound HTTPS.'
+  echo 'Setup installs the pinned shared FFmpeg runtime in the workspace.'
   echo 'Preparation only: full training delivery has not passed acceptance yet.'
   exit 0
 fi
 case "$1" in /*) ;; *) echo 'Choose an absolute workspace path.' >&2; exit 2;; esac
 TASK_DIR="$1"
-for command_name in curl git ffmpeg; do
+for command_name in curl git; do
   command -v "$command_name" >/dev/null || { echo "Server prerequisite missing: $command_name. Ask its owner to install it once." >&2; exit 2; }
 done
 command -v python3.12 >/dev/null || { echo "Server prerequisite missing: python3.12" >&2; exit 2; }

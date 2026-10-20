@@ -14,7 +14,7 @@ See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json
 
 ## Evidence and remaining work
 
-- 78 source regression tests and four bootstrap tests pass.
+- 78 source regression tests and seven bootstrap tests pass.
 - The Linux dependency repair passed real CPU video decoding, dependency checks and repeated invocation. It corrects metadata in the known decord wheel without changing its native binary. A subsequent Linux test installed both a new Python virtual environment and a new shared FFmpeg prefix, repeated setup, and passed dependency/import/native-decoding checks. It reused package download bytes only, not an installed environment. GPU execution from that fresh environment remains unverified.
 - A small single-A100 engineering test completed training, a new-process checkpoint restore and a further update, followed by finite inference. It used an older harness and a small SOLOs subset.
 - Engineering checkpoints were uploaded to W&B and downloaded into fresh caches, with file sizes and SHA256 verified. Continuing training from those downloaded checkpoints is still pending.
