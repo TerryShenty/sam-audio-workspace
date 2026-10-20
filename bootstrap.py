@@ -5,8 +5,8 @@ No sudo, GPU allocation, training, dataset bulk download or deletion.
 import argparse, hashlib, json, os, platform, shutil, subprocess, sys, tarfile, urllib.request, tempfile, time
 from pathlib import Path
 COMMIT = 'main'
-SHA = '04552d37694c40376980d6ca03594b0e0a87493eedde48e224118039a0bf20f2'
-ARCHIVE = 'workspace-source-04552d37694c4037.tar.gz'
+SHA = '2ab4f93dce4722337d262fed7efed449fd29399606c75b263035c017af70794d'
+ARCHIVE = 'workspace-source-2ab4f93dce472233.tar.gz'
 BASE = 'https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/' + COMMIT
 DATASET = 'TerryShenty/avspeech-93942'
 def fetch(url):
@@ -45,7 +45,7 @@ def main():
                 if dest.is_symlink() or not dest.is_file() or dest.read_bytes()!=source.read_bytes():
                     raise SystemExit('Existing source differs: '+str(dest)+'. Choose a new --directory; no files overwritten.')
         else: (stage/'training').rename(target)
-    report={'code_commit':COMMIT,'source_sha256':SHA,'host':platform.platform(),'dataset':DATASET,'training_ready':False,'notes':['Preparation release; install and GPU train/eval/resume not yet certified','No bulk data download or training started']}
+    report={'code_commit':COMMIT,'source_sha256':SHA,'host':platform.platform(),'dataset':DATASET,'training_ready':False,'notes':['Fresh CPU installation passed on reference Linux; GPU and full delivery acceptance remain pending','No bulk data download or training started']}
     report['tools']={k:shutil.which(k) for k in ['python3.12','git','ffmpeg','nvidia-smi']}
     if report['tools']['nvidia-smi']:
         try:

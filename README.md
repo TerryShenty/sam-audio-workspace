@@ -14,7 +14,7 @@ See [HANDOFF.md](HANDOFF.md) for operator instructions and [DELIVERY_STATUS.json
 
 ## Evidence and remaining work
 
-- 71 source regression tests and four bootstrap tests pass.
+- 78 source regression tests and four bootstrap tests pass.
 - The Linux dependency repair passed real CPU video decoding, dependency checks and repeated invocation. It corrects metadata in the known decord wheel without changing its native binary. A subsequent Linux test installed both a new Python virtual environment and a new shared FFmpeg prefix, repeated setup, and passed dependency/import/native-decoding checks. It reused package download bytes only, not an installed environment. GPU execution from that fresh environment remains unverified.
 - A small single-A100 engineering test completed training, a new-process checkpoint restore and a further update, followed by finite inference. It used an older harness and a small SOLOs subset.
 - Engineering checkpoints were uploaded to W&B and downloaded into fresh caches, with file sizes and SHA256 verified. Continuing training from those downloaded checkpoints is still pending.
@@ -52,3 +52,6 @@ The multi-GPU launcher now runs a bounded allreduce/DDP/two-update probe before 
 `tools/archive_best_last.py --run-dir /path/to/completed-run` inspects the terminal run and plans both roles. `--upload` executes the verified archival after training has ended. Formal selection requires complete MSDWild78 and EasyCom207 summaries and uses their equal-weight mean aligned SI-SDR. The last role comes from the recorded latest successful checkpoint, not filename ordering. Engineering subsets require an explicit flag matching their saved configuration.
 
 The helper keeps separate best/last receipts, verifies unchanged local content before reuse, and refuses to retry an unresolved upload. It never deletes server files. On Slurm, transfers must be run after the GPU allocation ends. A real engineering-pilot audit reconciled both existing cloud receipts and repeated without any new upload. The new helper's fresh live-upload path and automatic end-of-training integration still need acceptance; content verification alone is not resumed training.
+
+
+After an independently prepared dataset/cache and environment are ready, run.sh now invokes a completion wrapper. On standalone servers it waits for all training processes to exit before verified best/last archival. Explicit offline logging or a Slurm GPU allocation produces a deferred archival record; those cases still require a subsequent transfer phase. This integration passed local subprocess regressions and real existing-receipt reconciliation, but has not yet passed its own GPU/fresh-upload end-to-end test. The one-command preparation entry above still does not launch a full experiment.

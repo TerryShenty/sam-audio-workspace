@@ -34,13 +34,13 @@ The logger is configured to record each dataset separately, with sample count, a
 
 `tools/upload_results.py` verifies the uploaded engineering artifact by downloading it and checking its content manifest. Independent receipts preserve both best and last references. `tools/restore_checkpoint.py` requires an immutable artifact version and a trusted upload receipt, verifies every file and refuses to overwrite an existing destination. Real engineering uploads and fresh-cache restores passed; GPU continuation from downloaded files is still pending.
 
-`tools/select_best_checkpoint.py` supports an explicit equal-weight mean across datasets, requires complete expected cohort counts and retained matching checkpoints, and rejects missing or nonfinite scores. Automatic best-retention integration is not finished. Half-epoch save/validation triggering passed an actual two-rank engineering run; complete 285-row runtime acceptance is still pending.
+`tools/select_best_checkpoint.py` supports an explicit equal-weight mean across datasets, requires complete expected cohort counts and retained matching checkpoints, and rejects missing or nonfinite scores. Automatic best-retention integration is implemented; real GPU and fresh-upload acceptance remain pending. Half-epoch save/validation triggering passed an actual two-rank engineering run; complete 285-row runtime acceptance is still pending.
 
 No automatic server cleanup is enabled. Keep data and checkpoints until the necessary artifacts have been verified and successfully used for recovery.
 
 ## Maintainer acceptance
 
-Passed: 71 source tests and four bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
+Passed: 78 source tests and four bootstrap tests; guarded decord metadata repair with actual before/after CPU decoding and dependency checks; older single-A100 engineering train/resume/inference; real engineering W&B content roundtrips; the actual HF pilot's CPU checks; full 285-row validation media preparation.
 
 Remaining: GPU execution from the fresh environment; integrated AVSpeech feature-cache preparation; full real validation features/scoring; downloaded-checkpoint continuation; automatic best/last retention; and an integrated command that completes these stages. The current public training entry has passed the two-rank engineering pilot, including its explicit subset gate and half-epoch schedule.
 
@@ -69,4 +69,11 @@ The multi-GPU launcher now runs a bounded allreduce/DDP/two-update probe before 
 
 `tools/archive_best_last.py --run-dir /path/to/completed-run` inspects the terminal run and plans both roles. `--upload` executes the verified archival after training has ended. Formal selection requires complete MSDWild78 and EasyCom207 summaries and uses their equal-weight mean aligned SI-SDR. The last role comes from the recorded latest successful checkpoint, not filename ordering. Engineering subsets require an explicit flag matching their saved configuration.
 
-The helper keeps separate best/last receipts, verifies unchanged local content before reuse, and refuses to retry an unresolved upload. It never deletes server files. On Slurm, transfers must be run after the GPU allocation ends. A real engineering-pilot audit reconciled both existing cloud receipts and repeated without any new upload. The new helper's fresh live-upload path and automatic end-of-training integration still need acceptance; content verification alone is not resumed training.
+The helper keeps separate best/last receipts, verifies unchanged local content before reuse, and refuses to retry an unresolved upload. It never deletes server files. On Slurm, transfers must be run after the GPU allocation ends. A real engineering-pilot audit reconciled both existing cloud receipts and repeated without any new upload. The new helper's fresh live-upload path and automatic end-of-training integration still need runtime acceptance; content verification alone is not resumed training.
+
+
+## Automatic finalization (not yet GPU accepted)
+
+run.sh now waits for the training process group to finish, checks a fresh successful terminal receipt, and calls tools/finalize_run.py. On a standalone server in online W&B mode this invokes verified best/last archival. A per-output lock rejects duplicate launches. Failed or interrupted training does not trigger archival; upload errors preserve the training result and a separate workflow report. Historical invocation reports remain available.
+
+On Slurm GPU allocations, finalization records ARCHIVAL_DEFERRED before checkpoint hashing or transfer. Run tools/finalize_run.py --run-dir on the transfer facility after allocation termination. Explicit offline/disabled W&B mode also records a deferred result. No file cleanup is enabled. This orchestration passed seven local regressions, including real subprocess exit/failure and stale-receipt refusal; actual existing pilot receipts reconciled twice without new uploads. The new wrapper has not run GPU training and its fresh live-upload path remains unaccepted. Publishing this code does not establish GPU or fresh-upload acceptance.

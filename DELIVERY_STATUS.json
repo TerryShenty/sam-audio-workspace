@@ -5,7 +5,7 @@
   "production_changed": false,
   "scope": "Code-only preparation; no automatic full training or dataset publication",
   "local_tests": {
-    "source": 71,
+    "source": 78,
     "bootstrap": 4
   },
   "environment": {
@@ -56,7 +56,8 @@
     "per_dataset_live_scoring_upload": "PASS_INDEPENDENT_CLOUD_READBACK_ALL_ENGINEERING_METRICS_COUNTS_COORDINATES",
     "score_archive_and_destination": "UNIT_TESTED",
     "automatic_best_last_retention": "NOT_ACCEPTED",
-    "best_last_archive_helper": "PASS_REAL_PILOT_EXISTING_RECEIPT_RECONCILIATION_NO_NEW_UPLOAD; GENERIC_LIVE_UPLOAD_AND_AUTOMATIC_INTEGRATION_PENDING"
+    "best_last_archive_helper": "PASS_REAL_PILOT_EXISTING_RECEIPT_RECONCILIATION_NO_NEW_UPLOAD; GENERIC_LIVE_UPLOAD_AND_AUTOMATIC_INTEGRATION_PENDING",
+    "automatic_finalization_wrapper": "78_LOCAL_TESTS_AND_REAL_EXISTING_RECEIPT_RECONCILIATION_PASS_GPU_AND_FRESH_LIVE_UPLOAD_PENDING"
   },
   "remaining": [
     "GPU execution from the fresh installed environment",
@@ -68,8 +69,5 @@
     "automatic multi-GPU transport launcher runtime acceptance"
   ],
   "configuration_difference": "Portable BF16/global batch32 versus historical SOLOs INT8/global batch64",
-  "automatic_cleanup": false,
-  "source_archive": "workspace-source-04552d37694c4037.tar.gz",
-  "source_sha256": "04552d37694c40376980d6ca03594b0e0a87493eedde48e224118039a0bf20f2",
-  "source_files": 112
+  "automatic_cleanup": false
 }
