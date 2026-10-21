@@ -10,6 +10,25 @@ See [HARDWARE.md](HARDWARE.md) for GPU selection and the precise tested scope.
 Having twelve or several dozen GPUs does not require using all of them.
 The migrated SOLOs fast recipe reproduces the accepted single-A100 rate at **50.26 real targets/second**. Select it explicitly with `--performance-profile solos-fast-v1`. See [FAST_PROFILE.md](FAST_PROFILE.md) for exact batches, commands, memory and measured scaling. The bounded root check is intentionally smaller than the throughput dataset. The four-L40S larger reference test now measures 173.03 real targets/s, -2.76% versus the historical177.94/s long-production rate; its exact scope and communication settings are in FAST_PROFILE.md.
 
+## One-command colleague setup
+
+[中文启动、全量训练边界与升级说明](QUICKSTART_ZH.md)
+
+After your own model access and HF/W&B login are ready, this single command uses
+the pinned accepted fast runtime, two visible GPUs and a small engineering batch:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/quickstart.sh) --wandb-entity YOUR_WANDB_ENTITY
+```
+
+It runs **13 engineering prompts, not full93,942-video production**. The full
+public dataset is complete, but the top-level full-corpus preparation/training
+bridge and longest-input memory gate are not accepted. The larger prepared-bundle
+fast training kernel is separately verified. See the Chinese guide above for
+memory, changed-data/code updates and exact-resume limits. The wrapper fixes the
+bootstrap to56e7db0 and verifies its SHA256; the existing source archive is unchanged.
+Add `--source-only` to inspect source without installation or GPU work.
+
 ## Start on one server
 
 Use Linux x86_64, Python 3.12, an NVIDIA driver compatible with the installed
