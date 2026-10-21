@@ -1,6 +1,6 @@
 {
-  "status": "ENGINEERING_PREVIEW_SINGLE_NODE_WORKFLOW_AND_TWO_NODE_SAVE_RESUME_ACCEPTED",
-  "updated_utc": "2026-10-20",
+  "status": "ENGINEERING_FAST_PROFILE_VERIFIED_SINGLE_AND_TWO_GPU",
+  "updated_utc": "2026-10-21",
   "public_data_complete": true,
   "default_profile": {
     "training_videos": 3,
@@ -38,7 +38,10 @@
     "Same-entry fresh training/public285 features and new0\u21929, three full285 passes, complete CPU checkpoint state, 30 cloud fields and automatic best/last archive",
     "Two distinct physical cloud nodes L40S48/L4048: real0\u21922/save/new-process2\u21923 plus complete saved-state CPU audit",
     "Native2L40S same-host actual SAM: five bounded arms, two112-update repetitions, complete saved-state audits and exact28-step candidate/baseline saved-state equality",
-    "Independent immutable final9 checkpoint: actual different resolved model path, strict identical base, both ranks real9\u219210, complete CPU state and original checkpoint unchanged"
+    "Independent immutable final9 checkpoint: actual different resolved model path, strict identical base, both ranks real9\u219210, complete CPU state and original checkpoint unchanged",
+    "Migrated SOLOs fast singleA100 recipe reproduced50.2583targets/s versus accepted50.4336/50.3127 reference; same384 full10s inputs and effective32, full states",
+    "TwoA100 fast repeated480updates,29184timed processing events from384distinct inputs, eight full periodic states and stable71.9098targets/s at fixedglobal32",
+    "Actual public fast micro2/global4 entry: three realGT updates, full285 originalBF16 validation between2and3, full states and ten independent cloud score fields"
   ],
   "current_standalone": {
     "worker_source_files": 146,
@@ -58,7 +61,7 @@
     ]
   },
   "remaining": [
-    "Actual1/4/8-card and H200 hardware tests, fast-network scaling and multi-node full285",
+    "Actual4/8-card and H200 portable fast-profile GPU tests, fast-network scaling and multi-node full285",
     "Single uninterrupted cold invocation on an empty ordinary server",
     "Full-corpus/30\u201350second training resource and quality acceptance"
   ],
@@ -86,10 +89,10 @@
     "cloud_metrics": "NOT_TESTED_OFFLINE_ENGINEERING",
     "full285": "NOT_TESTED_ACROSS_NODES"
   },
-  "source_runtime_basis": "Accepted152 multi-node and speed runtime plus the separately GPU/CPU-accepted153 terminal model-path relocation fix; no speed candidate enabled",
+  "source_runtime_basis": "Accepted159 worker: migrated measured SOLOs fast recipe, public-entry integration and prior strict relocation fix",
   "native_speed": {
     "status": "PASS_NATIVE_TWO_L40S_REPEATED_REAL_SAM_SPEED_AND_SAVED_STATE",
-    "evidence": "PERFORMANCE.json",
+    "evidence": "Historical BF16 protocol retained in this native_speed object; current fast evidence is PERFORMANCE.json",
     "repeated_baseline": {
       "runs": 2,
       "updates_per_run": 112,
@@ -144,5 +147,74 @@
       "Optimizer shape multiset not model-name/ID",
       "GPU restore sampled equality plus separate actual update proof"
     ]
+  },
+  "fast_profile": {
+    "status": "PASS_MIGRATED_FAST_SINGLE_AND_TWO_GPU_WITH_PUBLIC_ENTRY",
+    "recipe": "solos-fast-v1",
+    "worker_source_manifest_sha256": "71b40b871875ee36d272393c8fef2d58268cf41df9720bfc2838dc7612625633",
+    "single": {
+      "original_rates": [
+        50.43357340150957,
+        50.31269011527646
+      ],
+      "repeated_rates": [
+        50.429671091260275,
+        50.08800560903902
+      ],
+      "aggregate_targets": 6144,
+      "aggregate_timed_seconds": 122.24856737302616,
+      "aggregate_rate": 50.25825767963689,
+      "difference_percent": -0.2280463309430547,
+      "cold_and_cache_reuse_process_seconds": [
+        387.98205995198805,
+        225.21420255402336
+      ],
+      "peak_bytes": [
+        30793290752,
+        30800049152
+      ]
+    },
+    "two": {
+      "aggregate_targets": 29184,
+      "aggregate_timed_seconds": 405.84165015112376,
+      "aggregate_targets_per_second": 71.90981997321546,
+      "single_reference_rate": 50.25825767963689,
+      "speedup": 1.4308060663700868,
+      "per_gpu_scaling_efficiency": 0.7154030331850434,
+      "repeat_spread_percent": 0.12697614811578717,
+      "steady_stability_ok": true
+    },
+    "public_entry": {
+      "status": "PASS_FAST_PUBLIC_ENTRY_FULL285_POST_VALIDATION_UPDATE_AND_CLOUD",
+      "microbatch": 2,
+      "world": 2,
+      "global_batch": 4,
+      "updates": 3,
+      "full_validation": 285,
+      "post_validation_actual_update": 3
+    },
+    "scope_limits": [
+      "Historical384 uniform10s input is not distributed in this repository",
+      "TwoA100 samehost; not fastfabric multinode/H200/12GPUs",
+      "Full13 root cold combined invocation remains unobserved",
+      "No full93942 long production or30-50s micro16 memory/quality claim"
+    ]
+  },
+  "release_boundary": "Accepted runtime159 fast entry; single speed, two-card scaling, publicGT full285 connection accepted; listed hardware and cold end-to-end limits remain.",
+  "recommended_engineering_profile": {
+    "performance_profile": "solos-fast-v1",
+    "gpus": 2,
+    "microbatch": 2,
+    "global_batch": 4,
+    "epochs": 3,
+    "optimizer_steps": 9,
+    "validation_steps": [
+      2,
+      4,
+      6,
+      8,
+      9
+    ],
+    "actual_new_prefix_test": "0 to 3, with full285 at2 and real update3; not a rerun of all nine steps"
   }
 }

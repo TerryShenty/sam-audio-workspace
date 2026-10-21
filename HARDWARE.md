@@ -1,107 +1,48 @@
 # Choosing GPUs and servers
 
-A **node** is one physical server. Cards in one node are locally visible CUDA
-devices. Cards in different nodes communicate over the network; a GPU index on
-one server cannot select a GPU in another server. Ask the administrator for the
-number of servers, GPUs per server, GPU model and inter-server network.
+A node is one physical server. Cards within a node are local CUDA devices; cards in different nodes communicate over a network. Twelve or several dozen GPUs do not identify the number of servers, interconnect or usable GPU memory. Check the actual topology with the administrator.
 
-Twelve H200 GPUs could be divided across servers or belong to one large server;
-the count alone does not establish topology. Several dozen cards are commonly a
-multi-server cluster, but the deployment still needs to be checked.
+## Measured configurations
 
-## What has actually run
-
-| Setup | Real evidence | Limits |
+| Setup | Accepted evidence | Boundary |
 |---|---|---|
-| One server, two A100 40GB | New training and all 285 validation features; nine GT updates; three full validations; complete checkpoint CPU audit; cloud metric readback; automatic best/last archival | Engineering selection and 10/20-second examples; CPU/transfer/GPU phases separated |
-| Two different physical servers, one L40S 48GB and one L40 48GB | Global world size 2; actual 10/20-second updates 0→2; checkpoint; new-process 2→3 update; full saved-state CPU audit | Mixed-hardware functional test over a slow link; no cross-node full285/W&B acceptance or scaling claim |
-| One server, two L40S 48GB | Real 3/28-step correctness checks and two 112-update runs, full saved-state CPU audits; roughly 0.30–0.31 seconds/update after warmup | Same public HF13/BF16/global2 selection; no new full285 or GPU resume in these speed runs; see [PERFORMANCE.md](PERFORMANCE.md) |
-| One server, 1, 4 or 8 selected GPUs | CPU tests for planning, batching, coverage, receipts and strict resume guards | Actual GPU execution at these counts is not accepted |
-| H200, 12 GPUs, more nodes, RDMA/InfiniBand | No direct hardware acceptance | Do not infer from A100/L40 results |
+| One A100 40GB, fast profile | Same 384 full 10-second inputs as the accepted SOLOs reference; micro16/accumulation2/global32; repeated 50.2583 targets/s; full saved states. Separate public GT save8/new-process resume9 also passed. | Not H200 or long-input memory acceptance. |
+| Two A100 40GB in one node, fast profile | Micro16/accumulation1/global32; two independent 480-update runs, 29,184 timed processing events; eight complete periodic checkpoints. Public micro2/global4 entry separately passed three updates with a full285 validation between updates2 and3. | Larger timing dataset has 384 distinct examples. Public13 is a functional check and cannot saturate the same batch. See FAST_PROFILE.md. |
+| Two A100 40GB, original BF16 profile | New training and full285 features, nine updates, three full285 validations, full states, cloud metrics and automatic archival. | Historical complete engineering workflow; do not label the entire nine-update chain as newly rerun with the fast profile. |
+| Two L40S 48GB in one node, original BF16 profile | Two 112-update repeats on public13, about 6.079 real targets/s at micro1/global2, full states. | Different recipe/input from the fast reference; not evidence that L40S is slower than A100. |
+| Two physical nodes, one L40S 48GB and one L40 48GB, original BF16 profile | Real 0→2/save/new-process2→3 and complete CPU states. | Slow cross-region connection; fast profile, cross-node full285 and scaling remain unmeasured. |
+| Four or eight selected GPUs | CPU planning, batch/coverage/receipt and resume rejection tests. | No current portable fast-profile GPU acceptance at these counts. |
+| H200, twelve GPUs, more nodes, RDMA/InfiniBand | No direct acceptance. | Hardware availability or a successful two-card run does not establish throughput. |
 
-## One-server selection
+## Select assigned GPUs
 
-The default is two GPUs. Use `CUDA_VISIBLE_DEVICES` to choose your assigned
-physical cards outside a scheduler. For example, `CUDA_VISIBLE_DEVICES=2,5`
-exposes those two cards as local CUDA devices 0 and 1. In Slurm, preserve its
-assigned visibility and request exactly the GPUs the phase uses.
+The single-server entry supports 1–8 selected GPUs and defaults to two. Outside a scheduler, `CUDA_VISIBLE_DEVICES=2,5` exposes those assigned physical cards as local devices0/1. Inside Slurm, preserve the allocation's visibility. A 12-card host can use a supported subset; `--gpus 12` is not supported by the engineering entry.
 
-This release accepts 1–8 selected GPUs per server. A larger server can
-expose a subset. A 12-card host can therefore start with two selected cards;
-`--gpus 12` is not supported by this engineering entry.
-
-| Selected training GPUs | Microbatch per GPU | Default global batch | Accumulation | Epoch capacity for nine updates | Training encoder GPUs |
-|---|---:|---:|---:|---:|---:|
-| 1 | 1 | 2 | 2 | 2 × 7 updates | 1 |
-| 2 | 1 | 2 | 1 | 2 × 7 updates | 2 |
-| 4 | 1 | 4 | 1 | 3 × 4 updates | 3 |
-| 8 | 1 | 8 | 1 | 5 × 2 updates | 3 |
-
-The tiny training selection has only three unique mixtures, so its encoder uses
-at most three GPUs. Validation encoding, training and scoring use the selected
-count. A four/eight-GPU Slurm workflow must allocate three GPUs for this training
-encoder, then four/eight for validation encoding and training. Do not leave
-allocated workers idle merely to preserve a uniform request across phases.
-
-`--global-batch` must be a positive multiple of the selected count. Changing
-batch changes updates per epoch, validation boundaries and training trajectory.
-Four/eight cards do not retain the two-card step4/step7 validation schedule and
-may trigger more full validations. Do not extrapolate speed or wall time from
-the two-card reference.
-
-After extracting the source, these inspections do not launch training:
+Inspect the selected recipe before compute:
 
 ```bash
-bash start.sh --gpu-plan --gpus 4
-bash start.sh --check-gpus --gpus 4
+bash start.sh --directory "$PWD/plan" --gpu-plan --gpus 2 \
+  --performance-profile solos-fast-v1 --microbatch 2 --global-batch 4
 ```
 
-`--gpu-plan` needs no Torch or installation. `--check-gpus` needs the installed
-environment; the shell entry may install it if absent. To avoid that installation,
-use the already-installed Python directly with `tools/standalone_workflow.py`.
+The public bootstrap may fetch its small source package. The extracted planner itself needs no Torch, installation or GPU. `--check-gpus` requires the installed Torch environment.
 
-## Memory and compatibility
+The root cohort has only three unique training mixtures. Its training encoder uses `min(gpus,3)` workers; validation encoding, training and scoring use the selected count. Allocate the exact per-phase count. The planner records epochs, accumulation and batch size. Global batch must be divisible by `gpus × microbatch`; changing these changes the training trajectory and validation boundaries.
 
-DDP keeps a model replica on each card: four 48GB GPUs do not provide a single
-192GB model-memory pool. The single-server entry checks visible count, distinct
-UUIDs, CUDA BF16 capability, homogeneous selected devices and at least 22 GiB
-reported capacity per card. That threshold allows nominal 24GB cards; it is an
-admission rule, not an OOM guarantee or a measurement on every card model.
-Identifiable MIG partitions and nested torchrun invocation are rejected.
+For saturated, explicitly prepared larger inputs, the measured recipe is micro16/global32: one card accumulates twice, two cards once. Four cards at micro16 require at least global64 and eight require at least global128; these are changed-batch experiments, not equivalent resumes or measured linear scaling. Keeping global32 requires smaller per-card batches. The 13-row public check limits microbatch to1/2/4.
 
-There is no automatic batch enlargement, FP32 fallback, FSDP/ZeRO or elastic
-checkpoint resharding. Host memory, driver/library compatibility, occupied VRAM
-and input duration still matter. Longer 30–50-second training examples have not
-been accepted. More GPUs require a new measured host-memory and timing estimate.
+## Memory and restoration
 
-Full resume keeps the original world size, batch/accumulation, data/base identity,
-optimizer, scheduler, EMA and per-rank RNG. A two-card checkpoint cannot silently
-become an exact four-card resume. A new run or explicitly designed conversion is
-required; loading only model weights is not complete continuation.
+DDP replicates the model and does not pool memory. Micro16 reached approximately28.69GiB Torch allocation per A100 for full10-second inputs. This excludes some driver/NCCL overhead; it does not establish micro16 safety on nominal24GB GPUs or on20–50-second inputs. Use the smaller root recipe for an initial functional check and measure representative longer inputs before a larger run.
+
+The entry checks visible count, distinct UUIDs, BF16 capability, homogeneous selected devices and at least22GiB reported memory; the capacity threshold is only an admission rule, not an OOM guarantee. Identifiable MIG partitions and nested torchrun are rejected. No automatic FSDP/ZeRO, elastic resharding or FP32 fallback is provided.
+
+Complete resume keeps profile, world size, batch/accumulation, data/base identity, optimizer, scheduler, EMA and per-rank RNG. Changing a BF16 checkpoint to the INT8 fast recipe is not a complete compatible continuation. A different world or batch requires a deliberately defined new run or conversion, not silently reused state.
 
 ## Multiple servers
 
-Use the explicit experimental launcher in [MULTINODE.md](MULTINODE.md), not the
-single-server `--gpus` option. The implemented fixed-topology contract allows
-2–16 nodes and 1–8 GPUs per node, but **only two nodes with one GPU each have
-passed actual GPU testing**. More cards or nodes are implementation bounds, not
-tested configurations.
+Increasing the single-server `--gpus` value does not reach another machine. Follow MULTINODE.md with independently verified inputs on each node and explicit ranks/network addresses. The fixed-topology launcher accepts2–16nodes and1–8GPUs per node, but only the original two-node/one-GPU-each BF16 save/resume test has actual cross-node acceptance.
 
-The two-cloud-server experiment used about a 12 MB/s connection; initial model
-broadcast dominated roughly ten-minute short phases. That result demonstrates
-correct updates and resume, not efficient training. A fast intra-cluster network
-and consistent devices should be evaluated on the actual target system. Existing
-operator NCCL settings are preserved; the tested local fallback is not a universal
-recommendation to disable P2P or InfiniBand.
+Prefer measured local interconnects or a fast same-cluster fabric. Check actual NCCL transport; private IPs and same data-center labels are not bandwidth guarantees. Preserve functioning operator RDMA/P2P configuration. The Longleaf P2P workaround was specific to the tested host. See COMMUNICATION.md.
 
-## A100 versus L40S
-
-L40S has 48GB GDDR6 ECC and no NVLink, according to the
-[NVIDIA specification](https://www.nvidia.com/en-us/data-center/l40s/).
-The tested A100 cards have 40GB per device. Capacity alone does not predict
-training speed: local PCIe topology, peer access, memory bandwidth and the
-selected workload matter. Native two-L40S repeated speed measurements now exist in
-[PERFORMANCE.md](PERFORMANCE.md), with earlier same-recipe A100 short windows as
-context. They are not a controlled repeated hardware A/B or a global optimum.
-
-See [COMMUNICATION.md](COMMUNICATION.md) before choosing a multi-server rental.
+The migrated fast profile is separately documented in [FAST_PROFILE.md](FAST_PROFILE.md); previous BF16 scopes are historical and do not establish fast-profile multi-node or H200 throughput.

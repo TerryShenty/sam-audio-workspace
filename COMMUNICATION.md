@@ -5,6 +5,14 @@ Single-server and multi-server training both use PyTorch DistributedDataParallel
 communication uses the available local GPU interconnect; across servers it also
 uses the network. More GPUs do not pool model memory or guarantee a faster run.
 
+## Current fast-profile scaling on two A100s
+
+The same 384 full10-second inputs and effective batch32 ran at50.2583 real targets/s on one A100 and71.9098 on two A100s: **1.431× speedup**, about71.5% per-card scaling efficiency. Two independent480-update runs differed by0.127%; late-half drift was below0.5%. This is actual forward/backward/optimizer throughput, excluding separately recorded initialization, compilation and checkpoint writes. It is not linear scaling or a claim of globally optimal communication.
+
+The observed pair crosses NUMA domains (`SYS` topology). After the previously accepted host-specific P2P failure workaround, actual NCCL channels used shared host memory (`SHM/direct/direct`). The extended test's128MiB payload medians were approximately0.671GB/s broadcast and0.659GB/s all-reduce, measured separately with three warmups and five repetitions. Synthetic payload rates do not equal model training rates. This slow host-memory route is a plausible contributor to scaling loss; no isolated profiler establishes that it explains all of it.
+
+Do not disable working P2P/RDMA or initial DDP synchronization to reproduce the workaround. The trainer already avoids redundant accumulation reductions with `no_sync`. Default initial parameter/buffer synchronization remains enabled. A previous guarded skip-initialization test saved startup time but did not improve steady throughput, so it was not adopted. On another server, retain its functioning topology settings and repeat same-input, same-effective-batch training before claiming a gain.
+
 ## What the two-server test established
 
 The accepted pair was one L40S and one L40 in two different physical machines
@@ -66,7 +74,7 @@ These native results do not establish a fast inter-server link.
 
 ## Current limits and next useful tests
 
-No accepted H200 run, 4/8-card GPU run, fast-fabric scaling measurement or
+No accepted portable fast-profile H200 run, 4/8-card GPU run, fast-fabric scaling measurement or
 multi-node full285 validation is available. The next useful paid test is a
 bounded same-data-center comparison with initialization and steady-state
 communication measured separately, not another cross-region repeat or an
@@ -75,3 +83,5 @@ instances: set a hard external lifetime/budget and verify provider shutdown.
 
 References: [PyTorch DDP](https://docs.pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html),
 [PyTorch tuning guide](https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
+
+The migrated fast profile is separately documented in [FAST_PROFILE.md](FAST_PROFILE.md); previous BF16 scopes are historical and do not establish fast-profile multi-node or H200 throughput.

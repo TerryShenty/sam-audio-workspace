@@ -1,4 +1,4 @@
-# SAM Audio engineering workflow
+# SAM Audio — verified SOLOs fast training recipe
 
 This release provides a bounded **3-video / 8-target / 13-prompt training check**
 with all **285 validation examples**. It does not start full 93,942-video training.
@@ -8,8 +8,7 @@ new-process resume on one L40S 48GB and one L40 48GB in different physical serve
 
 See [HARDWARE.md](HARDWARE.md) for GPU selection and the precise tested scope.
 Having twelve or several dozen GPUs does not require using all of them.
-Native two-L40S training speed and its repeated measured limits are documented
-in [PERFORMANCE.md](PERFORMANCE.md).
+The migrated SOLOs fast recipe reproduces the accepted single-A100 rate at **50.26 real targets/second**. Select it explicitly with `--performance-profile solos-fast-v1`. See [FAST_PROFILE.md](FAST_PROFILE.md) for exact batches, commands, memory and measured scaling. The bounded root check is intentionally smaller than the throughput dataset.
 
 ## Start on one server
 
@@ -24,7 +23,9 @@ login tools or securely supplied environment variables; never put tokens in Git.
 git clone https://github.com/TerryShenty/sam-audio-workspace.git
 cd sam-audio-workspace
 CUDA_VISIBLE_DEVICES=0,1 bash start.sh \
-  --directory "$PWD/sam-run" --gpus 2 --wandb-entity YOUR_WANDB_ENTITY
+  --directory "$PWD/sam-run" --gpus 2 \
+  --performance-profile solos-fast-v1 --microbatch 2 --global-batch 4 \
+  --wandb-entity YOUR_WANDB_ENTITY
 ```
 
 Outside a scheduler, `CUDA_VISIBLE_DEVICES` selects GPUs on this server. Replace
@@ -35,15 +36,15 @@ The command verifies the packaged source, installs its environment if needed,
 downloads the pinned engineering training selection and full validation media,
 prepares GT spans, builds new training and validation features, checks and exports
 the bundle, performs nine updates, and archives the selected best/last checkpoints.
-The default two-GPU profile scores all 285 examples at step 4, step 7 and step 9.
+The original BF16 micro1/global2 check scores at steps4/7/9. The fast micro2/global4 example has different epoch boundaries and scores at steps2/4/6/8/9; every pass still uses all285 examples. Compilation makes a short check startup-heavy; the speed claim describes steady larger-batch training, not this nine-update end-to-end command.
 If best and last select the same checkpoint, one artifact serves both roles.
 
-The same entry has completed this data-to-training-to-archive chain on Longleaf
+The original BF16 profile completed this data-to-training-to-archive chain on Longleaf
 with CPU, transfer and GPU stages separated. Environment/model/raw-download bytes
 were explicitly reused; training and validation features and the run were new.
 Cold anonymous source/media downloads and a fresh environment were tested
 separately. A single uninterrupted invocation on an otherwise empty ordinary
-server has not been observed. These scopes must not be conflated.
+server has not been observed. These scopes must not be conflated. The fast profile was separately accepted through three actual GT updates with a full285 validation between updates2 and3, complete state inspection and independent cloud score readback. Its larger steady throughput is tested separately at micro16/global32.
 
 To verify only the public source, without installation, model downloads or GPU work:
 
@@ -82,6 +83,7 @@ hashing, CPU preparation and export outside GPU allocations.
 ```bash
 # Transfer facility
 bash start.sh --directory "$PWD/sam-run" --gpus 2 \
+  --performance-profile solos-fast-v1 --microbatch 2 --global-batch 4 \
   --wandb-entity YOUR_WANDB_ENTITY --through download
 # CPU allocation
 bash start.sh --directory "$PWD/sam-run" --only prepare
@@ -123,7 +125,7 @@ Engineering training stays pinned to the earlier immutable revision containing
 its selected three composites. Source-placement GT spans include silence and
 are not VAD labels. Validation GT is used for scoring, not conditioning.
 
-This BF16 engineering profile differs from the SOLOs production INT8 profile.
+The default BF16 fallback and explicit SOLOs INT8 fast profile are separate checkpoint recipes. The fastest accepted row-quantization/GEMM configuration is included; only its measured scopes are claimed.
 The tests do not establish full-corpus quality, 30–50-second training memory,
 H200 compatibility or twelve/dozens-of-GPU efficiency. The xformers native ABI
 warning remains; the tested SAM path uses SDPA.

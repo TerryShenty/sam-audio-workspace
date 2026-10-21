@@ -165,3 +165,5 @@ host memory and communication cost. H200, 12-GPU layouts, full validation across
 nodes and fast-network throughput require a separate bounded test on the actual
 target infrastructure. The entry does not infer those settings from total GPU
 count, and it does not claim elastic world-size resume.
+
+The migrated fast profile is separately documented in [FAST_PROFILE.md](FAST_PROFILE.md); previous BF16 scopes are historical and do not establish fast-profile multi-node or H200 throughput.
