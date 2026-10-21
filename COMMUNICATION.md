@@ -74,7 +74,7 @@ These native results do not establish a fast inter-server link.
 
 ## Current limits and next useful tests
 
-No accepted portable fast-profile H200 run, 4/8-card GPU run, fast-fabric scaling measurement or
+No accepted portable fast-profile H200 run, eight-card GPU run, fast-fabric scaling measurement or
 multi-node full285 validation is available. The next useful paid test is a
 bounded same-data-center comparison with initialization and steady-state
 communication measured separately, not another cross-region repeat or an
@@ -85,3 +85,7 @@ References: [PyTorch DDP](https://docs.pytorch.org/docs/stable/generated/torch.n
 [PyTorch tuning guide](https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
 
 The migrated fast profile is separately documented in [FAST_PROFILE.md](FAST_PROFILE.md); previous BF16 scopes are historical and do not establish fast-profile multi-node or H200 throughput.
+
+## Latest four-L40S evidence
+
+Actual four-L40S fast training, complete state and effective continuation now pass. See [FAST_PROFILE.md](FAST_PROFILE.md) for the production-rate comparison, host-specific communication fallback and remaining hardware limits. This accepts actual four-card fast training and state continuation; it does not claim a single cold four-card raw-data-to-archive root invocation.

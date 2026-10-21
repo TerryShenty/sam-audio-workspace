@@ -12,11 +12,15 @@ Each migrated repeat timed 3,072 real targets. Peak Torch allocation was about 2
 
 Later historical coordinate-descent, selective split-K and disabled epilogue-fusion trials did not establish a faster training configuration. The EXHAUSTIVE-search trial was interrupted when that research was paused; it is not an accepted faster version. Private diagnostic sample catalogs are not included in this release.
 
-## Relation to the earlier four-L40S result
+## Measured four-L40S comparison
 
-The historical four-L40S run measured143.0045 and143.7982 targets/s with micro16 and effective batch64. Its per-card batch used the same accepted fast combination, but GPU model/count and global batch differ from the new two-A100 global32 comparison. It is not a measured four-card result for this newly packaged portable entry. The new single-card measurement directly checks that the accepted fast computation was preserved; the new two-card measurement checks fixed-batch scaling on its actual topology.
+The historical long SOLOs production run processed 8,390,682 timed real targets in 47,153.596 seconds: **177.9436 targets/s**. It used 610,827 TRAIN prompts, four L40S cards, microbatch16, accumulation1 and effective batch64. Its complete-window median was181.1696/s. The older143.0045/143.7982 figures describe a separate400-example padded short benchmark and are not the production baseline.
 
-A claim such as “sixteen epochs in24hours” also depends on the actual prompt count, duration distribution, validation frequency, compilation, checkpoint writes and queue time. Steady targets/s alone is not an end-to-end completion promise. Increasing global batch for more GPUs changes the optimizer trajectory; record that choice rather than presenting it as an exact continuation of a smaller-batch checkpoint.
+The same published fast runtime was tested on a fresh Runpod four-L40S server. Two independent240-update runs, with20warmup updates each, processed 28,160 timed target events from8,192 distinct full10-second examples, with no padding: **173.0327 targets/s**, -2.760% relative to the historical production rate. Repeat spread was0.132%. Full model, Adam, FP32 EMA, scheduler, data position and four-rank RNG state were checked in ten generated checkpoints; a fresh process restored step240 and actually updated all four ranks to241.
+
+This is a different physical host and an8,192-example subset versus610,827 production examples, not a controlled original-host A/B or a24-hour production/quality acceptance. First compilation, initialization, checkpoint I/O and validation are excluded from the native steady windows and reported separately. More cards or a larger global batch do not guarantee linear speedup or the same training trajectory.
+
+On this Runpod host, default NCCL peer communication timed out before training. After full process cleanup, an explicit host-specific `NCCL_P2P_DISABLE=1` passed all four ranks;128MiB synthetic broadcast/all-reduce payload rates were19.69/11.01GB/s. These are communication tests, not SAM targets/s. The existing single-host launcher already probes default communication and, after failed-process cleanup, tries P2P-disabled communication if no explicit operator setting was supplied. Explicit operator settings are preserved; training itself is not automatically retried. Keep working P2P/RDMA enabled on other hosts; do not blindly copy this workaround.
 
 ## Public engineering check
 
@@ -64,3 +68,16 @@ The release additionally requires two independent 480-update two-GPU runs at eff
 On the same 384 distinct inputs and fixed effective batch of 32, two independent 480-update processes (24 warmup updates each, 29,184 timed sample processing events, 38 complete epoch windows per process) measured 71.9098 real targets/second (1.431 times the measured single card, 71.5% per-card scaling efficiency). This is measured SAM throughput; synthetic collective rates are reported separately.
 
 The actual public bundle entry performed three fast-profile GT updates with a complete 285-example original-BF16 validation between updates 2 and 3; full checkpoint state, fixed noise and ten independently read cloud score fields passed. Reused model, environment and public feature bytes are explicitly recorded; this is not a new cold installation.
+
+## Four-card prepared-bundle command
+
+From the extracted source, with your own verified larger bundle/config/model and explicit budget:
+
+```bash
+GPUS=4 CUDA_VISIBLE_DEVICES=0,1,2,3 bash run.sh \
+  --config "$CONFIG" --data-root "$BUNDLE" --model "$MODEL" \
+  --output "$OUTPUT" --epochs "$EPOCHS" --max-steps "$MAX_STEPS" \
+  --performance-profile solos-fast-v1 --microbatch 16 --global-batch 64
+```
+
+Micro16 was measured on full10-second examples. Longer20–50-second memory, eight-card/H200 hardware and fast-profile multi-node scaling remain unmeasured. Private reference inputs are not included in this repository.

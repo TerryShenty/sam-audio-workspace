@@ -1,5 +1,5 @@
 {
-  "status": "ENGINEERING_FAST_PROFILE_VERIFIED_SINGLE_AND_TWO_GPU",
+  "status": "ENGINEERING_FAST_PROFILE_VERIFIED_SINGLE_TWO_AND_FOUR_GPU",
   "updated_utc": "2026-10-21",
   "public_data_complete": true,
   "default_profile": {
@@ -41,7 +41,8 @@
     "Independent immutable final9 checkpoint: actual different resolved model path, strict identical base, both ranks real9\u219210, complete CPU state and original checkpoint unchanged",
     "Migrated SOLOs fast singleA100 recipe reproduced50.2583targets/s versus accepted50.4336/50.3127 reference; same384 full10s inputs and effective32, full states",
     "TwoA100 fast repeated480updates,29184timed processing events from384distinct inputs, eight full periodic states and stable71.9098targets/s at fixedglobal32",
-    "Actual public fast micro2/global4 entry: three realGT updates, full285 originalBF16 validation between2and3, full states and ten independent cloud score fields"
+    "Actual public fast micro2/global4 entry: three realGT updates, full285 originalBF16 validation between2and3, full states and ten independent cloud score fields",
+    "FourL40S actual8192-example repeated240updates, real240to241 restoration and ten complete CPU checkpoint states; actual production-rate comparison in PERFORMANCE.json"
   ],
   "current_standalone": {
     "worker_source_files": 146,
@@ -61,7 +62,7 @@
     ]
   },
   "remaining": [
-    "Actual4/8-card and H200 portable fast-profile GPU tests, fast-network scaling and multi-node full285",
+    "Actual8-card and H200 portable fast-profile GPU tests, fast-network scaling and multi-node full285",
     "Single uninterrupted cold invocation on an empty ordinary server",
     "Full-corpus/30\u201350second training resource and quality acceptance"
   ],
@@ -216,5 +217,28 @@
       9
     ],
     "actual_new_prefix_test": "0 to 3, with full285 at2 and real update3; not a rerun of all nine steps"
+  },
+  "four_l40s": {
+    "targets_per_second": 173.03270980260453,
+    "historical_production_targets_per_second": 177.94362941452272,
+    "relative_to_historical_production_percent": -2.7598176052024415,
+    "timed_target_processing_events": 28160,
+    "distinct_examples": 8192,
+    "repeat_spread_percent": 0.1324294820898464,
+    "steady_stable": true,
+    "limitations": [
+      "Different physical host/software/time and8192subset versus610827 production; comparison is not controlled original-host A/B.",
+      "Native steady windows exclude compilation/checkpoint/validation; no24hour production or quality claim.",
+      "No new publicGT/full285 test; their accepted evidence is separate.",
+      "Optimizer shape multiset not name-ID; CPU RNG restored/CUDA RNG stored; GPU model restoration sampled.",
+      "The5secondSMIpoll missed the single resumed update on rank0 (0positive/27samples); allfour actualCUDAforward/Adam receipts and full240to241modelchange prove computation. No claim of positive SMI sample for that rank."
+    ],
+    "world": 4,
+    "microbatch": 16,
+    "effective_batch": 64,
+    "steps_per_repeat": 240,
+    "warmup_updates": 20,
+    "checkpoint_and_effective_resume": "PASS_240_TO_241_ALL_FOUR_RANKS_AND_COMPLETE_CPU_STATE",
+    "communication": "This cloud host required NCCL_P2P_DISABLE=1 after default collective timeout and full process cleanup; not a universal setting"
   }
 }

@@ -14,9 +14,9 @@ import tarfile
 import tempfile
 import urllib.request
 
-ARCHIVE = 'workspace-source-6ebe5bfb8bf6ac6c.tar.gz'
-ARCHIVE_SHA256 = '6ebe5bfb8bf6ac6c0614095483df04c23b7a2c6c4c6647fb885af64e6f26c527'
-MANIFEST_SHA256 = '0bf3aac02d9456a45f289b11c44c9375401a63af2a13a3a1e21d3584bbd200eb'
+ARCHIVE = 'workspace-source-6b504ce954817ae4.tar.gz'
+ARCHIVE_SHA256 = '6b504ce954817ae4827df0fdb1bce62bd7a30ac388c6127f7e990b364350f17f'
+MANIFEST_SHA256 = '6113bf39691b84f8ac567d85cffad4c507f0179711a10e658f832de98fb5528b'
 REPOSITORY = 'TerryShenty/sam-audio-workspace'
 ROOT = Path(__file__).resolve().parent
 

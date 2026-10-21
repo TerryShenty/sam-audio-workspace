@@ -8,7 +8,7 @@ new-process resume on one L40S 48GB and one L40 48GB in different physical serve
 
 See [HARDWARE.md](HARDWARE.md) for GPU selection and the precise tested scope.
 Having twelve or several dozen GPUs does not require using all of them.
-The migrated SOLOs fast recipe reproduces the accepted single-A100 rate at **50.26 real targets/second**. Select it explicitly with `--performance-profile solos-fast-v1`. See [FAST_PROFILE.md](FAST_PROFILE.md) for exact batches, commands, memory and measured scaling. The bounded root check is intentionally smaller than the throughput dataset.
+The migrated SOLOs fast recipe reproduces the accepted single-A100 rate at **50.26 real targets/second**. Select it explicitly with `--performance-profile solos-fast-v1`. See [FAST_PROFILE.md](FAST_PROFILE.md) for exact batches, commands, memory and measured scaling. The bounded root check is intentionally smaller than the throughput dataset. The four-L40S larger reference test now measures 173.03 real targets/s, -2.76% versus the historical177.94/s long-production rate; its exact scope and communication settings are in FAST_PROFILE.md.
 
 ## Start on one server
 
@@ -60,7 +60,7 @@ bash start.sh --directory "$PWD/run4" --gpu-plan --gpus 4
 
 This root command downloads/verifies the small source package if absent. The
 extracted `start.sh --gpu-plan --gpus 4` itself performs no downloads or installation.
-The four-GPU plan is CPU-checked; four-GPU execution has not been accepted.
+Four-L40S fast training with a larger prepared reference dataset, complete state and new-process continuation is now accepted; see FAST_PROFILE.md. The complete four-card raw-data-to-validation-to-archive root invocation has not been rerun as one combined process.
 
 ## Continue and inspect
 

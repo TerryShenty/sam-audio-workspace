@@ -11,7 +11,8 @@ A node is one physical server. Cards within a node are local CUDA devices; cards
 | Two A100 40GB, original BF16 profile | New training and full285 features, nine updates, three full285 validations, full states, cloud metrics and automatic archival. | Historical complete engineering workflow; do not label the entire nine-update chain as newly rerun with the fast profile. |
 | Two L40S 48GB in one node, original BF16 profile | Two 112-update repeats on public13, about 6.079 real targets/s at micro1/global2, full states. | Different recipe/input from the fast reference; not evidence that L40S is slower than A100. |
 | Two physical nodes, one L40S 48GB and one L40 48GB, original BF16 profile | Real 0→2/save/new-process2→3 and complete CPU states. | Slow cross-region connection; fast profile, cross-node full285 and scaling remain unmeasured. |
-| Four or eight selected GPUs | CPU planning, batch/coverage/receipt and resume rejection tests. | No current portable fast-profile GPU acceptance at these counts. |
+| Four L40S48GB in one node, fast profile | Two240-update runs on8192 distinct full10s examples, micro16/global64, full checkpoints and actual240→241 continuation. | Different host/subset from610827-prompt production; see FAST_PROFILE.md. |
+| Eight selected GPUs | CPU planning, batch/coverage/receipt and resume rejection tests. | No actual eight-card GPU acceptance. |
 | H200, twelve GPUs, more nodes, RDMA/InfiniBand | No direct acceptance. | Hardware availability or a successful two-card run does not establish throughput. |
 
 ## Select assigned GPUs
@@ -46,3 +47,7 @@ Increasing the single-server `--gpus` value does not reach another machine. Foll
 Prefer measured local interconnects or a fast same-cluster fabric. Check actual NCCL transport; private IPs and same data-center labels are not bandwidth guarantees. Preserve functioning operator RDMA/P2P configuration. The Longleaf P2P workaround was specific to the tested host. See COMMUNICATION.md.
 
 The migrated fast profile is separately documented in [FAST_PROFILE.md](FAST_PROFILE.md); previous BF16 scopes are historical and do not establish fast-profile multi-node or H200 throughput.
+
+## Latest four-L40S evidence
+
+Actual four-L40S fast training, complete state and effective continuation now pass. See [FAST_PROFILE.md](FAST_PROFILE.md) for the production-rate comparison, host-specific communication fallback and remaining hardware limits. This accepts actual four-card fast training and state continuation; it does not claim a single cold four-card raw-data-to-archive root invocation.
