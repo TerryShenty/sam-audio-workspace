@@ -2,7 +2,7 @@
 """Single entry for the pinned Qwen30B/SAM V6 handoff. English-only UI."""
 import argparse, hashlib, json, os, pathlib, subprocess, sys, urllib.request, zipfile, fcntl
 URL='https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/qwen30b-4gpu-v6-auto-source.zip'
-SHA='665f287aac5456338f1aae192d2284ecf4c74f4788d762bc3970eb2cb67ba6ac'
+SHA='af1fa3883f550e127215dee072c2e3036dfa4fe586d24e96ff25c86dc122e941'
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('action',choices=['setup','prepare','qualify','train'])
@@ -39,11 +39,10 @@ def main():
   paths={'data_root':str(root/'joint_data/data'),'sam_namespace':str(root/'joint_data/sam_namespace'),'qwen_model':str(root/'models/Qwen3-Omni-30B-A3B-Thinking'),'sam_model':str(root/'models/sam-audio-large-tv')}
   config=root/'paths.json';config.write_text(json.dumps(paths,indent=2)+'\n')
   run([python,package/'prepare.py','--paths',config],cwd=package)
-  print('Prepared. Next: run this entry with qualify, --account and --partition.')
+  print('Prepared. Next: run this entry with train, --account and --partition.')
  else:
   if not a.account or not a.partition:p.error('--account and --partition are required')
   if not (package/'CPU_READY.json').is_file():p.error('Run prepare successfully first')
-  if a.action=='train' and (not a.gate or not a.gate.expanduser().is_file()):p.error('train requires --gate pointing to a successful PORTABLE_GATE.json')
   output=(a.output or root/'runs'/a.action).expanduser().resolve()
   if output.exists():p.error('Output already exists; use a new --output to avoid duplicate submissions')
   output.parent.mkdir(parents=True,exist_ok=True)

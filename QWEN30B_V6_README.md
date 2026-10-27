@@ -1,11 +1,7 @@
-# Qwen30B + SAM Audio V6 automatic handoff
+# Direct four-GPU, 24-hour Qwen30B + SAM Audio training
 
-Target: one Linux x86_64 server with four approximately48GB NVIDIA GPUs,16 CPUs and128GiB host memory, subject to site policy and actual qualification. Training is per-rank2/global8 with the accepted V6 joint path. This is not multi-node training. Use QWEN_QUICKSTART.md in the repository for setup, own-account HF login, preparation and submission commands.
+Use [QWEN_QUICKSTART.md](QWEN_QUICKSTART.md) and `qwen_quickstart.py`: setup, HF login, prepare, then train. No separate qualification job or gate receipt is required. The optional qualify action is for debugging only.
 
-This revision adds an automatic private environment installer, early official-model access checks, CPU extraction/smoke decoding of the original SAM codec, and automatic complete817 validation. It preserves the model/optimizer joint training recipe and frozen AV cache identities. The original V6 speed result is oneA100/global2, not a four-card guarantee.
+The V6 joint model, optimizer, loss, caches, four persistent ranks and global batch 8 are unchanged. Full 817-example validation runs every half epoch (0.5, 1, 1.5, 2, 2.5, ...), after a complete checkpoint, and training continues afterward. The original walltime and checkpoint/final-validation reserves still apply. CSV results are under `<root>/runs/train/`; per-boundary results are under its `validation/` directory.
 
-Qualification now tests longest training inputs and full checkpoint restoration, then screens validation memory with the retained training state and runs all817 held-out samples. It writes PORTABLE_GATE.json only when validation completes. Formal training saves its complete final checkpoint before validation and reserves30 minutes for validation inside the original walltime. Validation failure preserves the checkpoint and is reported as failure, never successful training completion. Full validation uses live weights, original seeds, midpoint16, original GT/mixture scoring and a coverage audit. Per-GPU batch1 is the conservative initial portable policy; batch8 has not been approved in this retained joint-training state. No automatic OOM retry or example dropping.
-
-The new code path has source/CPU checks, not a target four-GPU acceptance result. Fresh environment installation and the actual817 GPU run must succeed on the recipient's server before claiming end-to-end completion. Existing queued production code is unchanged. Do not use qualification-trained state to initialize formal training.
-
-Start here: [simplified commands](QWEN_QUICKSTART.md). Use `qwen30b-4gpu-v6-auto-source.zip`; the older portable ZIP remains a historical fallback.
+This change removes the separate short-test prerequisite; it does not establish target GPU success. Single-A100 fixed64/global2 mean 0.809298911 seconds is not a four-GPU speed guarantee. New-machine installation and full four-GPU execution remain unverified. Existing source/data guards, finite training checks, watchdogs, full-state checkpoints and validation memory probes are retained. No existing Longleaf job is changed.

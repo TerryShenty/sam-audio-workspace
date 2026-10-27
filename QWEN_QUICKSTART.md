@@ -29,19 +29,13 @@ python3.12 qwen_quickstart.py prepare --root /YOUR_STORAGE/qwen-sam
 
 This checks model access early, waits for the dataset release by refusing an incomplete release, downloads official Qwen/SAM weights and111,068train+817validation data, fills paths, builds CPU extensions, and extracts/tests the original frozen audio codec. Data payload is350.57GB; allow additional model/checkpoint/temporary space. Re-run after UPLOAD_COMPLETE.json is published if the release is still uploading. Existing download caches are reused.
 
-## 4. Submit the four-GPU qualification
+## 4. Start four-GPU, 24-hour training directly
 
 ```bash
-python3.12 qwen_quickstart.py qualify --root /YOUR_STORAGE/qwen-sam --account YOUR_ACCOUNT --partition YOUR_PARTITION
+python3.12 qwen_quickstart.py train --root /YOUR_STORAGE/qwen-sam --account YOUR_ACCOUNT --partition YOUR_PARTITION
 ```
 
-This uses four persistent ranks in one one-hour Slurm job. It tests demanding training inputs, full-state resume, real retained-state validation memory, then all817 examples. The initial portable validation batch is1 per GPU; batch8 is not claimed safe in this changed joint state. PORTABLE_GATE.json requires actual complete validation. Diagnose a failed run before any repeat; the wrapper blocks duplicate submission paths.
-
-## 5. Submit 24-hour training after qualification
-
-```bash
-python3.12 qwen_quickstart.py train --root /YOUR_STORAGE/qwen-sam --account YOUR_ACCOUNT --partition YOUR_PARTITION --gate /YOUR_STORAGE/qwen-sam/runs/qualify/PORTABLE_GATE.json
-```
+No separate short-test job or PORTABLE_GATE.json is required. This starts one 24-hour allocation with four persistent training ranks. The initial three warmup updates are real training updates and remain in the saved state; training continues in the same process without restarting from initialization. Source/data checks, finite-update checks, watchdogs, checkpointing and validation memory probes remain enabled. The optional `qualify` action is only for explicit debugging, not part of the normal workflow. Direct launch does not claim that this four-GPU runtime has already been validated.
 
 No epoch cap. It periodically saves complete state and reserves30 minutes near the original deadline for final817validation after saving the final complete checkpoint. VALIDATION817.json and its memory receipt contain coverage/scoring. Validation failure preserves the checkpoint, records failure and does not claim completion. There is no automatic renewal, blind OOM retry, dropped validation row or speed-search sweep.
 
@@ -60,4 +54,4 @@ Default formal output: `<root>/runs/train/` (override with `--output`).
 - `VALIDATION817.json`: authoritative complete-coverage validation receipt.
 - `checkpoints/step-*/COMPLETE.json` and rank state files: complete resumable checkpoints. CSV files do not replace checkpoints.
 Send the summary CSV and training-rank0.csv for a quick review; include all four training CSVs to investigate rank differences. Validation CSVs are generated only after complete817 coverage. Missing validation CSV does not mean a passing validation.
-Validation now runs every half epoch based on committed global sampler progress (111,068 rows; global batch8), plus final validation when the final state has not already been scored. Boundaries occur after updates6,942,13,884,20,826,...; sample-based thresholds avoid cumulative rounding drift. Each boundary saves a complete checkpoint, runs all817 with the same scoring protocol, then resumes training. Fixed walltime takes priority near the deadline. Validation receipts are under `validation/step-*.json`, with matching `-summary.csv` and `-samples.csv`. The final summary remains `VALIDATION817-summary.csv`. A resumed checkpoint at an unfinished boundary is validated before further updates. No model, loss, optimizer, V6 kernel or validation solver change is made by this scheduling update. Target GPU execution remains pending.
+Validation now runs every half epoch based on committed global sampler progress (111,068 rows; global batch8), plus final validation when the final state has not already been scored. Boundaries occur after updates6,942,13,884,20,826,...; sample-based thresholds avoid cumulative rounding drift. Each boundary saves a complete checkpoint, runs all817 with the same scoring protocol, then resumes training. Fixed walltime takes priority near the deadline. Validation receipts are under `validation/step-*.json`, with matching `-summary.csv` and `-samples.csv`. The final summary remains `VALIDATION817-summary.csv`. An unfinished resumed validation boundary is detected by the schedule after startup warmup. No model, loss, optimizer, V6 kernel or validation solver change is made by this scheduling update. Target GPU execution remains pending.
