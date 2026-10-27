@@ -50,3 +50,14 @@ Use a new `--output` for an intentional new run only. Check submission journals 
 ## Verification boundary
 
 Automatic installer and validation wiring are implemented, not claims that a new server has passed. The existing-cluster CPU check exposed missing system FFmpeg libraries; an affected check uses the known working shared prefix. Actual target four-GPU and full817 GPU results remain pending. Model training weights, optimizer groups, data identities and V6 kernels are unchanged by this integration. The original production job is untouched.
+
+
+## Output files and sharing results
+Default formal output: `<root>/runs/train/` (override with `--output`).
+- `training-rank0.csv` through `training-rank3.csv`: recorded local loss, gradient norm, step and approximate processed epochs. Warmup updates are included in step numbers but not CSV rows; resumed epochs are approximate.
+- `VALIDATION817-summary.csv`: overall and per-dataset means, sample counts, training step, checkpoint identity and measured validation seconds (excluding the preliminary memory probe).
+- `VALIDATION817-samples.csv`: all817 per-example scores and identities.
+- `VALIDATION817.json`: authoritative complete-coverage validation receipt.
+- `checkpoints/step-*/COMPLETE.json` and rank state files: complete resumable checkpoints. CSV files do not replace checkpoints.
+Send the summary CSV and training-rank0.csv for a quick review; include all four training CSVs to investigate rank differences. Validation CSVs are generated only after complete817 coverage. Missing validation CSV does not mean a passing validation.
+Current frequency is qualification once and final training validation once, NOT every half epoch. First measure full817 on the target runtime; a future periodic schedule should budget measured validation overhead. No unmeasured validation-frequency change is enabled.

@@ -18,3 +18,14 @@
 
 ## V6 acceleration
 V5 mechanisms remain active. V6 adds dynamic INT8 gradient-row quantization and transposed INT8 weight caches for Qwen attention input gradients. This introduces an additional approximation; matching a few forward losses does not establish held-out quality equivalence. Single A100/global2/fixed64, two matched full32 pairs: control0.8228534477s/update; V6 0.8092989110s/update, mean gain1.64726%. No four-GPU speed claim. Long-input per-device physical memory, aggregate host memory and full-state continuation must be tested on the recipient cluster.
+
+
+## Output files and sharing results
+Default formal output: `<root>/runs/train/` (override with `--output`).
+- `training-rank0.csv` through `training-rank3.csv`: recorded local loss, gradient norm, step and approximate processed epochs. Warmup updates are included in step numbers but not CSV rows; resumed epochs are approximate.
+- `VALIDATION817-summary.csv`: overall and per-dataset means, sample counts, training step, checkpoint identity and measured validation seconds (excluding the preliminary memory probe).
+- `VALIDATION817-samples.csv`: all817 per-example scores and identities.
+- `VALIDATION817.json`: authoritative complete-coverage validation receipt.
+- `checkpoints/step-*/COMPLETE.json` and rank state files: complete resumable checkpoints. CSV files do not replace checkpoints.
+Send the summary CSV and training-rank0.csv for a quick review; include all four training CSVs to investigate rank differences. Validation CSVs are generated only after complete817 coverage. Missing validation CSV does not mean a passing validation.
+Current frequency is qualification once and final training validation once, NOT every half epoch. First measure full817 on the target runtime; a future periodic schedule should budget measured validation overhead. No unmeasured validation-frequency change is enabled.

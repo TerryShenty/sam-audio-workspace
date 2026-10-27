@@ -2,7 +2,7 @@
 """Single entry for the pinned Qwen30B/SAM V6 handoff. English-only UI."""
 import argparse, hashlib, json, os, pathlib, subprocess, sys, urllib.request, zipfile, fcntl
 URL='https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/qwen30b-4gpu-v6-auto-source.zip'
-SHA='def2353b6384aad39f208fae84ff365cf404779c7c30de115b46dfae91f10cc8'
+SHA='0eee2365a0d7cfd260675cf337e4a2c00c5bc40f433d6ff86d90a74a2ec8e7b1'
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('action',choices=['setup','prepare','qualify','train'])
