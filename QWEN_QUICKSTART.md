@@ -1,35 +1,52 @@
-# Qwen30B + SAM Audio: simplified entry
+# Qwen30B + SAM Audio: one entry, one server, four 48GB GPUs
 
-Use this entry for Qwen joint training. The repository-root `quickstart.sh` is a separate SAM-only workflow.
+This entry selects the accepted V6 joint training implementation. Defaults: one node, four GPUs, two examples per rank/global batch8,16 CPUs,128GiB host RAM, no requeue. Actual GPU memory/driver compatibility and Slurm limits must match your server. The root SAM-only quickstart is a different workflow.
 
-Prerequisites: activate a compatible Linux Python 3.12 environment with the dependencies in [the V6 guide](QWEN30B_V6_README.md); sign in using `hf auth login` and obtain official SAM model access. The environment is not automatically installed or validated by this wrapper. Use CPU/data-transfer facilities with a compiler for preparation, not GPUs. Allow at least 350.57 GB for data plus models, checkpoints and temporary space.
+## 1. Install the private environment
 
-Download the entry once:
+Use Linux x86_64, Python3.12, git and a C++ compiler. On a cluster, use authorized CPU facilities with network access, not a GPU allocation. No sudo or system package changes are made.
 
 ```bash
 curl -fL https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/qwen_quickstart.py -o qwen_quickstart.py
+python3.12 qwen_quickstart.py setup --root /YOUR_STORAGE/qwen-sam
 ```
 
-One preparation command downloads the pinned, hash-checked V6 source archive, official model weights and completed dataset, fills paths automatically, then runs CPU preparation:
+This downloads the hash-checked source, installs the original CUDA13 PyTorch stack and pinned upstream dependencies in a private environment, installs shared FFmpeg7, and checks imports plus actual waveform decoding. Your NVIDIA driver must support CUDA13. Missing compiler, unsupported ABI or unavailable package errors stop setup; no silent slower runtime is selected. Fresh installation and GPU execution on a recipient server are not yet accepted results.
+
+## 2. Sign in once with your own HF account
+
+Obtain access to `facebook/sam-audio-large-tv` through its official HF page. Public dataset access is separate and does not require model approval. Never share your token or another person's gated model access.
 
 ```bash
-python qwen_quickstart.py prepare --root /YOUR_STORAGE/qwen-sam
+/YOUR_STORAGE/qwen-sam/environment/bin/hf auth login
 ```
 
-The command refuses to proceed while the HF release lacks `UPLOAD_COMPLETE.json`. Official model access errors require your own HF account/access. Source/model identity checks are not bypassed. Re-running preparation reuses the existing download caches.
-
-Submit one four-GPU qualification job (adjust the bundled Slurm resource template to your site if necessary):
+## 3. Download and prepare everything
 
 ```bash
-python qwen_quickstart.py qualify --root /YOUR_STORAGE/qwen-sam --account YOUR_ACCOUNT --partition YOUR_PARTITION
+python3.12 qwen_quickstart.py prepare --root /YOUR_STORAGE/qwen-sam
 ```
 
-After qualification succeeds, submit training:
+This checks model access early, waits for the dataset release by refusing an incomplete release, downloads official Qwen/SAM weights and111,068train+817validation data, fills paths, builds CPU extensions, and extracts/tests the original frozen audio codec. Data payload is350.57GB; allow additional model/checkpoint/temporary space. Re-run after UPLOAD_COMPLETE.json is published if the release is still uploading. Existing download caches are reused.
+
+## 4. Submit the four-GPU qualification
 
 ```bash
-python qwen_quickstart.py train --root /YOUR_STORAGE/qwen-sam --account YOUR_ACCOUNT --partition YOUR_PARTITION --gate /YOUR_STORAGE/qwen-sam/runs/qualify/PORTABLE_GATE.json
+python3.12 qwen_quickstart.py qualify --root /YOUR_STORAGE/qwen-sam --account YOUR_ACCOUNT --partition YOUR_PARTITION
 ```
 
-Submission is journaled before `sbatch`; a repeated request with the same output is blocked. On an interrupted or failed submission, inspect the journal and scheduler before deciding to retry. Use a new `--output` only for an intentional new run. No automatic resubmission or renewal. Formal checkpoint resume uses the detailed V6 guide, not this simplified fresh-run entry.
+This uses four persistent ranks in one one-hour Slurm job. It tests demanding training inputs, full-state resume, real retained-state validation memory, then all817 examples. The initial portable validation batch is1 per GPU; batch8 is not claimed safe in this changed joint state. PORTABLE_GATE.json requires actual complete validation. Diagnose a failed run before any repeat; the wrapper blocks duplicate submission paths.
 
-This wrapper merges existing operations; it does not establish fresh-environment GPU acceptance. Full four-GPU training/resume and the complete 817-example validation remain unverified. The validation API still needs codec/memory integration; training does not automatically run full validation. See [method and validation](QWEN30B_METHOD_AND_VALIDATION.md).
+## 5. Submit 24-hour training after qualification
+
+```bash
+python3.12 qwen_quickstart.py train --root /YOUR_STORAGE/qwen-sam --account YOUR_ACCOUNT --partition YOUR_PARTITION --gate /YOUR_STORAGE/qwen-sam/runs/qualify/PORTABLE_GATE.json
+```
+
+No epoch cap. It periodically saves complete state and reserves30 minutes near the original deadline for final817validation after saving the final complete checkpoint. VALIDATION817.json and its memory receipt contain coverage/scoring. Validation failure preserves the checkpoint, records failure and does not claim completion. There is no automatic renewal, blind OOM retry, dropped validation row or speed-search sweep.
+
+Use a new `--output` for an intentional new run only. Check submission journals and the live scheduler before retrying an interrupted submission. Formal checkpoint resume remains available through the package's launch.py/train.sbatch interface with QWEN_RESUME; never use a qualification checkpoint as production initialization.
+
+## Verification boundary
+
+Automatic installer and validation wiring are implemented, not claims that a new server has passed. The existing-cluster CPU check exposed missing system FFmpeg libraries; an affected check uses the known working shared prefix. Actual target four-GPU and full817 GPU results remain pending. Model training weights, optimizer groups, data identities and V6 kernels are unchanged by this integration. The original production job is untouched.
