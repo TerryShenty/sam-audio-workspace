@@ -20,7 +20,8 @@ if [[ -d "$env_root/media/lib" ]]; then
  export PATH="$env_root/media/bin:$PATH"
 fi
 cd "$QWEN_PACKAGE"
-args=(--mode "${QWEN_MODE:-train}" --output "$QWEN_OUTPUT")
+# Direct sbatch users must match --gres to QWEN_GPUS (default 4).
+args=(--gpus "${QWEN_GPUS:-4}" --mode "${QWEN_MODE:-train}" --output "$QWEN_OUTPUT")
 if [[ -n "${QWEN_GATE:-}" ]]; then args+=(--gate "$QWEN_GATE"); fi
 if [[ -n "${QWEN_RESUME:-}" ]]; then args+=(--resume "$QWEN_RESUME"); fi
 exec "$QWEN_PYTHON" scripts/launch.py "${args[@]}"

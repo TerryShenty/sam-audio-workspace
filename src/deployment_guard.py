@@ -55,11 +55,11 @@ def actual_activation(before,after,steps,max_tokens,long_input_receipt=None):
         assert long_input_receipt['physical_headroom_pass'] and long_input_receipt['all_ranks_compute']
 
 def full_restore(manifest,world_size):
-    assert world_size==4 and manifest['world_size']==4
+    assert 1<=world_size<=8 and manifest['world_size']==world_size
     assert manifest['complete'] is True and manifest['contract_sha256']==BASELINE_SHA
     required={'model','optimizer','scheduler','ema','rng','data_position','sampler','config','identity'}
     assert required<=set(manifest['components'])
-    assert sorted(manifest['rank_ids'])==list(range(4))
+    assert sorted(manifest['rank_ids'])==list(range(world_size))
     assert manifest['effective_continuation_updates']>0 and manifest['all_groups_updated']
 
 def bytepair_activation(before,after):

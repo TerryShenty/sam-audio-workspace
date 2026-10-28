@@ -21,7 +21,7 @@ class JointBatch:
             assert item['split'] in ('music_train','speech_train')
         context=torch.autocast('cuda',dtype=torch.bfloat16) if self.device.type=='cuda' else contextlib.nullcontext()
         with context:
-            # Average two local per-example objectives; DDP averages four ranks.
+            # Average two local per-example objectives; DDP averages the participating ranks (single-device bypasses DDP).
             # Original FM target/residual .5/.5 and CE .1 remain inside joint.
             loss,terms,lengths=wrapped(items,args,clean,[.5,.5])
         self.last=dict(sample_ids=[r['sample_id'] for r in items],

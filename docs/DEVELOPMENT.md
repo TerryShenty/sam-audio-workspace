@@ -26,9 +26,14 @@ export QWEN_PACKAGE="$(pwd)"
 export QWEN_PYTHON=/YOUR_STORAGE/qwen-sam/environment/bin/python
 export QWEN_OUTPUT=/YOUR_STORAGE/qwen-sam/runs/resumed
 export QWEN_MODE=train
+export QWEN_GPUS=4  # must match the checkpoint and sbatch GPU request
 export QWEN_RESUME=/absolute/path/to/previous/checkpoints/step-XXXXXXXXXXXX
 unset QWEN_GATE
-sbatch --account=YOUR_ACCOUNT --partition=YOUR_PARTITION scripts/train.sbatch
+sbatch --gres=gpu:4 --account=YOUR_ACCOUNT --partition=YOUR_PARTITION scripts/train.sbatch
 ```
 
 This explicitly requests a new allocation; inspect existing jobs and submission receipts first. The convenience `train` entry intentionally does not inherit an old QWEN_RESUME value. No automatic retries or renewal are performed.
+
+## GPU-count integration checks
+
+`python tests/test_world_size.py` exercises real CPU/Gloo DDP at 1/2/4/8 ranks, agreement with a global-batch reference, complete-state restoration and effective continuation, sampler/817 coverage, and rejection of cross-world resume. It does not execute the CUDA kernels or real 30B model. Per-rank batch stays 2. Do not change GPU count on checkpoint resume.

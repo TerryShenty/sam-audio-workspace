@@ -5,7 +5,7 @@ from joint_sampler import JointSampler
 class QualificationSampler(JointSampler):
     def __init__(self,base,cases):
         assert base.cursor==0 and base.pending is None
-        super().__init__(base.ids,rank=base.rank,seed=base.seed,data_identity=base.identity)
+        super().__init__(base.ids,rank=base.rank,seed=base.seed,data_identity=base.identity,world_size=base.world_size)
         lookup={sid:i for i,sid in enumerate(base.ids)}
         self.prefix=[];self.case_names=[]
         for name,case in sorted(cases.items()):
@@ -14,8 +14,15 @@ class QualificationSampler(JointSampler):
             ids=[x['sample_id'] for r in ranks for x in r['samples']]
             assert all(len(r['samples'])==2 for r in ranks) and len(set(ids))==8
             assert all(sid in lookup for sid in ids)
-            self.prefix.extend(lookup[sid] for sid in ids);self.case_names.append(name)
-        assert self.prefix and len(self.prefix)%8==0
+            # Repack the fixed eight demanding examples for N ranks.
+            # Diagnostic-only padding repeats known cases; production never pads.
+            width=self.world_size*self.per_rank
+            for offset in range(0,len(ids),width):
+                part=ids[offset:offset+width]
+                part += [ids[i%len(ids)] for i in range(width-len(part))]
+                self.prefix.extend(lookup[sid] for sid in part)
+                self.case_names.append(name+':'+str(offset//width))
+        assert self.prefix and len(self.prefix)%(self.world_size*self.per_rank)==0
         self.base=base
         self.identity=hashlib.sha256(json.dumps(['qualification_only',base.identity,self.prefix],sort_keys=True).encode()).hexdigest()
     def _index(self,position):
@@ -40,4 +47,4 @@ def attach(session,cases):
     trainer.identity=hashlib.sha256(json.dumps(['qualification_only',trainer.identity,sampler.identity]).encode()).hexdigest()
     trainer.config['qualification_only']=True
     return dict(qualification_only=True,initialization_usable_for_production=False,
-                prefix_updates=len(sampler.prefix)//8,cases=sampler.case_names,sampler_identity=sampler.identity)
+                prefix_updates=len(sampler.prefix)//(sampler.world_size*sampler.per_rank),cases=sampler.case_names,sampler_identity=sampler.identity)

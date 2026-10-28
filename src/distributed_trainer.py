@@ -14,7 +14,7 @@ def tree(value,fn):
 
 class DistributedTrainer:
     def __init__(self,wrapped,optimizer,scheduler,sampler,*,identity,configuration):
-        assert dist.is_initialized() and dist.get_world_size()==4
+        assert dist.is_initialized() and 1<=dist.get_world_size()<=8
         self.rank=dist.get_rank();assert sampler.rank==self.rank
         self.wrapped=wrapped;self.model=wrapped.module
         self.params={n:p for n,p in self.model.named_parameters() if p.requires_grad}
@@ -66,7 +66,7 @@ class DistributedTrainer:
         # Only one rank materializes a CPU snapshot at a time. This bounds
         # transient host duplication without omitting any rank's RNG/data state.
         receipts=[]
-        for writer in range(4):
+        for writer in range(dist.get_world_size()):
             outcome=[None]
             if self.rank==writer:
                 try:outcome[0]=dict(receipt=save_rank(directory,self.snapshot()))
@@ -106,7 +106,7 @@ class DistributedTrainer:
     def serial_restore(self,operation):
         # One rank holds checkpoint CPU tensors at a time, including optimizer state.
         assert not self.busy
-        for reader in range(4):
+        for reader in range(dist.get_world_size()):
             outcome=[None]
             if self.rank==reader:
                 try:

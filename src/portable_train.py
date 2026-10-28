@@ -1,4 +1,4 @@
-"""Uncapped four-rank training on prepared data; direct 24-hour entry with in-run safeguards."""
+"""Uncapped N-rank training on prepared data; direct 24-hour entry with in-run safeguards."""
 import argparse,hashlib,importlib,json,os,sys,time
 from pathlib import Path
 
@@ -16,7 +16,9 @@ def main():
     install_before_cuda()
     import torch,torch.distributed as dist
     from datetime import timedelta
-    rank=int(os.environ['LOCAL_RANK']);assert int(os.environ['WORLD_SIZE'])==4 and torch.cuda.device_count()==4
+    rank=int(os.environ['LOCAL_RANK']);world=plan['world_size']
+    assert 1<=world<=8 and 0<=rank<world and int(os.environ['WORLD_SIZE'])==world
+    assert torch.cuda.device_count()==world,'Visible GPU count must match requested --gpus'
     torch.cuda.set_device(rank);device=torch.device('cuda',rank)
     assert torch.cuda.get_device_properties(device).total_memory>=44*2**30,'Requires approximately 48GB per GPU'
     from production_watchdog import WorkerWatchdog,write

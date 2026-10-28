@@ -19,8 +19,8 @@ def bind(rows,protocol):
     return result
 
 def batches(items,*,rank,world_size=4,batch_size=8):
-    assert world_size==4 and 0<=rank<4 and batch_size in (1,2,4,8)
-    # Global identity ordering is fixed; changing inference batching never changes seeds/rank.
+    assert type(world_size) is int and 1<=world_size<=8 and 0<=rank<world_size and batch_size in (1,2,4,8)
+    # Global identity ordering is fixed; changing inference batching never changes seeds; rank assignment follows world_size.
     local=[x for i,x in enumerate(items) if i%world_size==rank]
     return [local[i:i+batch_size] for i in range(0,len(local),batch_size)]
 

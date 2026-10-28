@@ -43,7 +43,7 @@ def collective_decision(proposed):
     import torch
     import torch.distributed as dist
     levels={'step':0,'checkpoint':1,'validate':2,'stop':3}
-    assert dist.is_initialized() and dist.get_world_size()==4
+    assert dist.is_initialized() and 1<=dist.get_world_size()<=8
     device=torch.device('cuda',torch.cuda.current_device()) if dist.get_backend()=='nccl' else torch.device('cpu')
     value=torch.tensor(levels[proposed],device=device,dtype=torch.int32)
     dist.all_reduce(value,op=dist.ReduceOp.MAX)

@@ -1,4 +1,4 @@
-"""Sealed four-GPU qualification entry; never a 24-hour production launcher."""
+"""Sealed N-GPU qualification entry; never a 24-hour production launcher."""
 import argparse,hashlib,json,os,time
 from pathlib import Path
 
@@ -8,7 +8,7 @@ def main():
     assert hashlib.sha256(raw).hexdigest()==args.plan_sha256
     plan=json.loads(raw);root=Path(plan['root']);version=Path(__file__).resolve().parent
     assert str(version)==plan['code_root'] and plan['qualification_only'] is True
-    assert plan['world_size']==4 and plan['per_rank_batch']==2 and plan['global_batch']==8
+    assert 1<=plan['world_size']<=8 and plan['per_rank_batch']==2 and plan['global_batch']==2*plan['world_size']
     assert plan['job_id']==os.environ['SLURM_JOB_ID']
     assert plan['end_epoch']==int(os.environ['SLURM_JOB_END_TIME'])
     assert time.time()<plan['end_epoch']-plan['checkpoint_reserve_seconds']
@@ -23,8 +23,9 @@ def main():
     import torch
     import torch.distributed as dist
     from datetime import timedelta
-    rank=int(os.environ['LOCAL_RANK']);assert 0<=rank<4 and int(os.environ['WORLD_SIZE'])==4
-    assert torch.cuda.device_count()==4,'EXACTLY_FOUR_VISIBLE_GPUS_REQUIRED'
+    rank=int(os.environ['LOCAL_RANK']);world=plan['world_size']
+    assert 0<=rank<world and int(os.environ['WORLD_SIZE'])==world
+    assert torch.cuda.device_count()==world,'Visible GPU count must match requested --gpus'
     torch.cuda.set_device(rank);device=torch.device('cuda',rank)
     assert torch.cuda.get_device_properties(device).total_memory>=44*2**30,'Requires approximately 48GB per GPU'
     from production_watchdog import WorkerWatchdog,write
@@ -70,7 +71,7 @@ def main():
             assert host['current']<.9*host['limit']
         local_case_record=dict(rank=rank,cases=measured,groups=sorted(observer.changed),before=before,after=observer.snapshot())
         write(output/f'completed-cases-rank{rank}.json',local_case_record)
-        ranks=[None]*4;dist.all_gather_object(ranks,local_case_record)
+        ranks=[None]*world;dist.all_gather_object(ranks,local_case_record)
         maximum=max(int(n) for r in ranks for c in r['cases'] for n in c['lengths'])
         assert maximum>=demands['cases']['train']['actual_tokens']['maximum']
         long_input=dict(status='PASS_TARGET_COMPLETE_UPDATES',max_tokens=maximum,retained=23,memo_active=all(r['after']['memo_hits']>r['before']['memo_hits'] for r in ranks),

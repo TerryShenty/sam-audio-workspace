@@ -1,4 +1,4 @@
-"""Deterministic infinite four-rank sampler, two examples per rank/update.
+"""Deterministic infinite N-rank sampler, two examples per rank/update.
 
 Cross epoch boundaries inside a batch: no dropped/padded training rows and no
 epoch cap. Commit cursor only after a globally successful optimizer update.
@@ -7,7 +7,7 @@ import hashlib, json, random
 
 class JointSampler:
     def __init__(self, sample_ids, *, rank, seed, data_identity, world_size=4, per_rank=2):
-        assert world_size==4 and per_rank==2 and 0<=rank<world_size
+        assert type(world_size) is int and 1<=world_size<=8 and per_rank==2 and 0<=rank<world_size
         assert sample_ids and len(set(sample_ids))==len(sample_ids)
         assert isinstance(seed,int) and data_identity
         self.ids=tuple(sample_ids);self.rank=rank;self.seed=seed
@@ -44,7 +44,7 @@ class JointSampler:
     def load_state_dict(self,state):
         assert self.pending is None,'Cannot restore over a pending update'
         assert state['identity']==self.identity and state['rank']==self.rank
-        assert (state['world_size'],state['per_rank'],state['seed'])==(4,2,self.seed)
-        cursor=state['global_samples'];assert type(cursor) is int and cursor>=0 and cursor%8==0
+        assert (state['world_size'],state['per_rank'],state['seed'])==(self.world_size,self.per_rank,self.seed)
+        cursor=state['global_samples'];assert type(cursor) is int and cursor>=0 and cursor%(self.world_size*self.per_rank)==0
         assert divmod(cursor,len(self.ids))==(state['completed_epochs'],state['epoch_offset'])
         self.cursor=cursor;self.cached_epoch=None;self.order=None

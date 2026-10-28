@@ -20,7 +20,7 @@ def execute(session,root,output,watchdog,*,checkpoint_identity,batch_size=1):
  # Batch 1 is the explicitly conservative initial portable policy. Batch 8 is
  # not claimed safe until tested with this retained training state.
  assert batch_size==1,'Portable initial validation is qualified at batch 1'
- local=[x for i,x in enumerate(items) if i%4==rank]
+ local=[x for i,x in enumerate(items) if i%dist.get_world_size()==rank]
  records={r['media_key']:r for r in json.loads((root/'PROCESSOR_COMPLETE.json').read_text())['records']}
  references={d:json.loads((Path(__file__).parent/'validation_reference'/d/'validation_inputs.json').read_text()) for d in ['music','speech']}
  lookup={d:{int(r['row']['row_index']):r for r in rows} for d,rows in references.items()}
@@ -48,9 +48,9 @@ def execute(session,root,output,watchdog,*,checkpoint_identity,batch_size=1):
     observed.append(dict(sample_id=x['item']['sample_id'],physical_free=m.free,allocated_peak=torch.cuda.max_memory_allocated(device),host_current=host['current']))
   status=dict(rank=rank,passed=True,cases=observed)
  except Exception as e:status=dict(rank=rank,passed=False,error=repr(e),cases=observed)
- ranks=[None]*4;dist.all_gather_object(ranks,status)
+ ranks=[None]*dist.get_world_size();dist.all_gather_object(ranks,status)
  assert all(r['passed'] for r in ranks),ranks
- approval=dict(status='PASS_TARGET_TRAIN_STATE_VALIDATION_MEMORY',checkpoint_identity=checkpoint_identity,validation_identity=vid,world_size=4,batch_size=1,longest_actual_padded_inputs=True,codec_and_scoring_included=True,ranks=ranks)
+ approval=dict(status='PASS_TARGET_TRAIN_STATE_VALIDATION_MEMORY',checkpoint_identity=checkpoint_identity,validation_identity=vid,world_size=dist.get_world_size(),batch_size=1,longest_actual_padded_inputs=True,codec_and_scoring_included=True,ranks=ranks)
  if rank==0:write(output.with_name(output.stem+'-memory.json'),approval)
  try:
   return run(session,codec,session.batch.store,root=root,output=output,checkpoint_identity=checkpoint_identity,validation_identity=vid,expected_step=session.trainer.step_number,batch_size=1,memory_approval=approval,watchdog=watchdog)

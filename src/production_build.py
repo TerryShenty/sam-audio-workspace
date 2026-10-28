@@ -31,15 +31,14 @@ def build(*,root,device,contract_path,immutable_identity,sam_namespace,configura
     # physical memory/watchdog and job admission belong to the calling entry.
     from deployment_guard import configuration as check_configuration,GROUPS
     check_configuration(contract_path,configuration,GROUPS)
-    assert (configuration['world_size'],configuration['per_rank_batch'],configuration['global_batch'])==(4,2,8)
+    world=configuration['world_size']
+    assert 1<=world<=8 and configuration['per_rank_batch']==2 and configuration['global_batch']==2*world
     from production_input_admission import load
     data=load(root,input_admission_sha256)
     import numpy as np
     import torch
     import torch.distributed as dist
-    assert dist.is_initialized() and dist.get_world_size()==4 and dist.get_backend()=='nccl'
-    assert configuration['world_size']==4 and configuration['per_rank_batch']==2
-    assert configuration['global_batch']==8
+    assert dist.is_initialized() and dist.get_world_size()==world and dist.get_backend()=='nccl'
     from production_models import construct,optimizer
     from production_runtime import ProductionRuntime
     from joint_ddp import wrap
@@ -58,7 +57,7 @@ def build(*,root,device,contract_path,immutable_identity,sam_namespace,configura
     scheduler=torch.optim.lr_scheduler.LambdaLR(opt,lambda n:min((n+1)/50,1.))
     rank=dist.get_rank();seed=20261027+rank
     random.seed(seed);np.random.seed(seed);torch.manual_seed(seed);torch.cuda.manual_seed(seed)
-    sampler=JointSampler([r['sample_id'] for r in data['train']],rank=rank,seed=20261027,data_identity=data['identity'])
+    sampler=JointSampler([r['sample_id'] for r in data['train']],rank=rank,seed=20261027,data_identity=data['identity'],world_size=world)
     trainer=DistributedTrainer(wrapped,opt,scheduler,sampler,
         identity=hashlib.sha256((immutable_identity+data['identity']).encode()).hexdigest(),configuration=configuration)
     runtime.activate_after_training_state_initialized()

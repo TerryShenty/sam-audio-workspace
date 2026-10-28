@@ -1,9 +1,10 @@
-"""Publish validation only after exact four-rank identity/seed/score coverage."""
+"""Publish validation only after exact all-rank identity/seed/score coverage."""
 import math
 from collections import Counter
 METRICS=('si_sdr_db','aligned_si_sdr_db','si_sdri_db','activity_primary_f1')
-def collect(rank_results,protocol):
-    assert len(rank_results)==4 and {x['rank'] for x in rank_results}==set(range(4))
+def collect(rank_results,protocol,*,world_size=4):
+    assert type(world_size) is int and 1<=world_size<=8
+    assert len(rank_results)==world_size and {x['rank'] for x in rank_results}==set(range(world_size))
     expected={x['sample_id']:x for x in protocol['rows']}
     assert len(expected)==len(protocol['rows'])==817
     identity={k:rank_results[0][k] for k in ('checkpoint_identity','validation_identity')}

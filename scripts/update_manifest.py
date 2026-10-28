@@ -7,7 +7,7 @@ def main():
     manifest=P/'SOURCE_MANIFEST.json'
     # Fixed source scope excludes generated .so files, datasets and local paths.
     paths=[P/'README.md',P/'LICENSE',P/'.gitignore',P/'requirements.txt',P/'qwen_quickstart.py']
-    for folder in ('scripts','configs','src','docs'):
+    for folder in ('scripts','configs','src','docs','tests'):
         paths.extend(p for p in (P/folder).rglob('*') if p.is_file() and p.suffix in ('.py','.json','.md','.txt','.cpp','.h','.cu','.cuh','.sbatch'))
     paths=[p for p in paths if '__pycache__' not in p.parts and p.name!='native_extensions.json']
     hashes={}
