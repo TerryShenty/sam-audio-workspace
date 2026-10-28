@@ -1,166 +1,81 @@
-# SAM Audio — verified SOLOs fast training recipe
+# Qwen30B + SAM Audio joint training
 
-This release provides a bounded **3-video / 8-target / 13-prompt training check**
-with all **285 validation examples**. It does not start full 93,942-video training.
-The tested single-server path uses two A100 40GB GPUs. A separate experimental
-two-server launcher has also performed real training, checkpoint saving and
-new-process resume on one L40S 48GB and one L40 48GB in different physical servers.
+This branch contains the **V6 source to run and edit**, directly in Git. No source ZIP download is needed.
 
-See [HARDWARE.md](HARDWARE.md) for GPU selection and the precise tested scope.
-Having twelve or several dozen GPUs does not require using all of them.
-The migrated SOLOs fast recipe reproduces the accepted single-A100 rate at **50.26 real targets/second**. Select it explicitly with `--performance-profile solos-fast-v1`. See [FAST_PROFILE.md](FAST_PROFILE.md) for exact batches, commands, memory and measured scaling. The bounded root check is intentionally smaller than the throughput dataset. The four-L40S larger reference test now measures 173.03 real targets/s, -2.76% versus the historical177.94/s long-production rate; its exact scope and communication settings are in FAST_PROFILE.md.
+**Start reading:** [training entry](src/portable_train.py) · [training updates](src/distributed_trainer.py) · [model construction](src/production_models.py) · [Slurm script](scripts/train.sbatch).
 
-## One-command colleague setup
+One Linux x86_64 node, four ~48 GB NVIDIA GPUs, 16 CPUs, 128 GiB host RAM. Per-rank batch 2, global batch 8. The supplied launcher uses Slurm. The joint Qwen / causal AUDSEG bridge / SAM training implementation and V6 acceleration modules are retained.
 
-[中文启动、全量训练边界与升级说明](QUICKSTART_ZH.md)
-
-After your own model access and HF/W&B login are ready, this single command uses
-the pinned accepted fast runtime, two visible GPUs and a small engineering batch:
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/TerryShenty/sam-audio-workspace/main/quickstart.sh) --wandb-entity YOUR_WANDB_ENTITY
-```
-
-It runs **13 engineering prompts, not full93,942-video production**. The full
-public dataset is complete, but the top-level full-corpus preparation/training
-bridge and longest-input memory gate are not accepted. The larger prepared-bundle
-fast training kernel is separately verified. See the Chinese guide above for
-memory, changed-data/code updates and exact-resume limits. The wrapper fixes the
-bootstrap to56e7db0 and verifies its SHA256; the existing source archive is unchanged.
-Add `--source-only` to inspect source without installation or GPU work.
-
-## Start on one server
-
-Use Linux x86_64, Python 3.12, an NVIDIA driver compatible with the installed
-PyTorch CUDA runtime, and your own Hugging Face and W&B accounts. Your HF account
-must have approved access to
-[facebook/sam-audio-large-tv](https://huggingface.co/facebook/sam-audio-large-tv).
-Training and validation data are public. Authenticate through the normal HF/W&B
-login tools or securely supplied environment variables; never put tokens in Git.
+## 1. Get the code
 
 ```bash
 git clone https://github.com/TerryShenty/sam-audio-workspace.git
 cd sam-audio-workspace
-CUDA_VISIBLE_DEVICES=0,1 bash start.sh \
-  --directory "$PWD/sam-run" --gpus 2 \
-  --performance-profile solos-fast-v1 --microbatch 2 --global-batch 4 \
-  --wandb-entity YOUR_WANDB_ENTITY
 ```
 
-Outside a scheduler, `CUDA_VISIBLE_DEVICES` selects GPUs on this server. Replace
-`0,1` with two GPUs assigned to you. Inside a scheduler allocation, keep its
-assigned device visibility; do not select cards belonging to another allocation.
+GitHub **Code → Download ZIP** also works: extract the repository and open its directory. All commands below run from this directory. Choose a writable shared storage directory; replace `/YOUR_STORAGE/qwen-sam` throughout. Keep this source checkout available to the compute node.
 
-The command verifies the packaged source, installs its environment if needed,
-downloads the pinned engineering training selection and full validation media,
-prepares GT spans, builds new training and validation features, checks and exports
-the bundle, performs nine updates, and archives the selected best/last checkpoints.
-The original BF16 micro1/global2 check scores at steps4/7/9. The fast micro2/global4 example has different epoch boundaries and scores at steps2/4/6/8/9; every pass still uses all285 examples. Compilation makes a short check startup-heavy; the speed claim describes steady larger-batch training, not this nine-update end-to-end command.
-If best and last select the same checkpoint, one artifact serves both roles.
+## 2. Set up an environment
 
-The original BF16 profile completed this data-to-training-to-archive chain on Longleaf
-with CPU, transfer and GPU stages separated. Environment/model/raw-download bytes
-were explicitly reused; training and validation features and the run were new.
-Cold anonymous source/media downloads and a fresh environment were tested
-separately. A single uninterrupted invocation on an otherwise empty ordinary
-server has not been observed. These scopes must not be conflated. The fast profile was separately accepted through three actual GT updates with a full285 validation between updates2 and3, complete state inspection and independent cloud score readback. Its larger steady throughput is tested separately at micro16/global32.
-
-To verify only the public source, without installation, model downloads or GPU work:
+On CPU/transfer facilities with network access, Python 3.12, git and a C++ compiler:
 
 ```bash
-bash start.sh --directory "$PWD/source-check" --source-only
+python3.12 qwen_quickstart.py setup --root /YOUR_STORAGE/qwen-sam
 ```
 
-To inspect a four-GPU plan before installation or GPU work:
+This installs a private environment; it does **not** submit a GPU job or download another source package. The reference installer selects CUDA 13, so check your NVIDIA driver/site modules. For your own environment instead, see [environment options](docs/ENVIRONMENT.md). You may adapt dependencies for your server; a different stack is not yet GPU-validated.
+
+## 3. Sign in and prepare data
+
+Request access to [facebook/sam-audio-large-tv](https://huggingface.co/facebook/sam-audio-large-tv), then log in with your own account:
 
 ```bash
-bash start.sh --directory "$PWD/run4" --gpu-plan --gpus 4
+/YOUR_STORAGE/qwen-sam/environment/bin/hf auth login
+python3.12 qwen_quickstart.py prepare --root /YOUR_STORAGE/qwen-sam
 ```
 
-This root command downloads/verifies the small source package if absent. The
-extracted `start.sh --gpu-plan --gpus 4` itself performs no downloads or installation.
-Four-L40S fast training with a larger prepared reference dataset, complete state and new-process continuation is now accepted; see FAST_PROFILE.md. The complete four-card raw-data-to-validation-to-archive root invocation has not been rerun as one combined process.
+Preparation downloads official weights and the [public joint dataset](https://huggingface.co/datasets/TerryShenty/qwen30b-sam-joint-111k), checks identities, builds CPU extensions and prepares the frozen audio codec. Dataset: 111,068 training + 817 validation rows, about 350.7 GB of tar payload; allow extra space for models, extraction and checkpoints. Run this on CPU/transfer facilities, not a GPU allocation.
 
-## Continue and inspect
+Already have the models and data? Copy `configs/paths.example.json` to your own paths file, fill in the four paths, and run `python scripts/prepare.py --paths /absolute/path/to/paths.json` using your chosen environment. Existing deployment bindings must match the current checkout; keep previous run data/bindings intact when relocating code.
 
-Source is stored under `sam-run/.sam-source/`; run outputs are under
-`sam-run/workspace/`. `BOOTSTRAP_SOURCE.json` records the verified source path.
-Use the same command and directory to check accepted stages and continue.
-An unresolved compute/upload intent requires reconciliation before another
-attempt. Do not delete intents to force a retry. Existing checkpoint files are
-preserved. Changing source version, GPU count or global batch requires a new
-workspace; full-state checkpoint continuation still enforces its saved identity.
-
-The root entry does not allocate GPUs, rent servers, submit scheduler jobs or
-automatically stop paid instances. Arrange those outside this program.
-
-## Cluster stages
-
-Use the same shared workspace and advance stages sequentially. Keep network,
-hashing, CPU preparation and export outside GPU allocations.
+## 4. Start training directly
 
 ```bash
-# Transfer facility
-bash start.sh --directory "$PWD/sam-run" --gpus 2 \
-  --performance-profile solos-fast-v1 --microbatch 2 --global-batch 4 \
-  --wandb-entity YOUR_WANDB_ENTITY --through download
-# CPU allocation
-bash start.sh --directory "$PWD/sam-run" --only prepare
-# Two-GPU allocation, one server
-bash start.sh --directory "$PWD/sam-run" --only encode-training
-bash start.sh --directory "$PWD/sam-run" --only encode-validation
-# CPU allocation
-bash start.sh --directory "$PWD/sam-run" --only export
-# Two-GPU allocation, one server
-bash start.sh --directory "$PWD/sam-run" --only train
-# Transfer facility after all training allocation steps have exited
-bash start.sh --directory "$PWD/sam-run" --only finalize
+python3.12 qwen_quickstart.py train --root /YOUR_STORAGE/qwen-sam \
+  --account YOUR_ACCOUNT --partition YOUR_PARTITION
 ```
 
-Use the allocation size for each phase shown in [HARDWARE.md](HARDWARE.md).
-The two-A100 reference used about 31 GiB host RAM, with a 64 GiB request.
-Each full validation pass took about ten minutes. These are measured reference
-values, not a promise for other hardware or networks.
+Replace account/partition with your cluster values. This submits **one 24-hour job**, with one torchrun and four persistent ranks. **No separate qualification job is required.** `qualify` is optional debugging only. Three startup warmup updates are real updates and are retained. There is no epoch cap or automatic renewal. Edit site resource directives in [scripts/train.sbatch](scripts/train.sbatch) before submission as needed; preserve four GPUs/four ranks/global 8 for this implementation.
 
-Explicit `SAM_PYTHON` and `SAM_FFMPEG_PREFIX` select an installed environment;
-`--hf-hub-cache` selects the model cache. Recorded raw/model reuse options are
-available in the extracted workflow help. Omit reuse options for ordinary new
-downloads. GPU stages use the pinned offline model cache.
+The call chain is `qwen_quickstart.py → scripts/train.sbatch → scripts/launch.py → src/portable_train.py`. Do not run `portable_train.py` alone: the launcher supplies the distributed environment and bound run plan.
 
-## More than one server
+## 5. Results
 
-The top-level `start.sh` is a **single-server workflow**. It does not combine
-remote GPUs by increasing `--gpus`. The separate `tools/launch_multinode.py`
-launcher requires prepared, independently verified inputs on every server,
-explicit node ranks and reachable peer networking. See
-[MULTINODE.md](MULTINODE.md) for the bounded two-server procedure and its limits.
+Default output: `/YOUR_STORAGE/qwen-sam/runs/train/`.
 
-## Data and limits
+- `training-rank0.csv` … `training-rank3.csv`: per-rank training records.
+- `validation/step-*-summary.csv` and `step-*-samples.csv`: full 817-example validation every half epoch.
+- `VALIDATION817-summary.csv`, `VALIDATION817-samples.csv`: final validation.
+- `checkpoints/step-*/`: complete resumable training state. Keep this directory; CSVs are not checkpoints.
 
-- [Full AVSpeech training release](https://huggingface.co/datasets/TerryShenty/avspeech-93942/tree/c8bdd1fd47e269c55f0323f54a550d77022f1e92): 93,942 videos, 256,708 target/residual pairs and 390,402 prompts; about 1.313 TB of compressed archives before extraction, models and feature storage.
-- [MSDWild78 + EasyCom207 validation](https://huggingface.co/datasets/sam-audio-research/sam-audio-validation-285/tree/9b438aab4d7987166304693ad616ae3769798e3c): fixed original media, GT audio and prompts, anonymously verified by size and SHA256.
+Training saves a full checkpoint before each half-epoch validation, then continues. The fixed wall limit takes priority; the run reserves about 30 minutes for final validation. A failed validation does not count as completion. See [method and validation](docs/METHOD_AND_VALIDATION.md) for the protocol and [development](docs/DEVELOPMENT.md) for editing/resume.
 
-Engineering training stays pinned to the earlier immutable revision containing
-its selected three composites. Source-placement GT spans include silence and
-are not VAD labels. Validation GT is used for scoring, not conditioning.
+## Code map
 
-The default BF16 fallback and explicit SOLOs INT8 fast profile are separate checkpoint recipes. The fastest accepted row-quantization/GEMM configuration is included; only its measured scopes are claimed.
-The tests do not establish full-corpus quality, 30–50-second training memory,
-H200 compatibility or twelve/dozens-of-GPU efficiency. The xformers native ABI
-warning remains; the tested SAM path uses SDPA.
+| Location | Purpose |
+|---|---|
+| `qwen_quickstart.py` | Setup, preparation and submission convenience entry |
+| `scripts/` | Environment/data helpers, preparation and Slurm launcher |
+| `configs/` | Effective V6 settings, SAM settings, path template and model identities |
+| `src/portable_train.py` | Main distributed training lifecycle |
+| `src/distributed_trainer.py` | Actual training update |
+| `src/production_models.py` | Model and optimizer construction |
+| `src/production_loop.py` | Training/checkpoint/validation scheduling |
+| `src/upstream_v2/` | Required bundled kernels/runtime dependencies; retain these |
+| `docs/` | Environment, development and method details |
 
-## Release boundary
+## Versions and verification
 
-The two-server save/resume and native two-L40S speed experiments used the accepted
-152-file worker. This release adds its separately GPU- and CPU-verified terminal
-checkpoint relocation fix. After an independently downloaded final checkpoint was
-moved to a workspace with a different model directory, both A100 ranks restored
-step 9 and performed a real step 10. The strict loader must verify identical SAM
-weights/config and T5 identities; changing a path alone never authorizes a different
-model. Full saved model, Adam, EMA, scheduler, data position and two-rank RNG state
-passed CPU inspection, and the original checkpoint stayed unchanged.
+`main` is the current collaborator source. The previous ZIP-based handoff and other historical workspace files are preserved on [archive/pre-source-layout-20261028](https://github.com/TerryShenty/sam-audio-workspace/tree/archive/pre-source-layout-20261028). Existing historical files can also be read at commit `93eeca21e31da1ccaae5fde14c13425a7cefe74e`.
 
-This is an explicit constant-scheduler/warmup-50 engineering continuation, not
-elastic world-size resume or a changed training recipe. Normal strict resume is
-unchanged. See DELIVERY_STATUS.json for the exact scope and
-[COMMUNICATION.md](COMMUNICATION.md) for the earlier slow-link limitation.
+This reorganization preserves the V6 numerical training implementation. Source/layout and mocked submission checks are not a new-server installation test, a four-GPU training pass, or full 817 GPU validation. The existing single-A100/global-2 speed evidence is not a four-GPU speed guarantee.

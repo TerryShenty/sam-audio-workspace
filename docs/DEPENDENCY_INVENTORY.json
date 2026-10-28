@@ -1,0 +1,822 @@
+[
+  {
+    "path": "dependency_seal.py",
+    "reason": "source/preflight_extensions_cpu.py"
+  },
+  {
+    "path": "deployment_guard.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "distributed_trainer.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "joint_batch.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "joint_checkpoint.py",
+    "reason": "source/distributed_trainer.py"
+  },
+  {
+    "path": "joint_ddp.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "joint_sampler.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "joint_validation.py",
+    "reason": "source/validation_run.py"
+  },
+  {
+    "path": "long_input_policy.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "native_extension_loader.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "production_bootstrap.py",
+    "reason": "entry"
+  },
+  {
+    "path": "production_build.py",
+    "reason": "entry"
+  },
+  {
+    "path": "production_data.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "production_input_admission.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "production_loop.py",
+    "reason": "entry"
+  },
+  {
+    "path": "production_models.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "production_regional_compile.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "production_runtime.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "production_session.py",
+    "reason": "source/production_build.py"
+  },
+  {
+    "path": "production_watchdog.py",
+    "reason": "source/qualification_entry.py"
+  },
+  {
+    "path": "qualification_data.py",
+    "reason": "source/qualification_entry.py"
+  },
+  {
+    "path": "qualification_entry.py",
+    "reason": "entry"
+  },
+  {
+    "path": "qualification_observer.py",
+    "reason": "source/qualification_entry.py"
+  },
+  {
+    "path": "qualification_restore.py",
+    "reason": "entry"
+  },
+  {
+    "path": "qualification_run.py",
+    "reason": "source/qualification_entry.py"
+  },
+  {
+    "path": "upstream_v2/adaptive_design_v19.py",
+    "reason": "source/upstream_v2/successor_design_v21.py"
+  },
+  {
+    "path": "upstream_v2/alias_nf4_metadata_v1.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "upstream_v2/atomic_replay_identity_v58h.py",
+    "reason": "source/upstream_v2/const_codebook_identity_v60.py"
+  },
+  {
+    "path": "upstream_v2/attention_origin_binding_v58b.py",
+    "reason": "source/upstream_v2/compiler_origin_install_v58c.py"
+  },
+  {
+    "path": "upstream_v2/checkpoint_call_binding_v58.py",
+    "reason": "source/upstream_v2/replay_observation_v58h.py"
+  },
+  {
+    "path": "upstream_v2/compiler_origin_install_v58c.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/const_codebook_identity_v60.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_identity.py"
+  },
+  {
+    "path": "upstream_v2/directional_backend_v9.py",
+    "reason": "source/upstream_v2/write_once_runtime_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/a30_adapter.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_backend.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_dispatch.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_backend.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_identity.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_lifecycle.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_live.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_registry.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_pair_adapter.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_backend.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_registry.py",
+    "reason": "source/long_input_policy.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bytepair_kernel.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bytepair_launch.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bytepair_launch.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_dispatch.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/int8_fused_dynamic_kernel.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/int8_fused_rowquant_linear.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/int8_fused_rowquant_linear.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/nf4_attention_policy.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/int8_rowquant_kernel.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/int8_fused_rowquant_linear.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/nf4_attention_policy.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/a30_adapter.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/word4_decode_kernel.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/word4_launch.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/word4_launch.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_dispatch.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/word8_decode_kernel.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/word8_launch.py"
+  },
+  {
+    "path": "upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/word8_launch.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_dispatch.py"
+  },
+  {
+    "path": "upstream_v2/dynamic_nf4_static_v1.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/execution_speed_v29.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "upstream_v2/exploration_design_v11.py",
+    "reason": "source/upstream_v2/focused_design_v20.py"
+  },
+  {
+    "path": "upstream_v2/finite_guard_identity_v48.py",
+    "reason": "source/upstream_v2/pointwise_identity_v50.py"
+  },
+  {
+    "path": "upstream_v2/focused_design_v18.py",
+    "reason": "source/upstream_v2/adaptive_design_v19.py"
+  },
+  {
+    "path": "upstream_v2/focused_design_v20.py",
+    "reason": "source/upstream_v2/successor_design_v21.py"
+  },
+  {
+    "path": "upstream_v2/gate_up_identity_candidate_v28.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_identity.py"
+  },
+  {
+    "path": "upstream_v2/gpu_identity_v3.py",
+    "reason": "source/production_watchdog.py"
+  },
+  {
+    "path": "upstream_v2/historical_resume_v22.py",
+    "reason": "source/upstream_v2/memo_transfer_runtime_candidate_v27.py"
+  },
+  {
+    "path": "upstream_v2/joint_design_v17.py",
+    "reason": "source/upstream_v2/focused_design_v20.py"
+  },
+  {
+    "path": "upstream_v2/layer_source_registry_v58.py",
+    "reason": "source/upstream_v2/registry_transition_v58a.py"
+  },
+  {
+    "path": "upstream_v2/lora_policy_v21.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/lora_recompute_candidate_v2/scoped_linear_cache.py",
+    "reason": "source/upstream_v2/lora_policy_v21.py"
+  },
+  {
+    "path": "upstream_v2/matched_route_control_v58i.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/memo_transfer_candidate_v1.py",
+    "reason": "source/upstream_v2/checkpoint_call_binding_v58.py"
+  },
+  {
+    "path": "upstream_v2/memo_transfer_identity_candidate_v27.py",
+    "reason": "source/upstream_v2/memo_transfer_runtime_candidate_v27.py"
+  },
+  {
+    "path": "upstream_v2/memo_transfer_runtime_candidate_v27.py",
+    "reason": "source/upstream_v2/checkpoint_call_binding_v58.py"
+  },
+  {
+    "path": "upstream_v2/memory_budget_v17.py",
+    "reason": "source/upstream_v2/successor_design_v23.py"
+  },
+  {
+    "path": "upstream_v2/memory_policy_v13.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/native_sam_candidate_v2/native_sam_policy.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/nf4_checkpoint_memo_v10.py",
+    "reason": "source/upstream_v2/memo_transfer_runtime_candidate_v27.py"
+  },
+  {
+    "path": "upstream_v2/nf4_forward_const_codebook_v60.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_dispatch.py"
+  },
+  {
+    "path": "upstream_v2/nf4_row_pair_grouped_v41.py",
+    "reason": "source/upstream_v2/row_grouped_dispatch_v41.py"
+  },
+  {
+    "path": "upstream_v2/nf4_row_quad_candidate_v1.py",
+    "reason": "source/upstream_v2/row_grouped_dispatch_v41.py"
+  },
+  {
+    "path": "upstream_v2/nf4_row_reuse_candidate_v1.py",
+    "reason": "source/upstream_v2/row_grouped_dispatch_v41.py"
+  },
+  {
+    "path": "upstream_v2/nf4_row_scale_candidate_v44.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_dispatch.py"
+  },
+  {
+    "path": "upstream_v2/nf4_same_expert_fused64_v39.py",
+    "reason": "source/upstream_v2/row_grouped_dispatch_v41.py"
+  },
+  {
+    "path": "upstream_v2/nf4_scale_fused64_v46.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_dispatch.py"
+  },
+  {
+    "path": "upstream_v2/parent_admission_v24_candidate.py",
+    "reason": "source/upstream_v2/successor_design_v25.py"
+  },
+  {
+    "path": "upstream_v2/pipeline_launch_candidate_v12.py",
+    "reason": "source/upstream_v2/write_once_runtime_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/pointwise_identity_v50.py",
+    "reason": "source/upstream_v2/retention_scope_v51.py"
+  },
+  {
+    "path": "upstream_v2/pointwise_recompute_v50.py",
+    "reason": "source/upstream_v2/routing_input_prepare_v57.py"
+  },
+  {
+    "path": "upstream_v2/pointwise_runtime_v50.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/projection_backend_candidate_v25.py",
+    "reason": "source/upstream_v2/write_once_runtime_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/projection_diagnostic_candidate_v1.py",
+    "reason": "source/upstream_v2/write_once_runtime_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/projection_identity_candidate_v25.py",
+    "reason": "source/upstream_v2/write_once_identity_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/projection_launch_candidate_v25.py",
+    "reason": "source/upstream_v2/static_write_once_candidate_v1.py"
+  },
+  {
+    "path": "upstream_v2/registry_transition_v58a.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_registry.py"
+  },
+  {
+    "path": "upstream_v2/replay_determinism_candidate_v1.py",
+    "reason": "source/upstream_v2/execution_speed_v29.py"
+  },
+  {
+    "path": "upstream_v2/replay_observation_v58h.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/replay_route_candidate_v58.py",
+    "reason": "source/upstream_v2/checkpoint_call_binding_v58.py"
+  },
+  {
+    "path": "upstream_v2/resume_audit_v6.py",
+    "reason": "source/upstream_v2/replay_determinism_candidate_v1.py"
+  },
+  {
+    "path": "upstream_v2/retention_runtime_v52.py",
+    "reason": "source/long_input_policy.py"
+  },
+  {
+    "path": "upstream_v2/retention_scope_v51.py",
+    "reason": "source/upstream_v2/retention_runtime_v52.py"
+  },
+  {
+    "path": "upstream_v2/route_aggregate_identity_v53.py",
+    "reason": "source/upstream_v2/route_backward_identity_v55.py"
+  },
+  {
+    "path": "upstream_v2/route_aggregate_runtime_v53.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/route_aggregate_v53.py",
+    "reason": "source/upstream_v2/routing_input_prepare_v57.py"
+  },
+  {
+    "path": "upstream_v2/route_backward_identity_v55.py",
+    "reason": "source/upstream_v2/route_input_identity_v57.py"
+  },
+  {
+    "path": "upstream_v2/route_backward_prepare_v55.py",
+    "reason": "source/upstream_v2/routing_input_prepare_v57.py"
+  },
+  {
+    "path": "upstream_v2/route_backward_runtime_v55.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/route_input_identity_v57.py",
+    "reason": "source/upstream_v2/route_input_runtime_v57.py"
+  },
+  {
+    "path": "upstream_v2/route_input_prepare_v57.py",
+    "reason": "source/upstream_v2/routing_input_prepare_v57.py"
+  },
+  {
+    "path": "upstream_v2/route_input_runtime_v57.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/routing_input_prepare_v57.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/routing_replay_candidate_v58.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/row_bk64_identity_v35.py",
+    "reason": "source/upstream_v2/row_waves_identity_v36.py"
+  },
+  {
+    "path": "upstream_v2/row_bk64_pair_identity_v35.py",
+    "reason": "source/upstream_v2/row_bk64_identity_v35.py"
+  },
+  {
+    "path": "upstream_v2/row_fused64_identity_v39.py",
+    "reason": "source/upstream_v2/row_grouped_identity_v41.py"
+  },
+  {
+    "path": "upstream_v2/row_grouped_dispatch_v41.py",
+    "reason": "source/upstream_v2/dual_model_research_20261026/nf4_word8_attention_30b_v1/bp_dispatch.py"
+  },
+  {
+    "path": "upstream_v2/row_grouped_identity_v41.py",
+    "reason": "source/upstream_v2/row_scale_fused_identity_v46.py"
+  },
+  {
+    "path": "upstream_v2/row_quad_identity_v33.py",
+    "reason": "source/upstream_v2/row_bk64_identity_v35.py"
+  },
+  {
+    "path": "upstream_v2/row_reuse_identity_v31.py",
+    "reason": "source/upstream_v2/row_quad_identity_v33.py"
+  },
+  {
+    "path": "upstream_v2/row_scale_fused_identity_v46.py",
+    "reason": "source/upstream_v2/finite_guard_identity_v48.py"
+  },
+  {
+    "path": "upstream_v2/row_scale_identity_v44.py",
+    "reason": "source/upstream_v2/row_scale_fused_identity_v46.py"
+  },
+  {
+    "path": "upstream_v2/row_tile_candidate_v23.py",
+    "reason": "source/upstream_v2/row_tile_runtime_v23.py"
+  },
+  {
+    "path": "upstream_v2/row_tile_runtime_v23.py",
+    "reason": "source/upstream_v2/write_once_runtime_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/row_tuning_identity_v38.py",
+    "reason": "source/upstream_v2/row_fused64_identity_v39.py"
+  },
+  {
+    "path": "upstream_v2/row_waves_identity_v36.py",
+    "reason": "source/upstream_v2/row_tuning_identity_v38.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/bridge.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/__init__.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/__init__.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/align.py",
+    "reason": "source/upstream_v2/runtime_v1/bridge.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/base.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/model.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/codec.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/model.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/config.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/transformer.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/judge.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/ranking/judge.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/model.py",
+    "reason": "source/upstream_v2/runtime_v1/bridge.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/patcher.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/transformer.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/rope.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/transformer.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/text_encoder.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/model.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/transformer.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/model/vision_encoder.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/model.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/__init__.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/benchmark_utils.py",
+    "reason": "source/upstream_v2/runtime_v1/perf/sam_batch_round23.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/data.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/native_finetuning/feature_cache.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/feature_cache.py",
+    "reason": "source/upstream_v2/runtime_v1/bridge.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/lora.py",
+    "reason": "source/upstream_v2/runtime_v1/bridge.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/model.py",
+    "reason": "source/upstream_v2/runtime_v1/bridge.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/objective.py",
+    "reason": "source/upstream_v2/runtime_v1/perf/sam_batch_round23.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/optimized_utils.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/native_finetuning/feature_cache.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/native_finetuning/referring_aux.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/native_finetuning/benchmark_utils.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/processor.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/model.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/ranking/__init__.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/model/model.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/ranking/clap.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/ranking/__init__.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/ranking/imagebind.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/ranking/__init__.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/ranking/judge.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/ranking/__init__.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/ranking/ranker.py",
+    "reason": "source/upstream_v2/runtime_v1/code/sam_audio/ranking/__init__.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/code/sam_audio/referring_training/__init__.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/common.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/dynamic_nf4.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/fast_moe.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/batch2_joint_round4.py",
+    "reason": "source/upstream_v2/runtime_v1/perf/sam_batch_round23.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/buffers_moe_round9.py",
+    "reason": "source/upstream_v2/runtime_v1/fast_moe.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/bulk_gather_moe_round6.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/bulk_gather_support_round6.py",
+    "reason": "source/upstream_v2/runtime_v1/fast_moe.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/checkpoint_policy_round14.py",
+    "reason": "source/upstream_v2/runtime_v1/fast_moe.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/compiled_sam_round26.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/deployment-round17/characterization.json",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/expert_buffers_round9.cpp",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/expert_bulk_gather_round6.cpp",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/expert_pointwise_round8.cpp",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/expert_unique_scatter_round3.cpp",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/fused_decode_round7.py",
+    "reason": "source/upstream_v2/runtime_v1/fast_moe.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/fused_moe_round7.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/grouped_moe.py",
+    "reason": "source/upstream_v2/runtime_v1/perf/unique_scatter_round3.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/hybrid-exclusive-round16.json",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/hybrid_moe_round16.py",
+    "reason": "source/upstream_v2/runtime_v1/fast_moe.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/nf4_grouped_round13b.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/nf4_moe_round13b.py",
+    "reason": "source/upstream_v2/runtime_v1/perf/hybrid_moe_round16.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/pointwise_moe_round8.py",
+    "reason": "source/upstream_v2/routing_input_prepare_v57.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/profile_round7.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/profile_round8.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/route_moe.py",
+    "reason": "source/upstream_v2/runtime_v1/perf/buffers_moe_round9.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/sam_batch_round23.py",
+    "reason": "source/production_models.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/saved_tensor_moe_round5.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/triton_grouped_round12.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/triton_moe_round12.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/unique_scatter_round3.py",
+    "reason": "source/upstream_v2/runtime_v1/fast_moe.py"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/update_replay_round17.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/update_replay_round23.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/update_replay_round24.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/perf/update_replay_round26.py",
+    "reason": "fast_moe source-bound asset"
+  },
+  {
+    "path": "upstream_v2/runtime_v1/sam_b1_policy.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/selective_offload_v13.py",
+    "reason": "source/upstream_v2/memory_policy_v13.py"
+  },
+  {
+    "path": "upstream_v2/singleton_attention_v2.py",
+    "reason": "source/production_runtime.py"
+  },
+  {
+    "path": "upstream_v2/static_write_once_candidate_v1.py",
+    "reason": "source/upstream_v2/write_once_runtime_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/successor_design_v20.py",
+    "reason": "source/upstream_v2/successor_design_v21.py"
+  },
+  {
+    "path": "upstream_v2/successor_design_v21.py",
+    "reason": "source/upstream_v2/successor_design_v23.py"
+  },
+  {
+    "path": "upstream_v2/successor_design_v23.py",
+    "reason": "source/upstream_v2/projection_identity_candidate_v25.py"
+  },
+  {
+    "path": "upstream_v2/successor_design_v24.py",
+    "reason": "source/upstream_v2/successor_design_v25.py"
+  },
+  {
+    "path": "upstream_v2/successor_design_v25.py",
+    "reason": "source/upstream_v2/write_once_identity_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/write_once_identity_candidate_v26.py",
+    "reason": "source/upstream_v2/write_once_runtime_candidate_v26.py"
+  },
+  {
+    "path": "upstream_v2/write_once_runtime_candidate_v26.py",
+    "reason": "source/upstream_v2/memo_transfer_runtime_candidate_v27.py"
+  },
+  {
+    "path": "validation_coverage.py",
+    "reason": "source/validation_run.py"
+  },
+  {
+    "path": "validation_inputs.py",
+    "reason": "source/validation_run.py"
+  },
+  {
+    "path": "validation_reference/music/gt_metric_protocol.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "validation_reference/music/media_utils.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "validation_reference/music/scoring.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "validation_reference/speech/gt_metric_protocol.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "validation_reference/speech/media_utils.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "validation_reference/speech/scoring.py",
+    "reason": "required runtime asset/package init/validation scorer"
+  },
+  {
+    "path": "validation_run.py",
+    "reason": "entry"
+  },
+  {
+    "path": "validation_scoring.py",
+    "reason": "source/validation_run.py"
+  },
+  {
+    "path": "watched_session.py",
+    "reason": "entry"
+  }
+]

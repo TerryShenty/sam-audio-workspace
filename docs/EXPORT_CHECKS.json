@@ -1,0 +1,22 @@
+{
+  "status": "STATIC_AND_EXISTING_CLUSTER_CPU_IMPORT_PASS_TARGET_GPU_PENDING",
+  "cpu_job": 6923689,
+  "original_missing_overlay_probe": 6923605,
+  "torch": "2.13.0+cu130",
+  "gpu_initialized": false,
+  "v6_normalize_descriptor": true,
+  "dependency_assets": 30,
+  "four_gpu_tested": false,
+  "validation817_tested": false,
+  "removed_closed_bookgather_import": true,
+  "preserved_v5_dispatch": true,
+  "automatic_handoff": {
+    "status": "IMPLEMENTED_TARGET_GPU_PENDING",
+    "cpu_job_initial": "6927574_missing_FFmpeg",
+    "cpu_job_affected_retry": "6927812",
+    "fresh_install_verified": false,
+    "full817_gpu_verified": false,
+    "cpu_import_audio": "6927812_COMPLETED_0_0_43s",
+    "cpu_original_codec": "6928020_COMPLETED_0_0_37s"
+  }
+}

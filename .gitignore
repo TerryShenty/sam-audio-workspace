@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.so
+*.o
+*.log
+local_paths.json
+CPU_READY.json
+codec_assets/
+src/native_extensions.json
+src/validation_reference/*/bound_validation_inputs.json
+runs/
+models/
+joint_data/
+environment/
+*.submission.json
+prepare.lock

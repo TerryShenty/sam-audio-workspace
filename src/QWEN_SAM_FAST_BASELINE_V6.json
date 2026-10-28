@@ -1,0 +1,100 @@
+{
+  "schema": "qwen_sam_30b_accepted_configuration_v6",
+  "model": "Qwen3-Omni-30B-A3B-Thinking",
+  "configuration": {
+    "name": "attention_backward_on_v5_30b",
+    "singleton": true,
+    "cache": "pinned",
+    "retained": 23,
+    "waves": 4,
+    "group": 1,
+    "static": true,
+    "native_sam_mode": "native_rms",
+    "compiler_mode": "both_dynamic_gemm",
+    "memo_policy": "all",
+    "memo_roles": [
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "memo_bytes": 3623878656,
+    "memory_tier": "expanded92",
+    "nf4_row_reuse_direction": "both",
+    "nf4_memo_consume_once": true,
+    "backward_kernel": {
+      "bn": 128,
+      "bk": 32,
+      "warps": 4,
+      "stages": 1,
+      "waves": 8,
+      "group": 1
+    },
+    "forward_kernel": {
+      "bn": 64,
+      "bk": 32,
+      "warps": 4,
+      "stages": 1,
+      "waves": 8,
+      "group": 1
+    },
+    "nf4_bytepair_decode_v1": true,
+    "nf4_word4_decode_v1": true,
+    "qwen_nf4_attention_forward_int8_30b_v1": true,
+    "nf4_word8_decode_v1": true,
+    "expert_route_input_prepare": {
+      "mode": "fused",
+      "block": 1024
+    },
+    "expert_route_backward_prepare": {
+      "mode": "fused",
+      "warps": 4
+    },
+    "expert_route_aggregate": {
+      "mode": "both",
+      "block": 1024
+    },
+    "expert_pointwise_recompute": {
+      "mode": "recompute",
+      "block": 1024
+    },
+    "nf4_row_scale_cache": {
+      "precision": "bf16",
+      "roles": [
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "direction": "forward",
+      "max_bytes": 2147483648
+    },
+    "nf4_same_expert_fused64": {
+      "gate_proj": {
+        "backward_kernel": true
+      },
+      "up_proj": {
+        "backward_kernel": true
+      },
+      "down_proj": {
+        "backward_kernel": true
+      }
+    },
+    "nf4_row_reuse_waves": {
+      "gate_proj": {
+        "forward_kernel": 32,
+        "backward_kernel": 32
+      },
+      "up_proj": {
+        "forward_kernel": 32,
+        "backward_kernel": 32
+      },
+      "down_proj": {
+        "forward_kernel": 32,
+        "backward_kernel": 32
+      }
+    },
+    "qwen_nf4_attention_backward_int8_30b_v1": true
+  },
+  "upstream_contract_sha256": "6c9598214c911eed1519d28bc6e8f6a4426fd0c929201424f0ea72b2fb18ca78",
+  "target_four_gpu_verified": false,
+  "export_status": "ISOLATED_PORTABLE_V6_TARGET_UNTESTED"
+}

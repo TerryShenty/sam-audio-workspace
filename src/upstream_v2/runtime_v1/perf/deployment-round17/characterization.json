@@ -1,0 +1,952 @@
+{
+  "status": "QUALIFIED_FOR_REAL_UPDATE_COMPARISON_NOT_ACCEPTED_FOR_PRODUCTION",
+  "raw_proof_sha256": "8e23d60f4f3515d2233675daa8be38ac36c52fd302448bfdbb9379311b1be55a",
+  "six_cases": [
+    {
+      "index": 0,
+      "tokens": 916,
+      "aa": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 2.1278110749886237e-06,
+          "cosine": 0.9999999999977363,
+          "norm_ratio": 0.9999999999663935,
+          "reference_norm": 0.13660014869956075,
+          "candidate_norm": 0.13660014869497009
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.13355539277935305,
+            "candidate_norm": 0.13355539277935305
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.028679504211937084,
+            "candidate_norm": 0.028679504211937084
+          },
+          "qwen_special": {
+            "relative_l2": 0.023035448898249322,
+            "cosine": 0.9997369112829525,
+            "norm_ratio": 0.9976100150650041,
+            "reference_norm": 7.4368430603539094e-06,
+            "candidate_norm": 7.4190691174757356e-06
+          },
+          "qwen_lora": {
+            "relative_l2": 0.009523306288173232,
+            "cosine": 0.9999549484561686,
+            "norm_ratio": 0.9991853351526575,
+            "reference_norm": 2.4656270767993017e-05,
+            "candidate_norm": 2.4636184170931777e-05
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 1.7149673157757615e-09,
+            "candidate_norm": 1.7149673157757615e-09
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0002075071420332305,
+            "candidate_norm": 0.0002075071420332305
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "candidate": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 1.991450181464623e-06,
+          "cosine": 0.999999999998017,
+          "norm_ratio": 0.9999999999778161,
+          "reference_norm": 0.13660014869956075,
+          "candidate_norm": 0.13660014869653042
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.13355539277935305,
+            "candidate_norm": 0.13355539277935305
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.028679504211937084,
+            "candidate_norm": 0.028679504211937084
+          },
+          "qwen_special": {
+            "relative_l2": 0.019018849178213573,
+            "cosine": 0.9998192562782776,
+            "norm_ratio": 0.9993075445316638,
+            "reference_norm": 7.4368430603539094e-06,
+            "candidate_norm": 7.43169337770961e-06
+          },
+          "qwen_lora": {
+            "relative_l2": 0.009424418866174218,
+            "cosine": 0.9999557538515484,
+            "norm_ratio": 0.9993818794893986,
+            "reference_norm": 2.4656270767993017e-05,
+            "candidate_norm": 2.4641030221316382e-05
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 1.7149673157757615e-09,
+            "candidate_norm": 1.7149673157757615e-09
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0002075071420332305,
+            "candidate_norm": 0.0002075071420332305
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "flow_hidden_gradient": 5.906024398427689e-07,
+      "peak_gib": 24.164955615997314
+    },
+    {
+      "index": 18,
+      "tokens": 916,
+      "aa": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 3.51229444041717e-06,
+          "cosine": 0.9999999999938318,
+          "norm_ratio": 1.0000000001080112,
+          "reference_norm": 0.1858386259760163,
+          "candidate_norm": 0.18583862599608894
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.18240470454087765,
+            "candidate_norm": 0.18240470454087765
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.035553929708089835,
+            "candidate_norm": 0.035553929708089835
+          },
+          "qwen_special": {
+            "relative_l2": 0.017778208842958755,
+            "cosine": 0.9998485411732351,
+            "norm_ratio": 1.003477590072096,
+            "reference_norm": 2.4429105011178067e-05,
+            "candidate_norm": 2.4514059424235128e-05
+          },
+          "qwen_lora": {
+            "relative_l2": 0.006714232778147687,
+            "cosine": 0.9999775157275239,
+            "norm_ratio": 1.0003134954753743,
+            "reference_norm": 7.257114742649482e-05,
+            "candidate_norm": 7.259389815285575e-05
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 3.3673124196633756e-09,
+            "candidate_norm": 3.3673124196633756e-09
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0006564182876694029,
+            "candidate_norm": 0.0006564182876694029
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "candidate": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 3.483436076880033e-06,
+          "cosine": 0.9999999999939326,
+          "norm_ratio": 1.0000000001434004,
+          "reference_norm": 0.1858386259760163,
+          "candidate_norm": 0.18583862600266565
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.18240470454087765,
+            "candidate_norm": 0.18240470454087765
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.035553929708089835,
+            "candidate_norm": 0.035553929708089835
+          },
+          "qwen_special": {
+            "relative_l2": 0.01737283677866012,
+            "cosine": 0.9998616531207372,
+            "norm_ratio": 1.0048757172479161,
+            "reference_norm": 2.4429105011178067e-05,
+            "candidate_norm": 2.454821441983222e-05
+          },
+          "qwen_lora": {
+            "relative_l2": 0.006735851419337072,
+            "cosine": 0.9999773975585262,
+            "norm_ratio": 1.0003864480025195,
+            "reference_norm": 7.257114742649482e-05,
+            "candidate_norm": 7.259919240145833e-05
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 3.3673124196633756e-09,
+            "candidate_norm": 3.3673124196633756e-09
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0006564182876694029,
+            "candidate_norm": 0.0006564182876694029
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "flow_hidden_gradient": 1.8724139181358623e-06,
+      "peak_gib": 24.164955615997314
+    },
+    {
+      "index": 77050,
+      "tokens": 920,
+      "aa": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 1.631631749174559e-05,
+          "cosine": 0.9999999998668888,
+          "norm_ratio": 0.9999999958639361,
+          "reference_norm": 0.613185671849789,
+          "candidate_norm": 0.613185669313614
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.586310212717567,
+            "candidate_norm": 0.586310212717567
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.17914230860634656,
+            "candidate_norm": 0.17914230860634656
+          },
+          "qwen_special": {
+            "relative_l2": 0.0292796498651968,
+            "cosine": 0.9997144282663134,
+            "norm_ratio": 0.9827959182825623,
+            "reference_norm": 0.00029249733918362597,
+            "candidate_norm": 0.0002874651910581778
+          },
+          "qwen_lora": {
+            "relative_l2": 0.00590549516110779,
+            "cosine": 0.999982568201885,
+            "norm_ratio": 0.9998749543768071,
+            "reference_norm": 0.0008758472404008164,
+            "candidate_norm": 0.0008757377195368186
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 4.480817076018912e-09,
+            "candidate_norm": 4.480817076018912e-09
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.012007632117326293,
+            "candidate_norm": 0.012007632117326293
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "candidate": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 1.5302288088806768e-05,
+          "cosine": 0.9999999998829199,
+          "norm_ratio": 0.9999999959121986,
+          "reference_norm": 0.613185671849789,
+          "candidate_norm": 0.6131856693432078
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.586310212717567,
+            "candidate_norm": 0.586310212717567
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.17914230860634656,
+            "candidate_norm": 0.17914230860634656
+          },
+          "qwen_special": {
+            "relative_l2": 0.028222749080092042,
+            "cosine": 0.9997466480953843,
+            "norm_ratio": 0.9827206696038558,
+            "reference_norm": 0.00029249733918362597,
+            "candidate_norm": 0.00028744318101987906
+          },
+          "qwen_lora": {
+            "relative_l2": 0.005092910787121916,
+            "cosine": 0.999987034259652,
+            "norm_ratio": 0.9999068613232126,
+            "reference_norm": 0.0008758472404008164,
+            "candidate_norm": 0.0008757656651477775
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 4.480817076018912e-09,
+            "candidate_norm": 4.480817076018912e-09
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.012007632117326293,
+            "candidate_norm": 0.012007632117326293
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "flow_hidden_gradient": 2.76570935966447e-05,
+      "peak_gib": 24.166837215423584
+    },
+    {
+      "index": "long_prompt_stress",
+      "tokens": 1916,
+      "aa": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 5.504063450381079e-06,
+          "cosine": 0.9999999999848526,
+          "norm_ratio": 0.9999999995742445,
+          "reference_norm": 0.14249041535473667,
+          "candidate_norm": 0.14249041529407058
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.13774256352897363,
+            "candidate_norm": 0.13774256352897363
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0364703521272985,
+            "candidate_norm": 0.0364703521272985
+          },
+          "qwen_special": {
+            "relative_l2": 0.018909302155179452,
+            "cosine": 0.9998495228201464,
+            "norm_ratio": 0.9923242326815276,
+            "reference_norm": 2.9170981408807042e-05,
+            "candidate_norm": 2.8947071743061557e-05
+          },
+          "qwen_lora": {
+            "relative_l2": 0.006196387620555489,
+            "cosine": 0.9999808322034576,
+            "norm_ratio": 0.9997358957549142,
+            "reference_norm": 8.997427773661405e-05,
+            "candidate_norm": 8.995051514791528e-05
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 1.922876360892123e-08,
+            "candidate_norm": 1.922876360892123e-08
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0006396325708662769,
+            "candidate_norm": 0.0006396325708662769
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "candidate": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 8.11214246122913e-06,
+          "cosine": 0.9999999999670965,
+          "norm_ratio": 0.9999999990619205,
+          "reference_norm": 0.14249041535473667,
+          "candidate_norm": 0.1424904152210693
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.13774256352897363,
+            "candidate_norm": 0.13774256352897363
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0364703521272985,
+            "candidate_norm": 0.0364703521272985
+          },
+          "qwen_special": {
+            "relative_l2": 0.027074657167007233,
+            "cosine": 0.9997142941497864,
+            "norm_ratio": 0.986997887891863,
+            "reference_norm": 2.9170981408807042e-05,
+            "candidate_norm": 2.8791697038225356e-05
+          },
+          "qwen_lora": {
+            "relative_l2": 0.009380456322946654,
+            "cosine": 0.9999564555888019,
+            "norm_ratio": 0.9990045971193775,
+            "reference_norm": 8.997427773661405e-05,
+            "candidate_norm": 8.98847170813731e-05
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 1.922876360892123e-08,
+            "candidate_norm": 1.922876360892123e-08
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0006396325708662769,
+            "candidate_norm": 0.0006396325708662769
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "flow_hidden_gradient": 1.8865664515033131e-06,
+      "peak_gib": 24.63575792312622
+    },
+    {
+      "index": "B2_normal",
+      "tokens": [
+        916,
+        916
+      ],
+      "aa": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 185,
+        "gradient": {
+          "relative_l2": 1.0977469188894892e-06,
+          "cosine": 0.9999999999993975,
+          "norm_ratio": 1.0000000000029308,
+          "reference_norm": 0.164669283675808,
+          "candidate_norm": 0.16466928367629063
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.162560332575948,
+            "candidate_norm": 0.162560332575948
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.02626921078913646,
+            "candidate_norm": 0.02626921078913646
+          },
+          "qwen_special": {
+            "relative_l2": 0.017684559690307064,
+            "cosine": 0.9998456788882611,
+            "norm_ratio": 1.0018767483030726,
+            "reference_norm": 6.7123208833209405e-06,
+            "candidate_norm": 6.724918220148392e-06
+          },
+          "qwen_lora": {
+            "relative_l2": 0.0061717649969553765,
+            "cosine": 0.9999809545128618,
+            "norm_ratio": 0.9999894180484004,
+            "reference_norm": 2.2088974856708303e-05,
+            "candidate_norm": 2.2088741112245485e-05
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 1.3485487534107098e-08,
+            "candidate_norm": 1.3485487534107098e-08
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.00019821866355027094,
+            "candidate_norm": 0.00019821866355027094
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "candidate": {
+        "forward_exact": {
+          "hidden": false,
+          "condition": false,
+          "loss": false,
+          "terms": false
+        },
+        "forward_relative_l2": {
+          "hidden": 0.03377900135116764,
+          "condition": 0.06467165691042215,
+          "loss": 0.0001302171644232146,
+          "terms": 6.328019414553795e-05
+        },
+        "forward_max_abs": {
+          "hidden": 2.5,
+          "condition": 0.01318359375,
+          "loss": 3.038346767425537e-05,
+          "terms": 7.668137550354004e-05
+        },
+        "missing": [],
+        "gradient_mismatch_count": 611,
+        "gradient": {
+          "relative_l2": 0.07743197206664235,
+          "cosine": 0.9970080270544338,
+          "norm_ratio": 1.0015595442853455,
+          "reference_norm": 0.164669283675808,
+          "candidate_norm": 0.16492609271613654
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.07729444354864028,
+            "cosine": 0.9970188313781532,
+            "norm_ratio": 1.001599347304512,
+            "reference_norm": 0.162560332575948,
+            "candidate_norm": 0.1628203230056739
+          },
+          "sam_lora": {
+            "relative_l2": 0.08252449916579675,
+            "cosine": 0.9965949559231685,
+            "norm_ratio": 1.0000299426870627,
+            "reference_norm": 0.02626921078913646,
+            "candidate_norm": 0.026269997359894503
+          },
+          "qwen_special": {
+            "relative_l2": 0.6953169767247727,
+            "cosine": 0.8202715425044129,
+            "norm_ratio": 1.2156335305157122,
+            "reference_norm": 6.7123208833209405e-06,
+            "candidate_norm": 8.159722333345779e-06
+          },
+          "qwen_lora": {
+            "relative_l2": 0.3294532783882633,
+            "cosine": 0.9602498748417226,
+            "norm_ratio": 1.1352335448635804,
+            "reference_norm": 2.2088974856708303e-05,
+            "candidate_norm": 2.5076145228983467e-05
+          },
+          "vlm": {
+            "relative_l2": 0.890420375673236,
+            "cosine": 0.9344780702473989,
+            "norm_ratio": 0.11832997756607111,
+            "reference_norm": 1.3485487534107098e-08,
+            "candidate_norm": 1.5957374373784244e-09
+          },
+          "bridge": {
+            "relative_l2": 0.09671261372135385,
+            "cosine": 0.997946631729869,
+            "norm_ratio": 1.0704091008694643,
+            "reference_norm": 0.00019821866355027094,
+            "candidate_norm": 0.00021217506142639237
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "flow_hidden_gradient": 5.13936981860752e-07,
+      "peak_gib": 24.600895404815674
+    },
+    {
+      "index": "B2_long",
+      "tokens": [
+        916,
+        1916
+      ],
+      "aa": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 189,
+        "gradient": {
+          "relative_l2": 4.980477335271044e-06,
+          "cosine": 0.9999999999875974,
+          "norm_ratio": 1.000000000019997,
+          "reference_norm": 0.22248547523634452,
+          "candidate_norm": 0.22248547524079357
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.21483386628165707,
+            "candidate_norm": 0.21483386628165707
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.05783814479960634,
+            "candidate_norm": 0.05783814479960634
+          },
+          "qwen_special": {
+            "relative_l2": 0.020098566324284414,
+            "cosine": 0.9998048594829188,
+            "norm_ratio": 1.0035074820603027,
+            "reference_norm": 3.1160264608459553e-05,
+            "candidate_norm": 3.1269558677568016e-05
+          },
+          "qwen_lora": {
+            "relative_l2": 0.008793638312710884,
+            "cosine": 0.9999613524180618,
+            "norm_ratio": 0.9997758678264198,
+            "reference_norm": 0.00010395317115558015,
+            "candidate_norm": 0.00010392987190537849
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 4.318548220964053e-08,
+            "candidate_norm": 4.318548220964053e-08
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0009663428641979119,
+            "candidate_norm": 0.0009663428641979119
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "candidate": {
+        "forward_exact": {
+          "hidden": true,
+          "condition": true,
+          "loss": true,
+          "terms": true
+        },
+        "forward_relative_l2": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "forward_max_abs": {
+          "hidden": 0.0,
+          "condition": 0.0,
+          "loss": 0.0,
+          "terms": 0.0
+        },
+        "missing": [],
+        "gradient_mismatch_count": 191,
+        "gradient": {
+          "relative_l2": 4.774288389519406e-06,
+          "cosine": 0.9999999999886031,
+          "norm_ratio": 1.0000000001797051,
+          "reference_norm": 0.22248547523634452,
+          "candidate_norm": 0.2224854752763263
+        },
+        "gradient_groups": {
+          "sam": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.21483386628165707,
+            "candidate_norm": 0.21483386628165707
+          },
+          "sam_lora": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.05783814479960634,
+            "candidate_norm": 0.05783814479960634
+          },
+          "qwen_special": {
+            "relative_l2": 0.018957834684635428,
+            "cosine": 0.9998321372471601,
+            "norm_ratio": 1.00470062450236,
+            "reference_norm": 3.1160264608459553e-05,
+            "candidate_norm": 3.1306737311778094e-05
+          },
+          "qwen_lora": {
+            "relative_l2": 0.00849223408983923,
+            "cosine": 0.9999640352506833,
+            "norm_ratio": 1.000399735453137,
+            "reference_norm": 0.00010395317115558015,
+            "candidate_norm": 0.00010399472492355705
+          },
+          "vlm": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 4.318548220964053e-08,
+            "candidate_norm": 4.318548220964053e-08
+          },
+          "bridge": {
+            "relative_l2": 0.0,
+            "cosine": 1.0,
+            "norm_ratio": 1.0,
+            "reference_norm": 0.0009663428641979119,
+            "candidate_norm": 0.0009663428641979119
+          }
+        },
+        "finite": true,
+        "tokens_equal": true
+      },
+      "flow_hidden_gradient": 2.313545564902597e-06,
+      "peak_gib": 25.61801242828369
+    }
+  ],
+  "old_group_gate_passed": false,
+  "old_group_gate_rejection": "Measured numerical bound or32GiB activation budget exceeded; evaluate the prevalidated exact preallocation family in the same loaded model",
+  "rationale": "User permits noticeable numeric differences. Complete finite outputs and gradients are characterized. Do not reclassify old subgroup gate as passed; assess actual AdamW/loss trajectory before selecting candidate. Eight updates are engineering evidence, not final369-score equivalence.",
+  "requires": "Full checkpoint restore;8 actual global8 DDP optimizer/scheduler/EMA updates per path on identical data/RNG;restore complete state after;finite/noOOM/nonzero flow gradient/DDP synchronized;loss maxrelative<=.05 median<=.02,normratios.5-2;matched speedup>=1.05;resume+2 full roundtrip."
+}

@@ -1,0 +1,6 @@
+{
+  "data_root": "/YOUR_SHARED_STORAGE/qwen-data",
+  "sam_namespace": "/YOUR_SHARED_STORAGE/sam-components/SIGNATURE",
+  "qwen_model": "/YOUR_SHARED_STORAGE/models/Qwen3-Omni-30B-A3B-Thinking",
+  "sam_model": "/YOUR_SHARED_STORAGE/models/sam-audio-large-tv"
+}

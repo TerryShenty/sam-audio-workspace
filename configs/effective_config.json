@@ -1,0 +1,110 @@
+{
+  "activation_offload_enabled": false,
+  "atomic_route_replay_enabled": false,
+  "backward_kernel": {
+    "bn": 128,
+    "bk": 32,
+    "warps": 4,
+    "stages": 1,
+    "waves": 8,
+    "group": 1
+  },
+  "cache": "pinned",
+  "compiler_mode": "both_dynamic_gemm",
+  "constant_codebook_enabled": false,
+  "expert_pointwise_recompute": {
+    "mode": "recompute",
+    "block": 1024
+  },
+  "expert_route_aggregate": {
+    "mode": "both",
+    "block": 1024
+  },
+  "expert_route_backward_prepare": {
+    "mode": "fused",
+    "warps": 4
+  },
+  "expert_route_input_prepare": {
+    "mode": "fused",
+    "block": 1024
+  },
+  "forward_kernel": {
+    "bn": 64,
+    "bk": 32,
+    "warps": 4,
+    "stages": 1,
+    "waves": 8,
+    "group": 1
+  },
+  "forward_same_expert64_enabled": false,
+  "global_batch": 8,
+  "group": 1,
+  "language_hidden_cached": false,
+  "lora_intermediate_cache_cap_bytes": 0,
+  "memo_bytes": 3623878656,
+  "memo_policy": "all",
+  "memo_roles": [
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "memory_tier": "expanded92",
+  "name": "attention_backward_on_v5_30b",
+  "native_sam_mode": "native_rms",
+  "nf4_bytepair_decode_v1": true,
+  "nf4_memo_consume_once": true,
+  "nf4_row_reuse_direction": "both",
+  "nf4_row_reuse_waves": {
+    "gate_proj": {
+      "forward_kernel": 32,
+      "backward_kernel": 32
+    },
+    "up_proj": {
+      "forward_kernel": 32,
+      "backward_kernel": 32
+    },
+    "down_proj": {
+      "forward_kernel": 32,
+      "backward_kernel": 32
+    }
+  },
+  "nf4_row_scale_cache": {
+    "precision": "bf16",
+    "roles": [
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "direction": "forward",
+    "max_bytes": 2147483648
+  },
+  "nf4_same_expert_fused64": {
+    "gate_proj": {
+      "backward_kernel": true
+    },
+    "up_proj": {
+      "backward_kernel": true
+    },
+    "down_proj": {
+      "backward_kernel": true
+    }
+  },
+  "per_rank_batch": 2,
+  "qwen_lora_projections": [
+    "q_proj",
+    "v_proj"
+  ],
+  "qwen_lora_rank": 8,
+  "qwen_precision": "nf4_doublequant_bf16",
+  "retained": 23,
+  "sam_wo_int8_enabled": false,
+  "scaled_gate_up_enabled": false,
+  "singleton": true,
+  "static": true,
+  "waves": 4,
+  "world_size": 4,
+  "nf4_word4_decode_v1": true,
+  "qwen_nf4_attention_forward_int8_30b_v1": true,
+  "nf4_word8_decode_v1": true,
+  "qwen_nf4_attention_backward_int8_30b_v1": true
+}
