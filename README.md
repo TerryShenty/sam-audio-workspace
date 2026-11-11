@@ -25,7 +25,7 @@ The arms form a 2×2 (FM time points × D), so `dual_t0_contrastive` differs fro
 
 ## Steps
 
-All commands run from the repository root. Choose a shared storage root `R`.
+Get this branch: `git clone -b experiment/gs-qwen-ablation https://github.com/TerryShenty/sam-audio-workspace.git` (or GitHub **Code → Download ZIP** on this branch). All commands run from the repository root. Choose a shared storage root `R`.
 
 **1. Environment (CPU/network)** — unchanged V6 installer:
 ```bash
@@ -81,4 +81,4 @@ Repeat for `dual_t0`, `contrastive`, `dual_t0_contrastive` with their own output
 | `src/ablation_joint.py`, `src/ablation_sampler.py`, `src/ablation_data.py` | objective, A/B pair sampler, data contract |
 | `src/ablation_validation.py`, `src/referring_metrics_v2.py` | generation + scoring of both validation sets |
 
-Based on [`TerryShenty/sam-audio-workspace`](https://github.com/TerryShenty/sam-audio-workspace) commit `83e329a` (V6); its history is kept in this repository.
+This is branch `experiment/gs-qwen-ablation` of [`TerryShenty/sam-audio-workspace`](https://github.com/TerryShenty/sam-audio-workspace), built on its `main` commit `83e329a` (V6). `main` keeps the V6 joint-training handoff; each experiment lives on its own branch with a pull request.

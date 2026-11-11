@@ -2,7 +2,7 @@
   "files": {
     ".gitignore": "ff5fd5f50dfd38d26f065f622ada64a2e02c265d595e6ce69d3545aeb6ff33ad",
     "LICENSE": "4dea99bfaa016e21bc860d73f344236bd1e5c4977d1a9a8fd32f822b500ae1be",
-    "README.md": "f02ece05a84982d184d80423e5b6f1932c9a6e94800f9f26e750a132d1e63339",
+    "README.md": "0ef19724131627dec02839063fb4b1db5d4bf66d752f34306968823d3db72b03",
     "configs/MODEL_SHA256.json": "3e5f78d2d31f33e28b13025defd1deac2275633761993d08bc469201dd262038",
     "configs/ablation_data.json": "7ddba91c573c49042121c8c41567be16a7cb6ea2ba3819a4f3e4bce6afee908b",
     "configs/effective_config.json": "f571de00f1c8dae6502e4968f99a6cb7feb4baa481b4ba0871ccc9017d92b459",
