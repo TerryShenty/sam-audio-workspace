@@ -5,11 +5,11 @@ Same model, data, sampler and optimizer in every arm; only the training objectiv
 | arm | objective (per example, on top of the unchanged V6 joint path) |
 |---|---|
 | `baseline` | 0.5·FM_target + 0.5·FM_residual + 0.1·Qwen CE, flow time t ~ U(0,1) |
-| `dual_t0` | FM terms = ½·FM(t ~ U(0,1)) + ½·FM(t = 0) for the same example |
+| `dual_t0` | FM terms = ½·FM(t ~ U(0,1)) + ½·FM(t = 0) for the same example (A and B share the t = 0 noise) |
 | `contrastive` | baseline + λ·D, D = ‖(v_A − v_B) − (c_A − c_B)‖² at t = 0 with the **same** noise for A and B |
 | `dual_t0_contrastive` | dual_t0 FM average + λ·D (one shared t = 0 forward) |
 
-t = 0 is pure noise in SAM Audio's convention, so at t = 0 the A and B inputs are identical and only the prompt can make the two predictions differ. λ = 1. Implementation: [`src/ablation_joint.py`](src/ablation_joint.py).
+The arms form a 2×2 (FM time points × D), so `dual_t0_contrastive` differs from `dual_t0` only by D and `contrastive` differs from `baseline` only by D; if GPUs are limited, `baseline` → `dual_t0` → `dual_t0_contrastive` still isolates each addition, and `contrastive` can be run later. D is computed only at t = 0. t = 0 is pure noise in SAM Audio's convention, so at t = 0 the A and B inputs are identical and only the prompt can make the two predictions differ. λ = 1. Implementation: [`src/ablation_joint.py`](src/ablation_joint.py).
 
 **Model.** Qwen3-Omni-30B-A3B-Thinking (NF4, q/v LoRA r8) → causal `<AUDSEG>` hidden state → bridge → one SAM conditioning token; SAM Audio Large-TV with the seven trained groups (attention LoRA, FFN LoRA, input projection, output head, context embedder, memory projection, video aligner). Fresh official initialization. The V6 accelerated runtime is reused unchanged ([V6 notes](docs/V6_JOINT_TRAINING_README.md), [method](docs/METHOD_AND_VALIDATION.md)).
 

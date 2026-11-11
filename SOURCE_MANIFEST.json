@@ -2,7 +2,7 @@
   "files": {
     ".gitignore": "ff5fd5f50dfd38d26f065f622ada64a2e02c265d595e6ce69d3545aeb6ff33ad",
     "LICENSE": "4dea99bfaa016e21bc860d73f344236bd1e5c4977d1a9a8fd32f822b500ae1be",
-    "README.md": "e03578cf95176fff00675578e4374a56242ea0989e73f0f0c5001bebd6cd2e17",
+    "README.md": "f02ece05a84982d184d80423e5b6f1932c9a6e94800f9f26e750a132d1e63339",
     "configs/MODEL_SHA256.json": "3e5f78d2d31f33e28b13025defd1deac2275633761993d08bc469201dd262038",
     "configs/ablation_data.json": "7ddba91c573c49042121c8c41567be16a7cb6ea2ba3819a4f3e4bce6afee908b",
     "configs/effective_config.json": "f571de00f1c8dae6502e4968f99a6cb7feb4baa481b4ba0871ccc9017d92b459",
@@ -38,7 +38,7 @@
     "src/QWEN_SAM_FAST_BASELINE_V6.json": "266b60de355a03a401147ed812b09369689cffb411935a480bbdb8dd1fb600ce",
     "src/ablation_build.py": "780d264653ef0626834ca81005f9e8a5629324a769b9a429a765eca6a8de82bb",
     "src/ablation_data.py": "35bf7b186d9b21e3e9a2f98cc00c104e748a77279dcdd2440d817c01ec3d239c",
-    "src/ablation_joint.py": "980f8707ecfe12ecbc545305ab565aa8af4f0f2db5cda317f976dbf56abaf4b5",
+    "src/ablation_joint.py": "cf7ba1b7440e5edeeeb14b7d7efc74c6eee0be37820dcd0a3d357abb3e829dec",
     "src/ablation_sampler.py": "e322ba3bb37d16624fe52143ce65488a496607907eee7c4780f20d37eafcf0fc",
     "src/ablation_train.py": "d1ff8b348b7a34ebbba4545235c2891e6a398b8a31329fbd5978ed34a4114947",
     "src/ablation_validation.py": "5ec1cce6dac6c93835cc24145448e24787dc5d49423ae5743f92de0dadbcd928",
@@ -270,7 +270,7 @@
     "src/validation_run.py": "a76eb1b6342c8c73a255374d0fcb9d0666b317b92ab3812cccf3b66d5a617197",
     "src/validation_scoring.py": "7398a72eae36a0c8b03446c0100ae3e2481058f85f069dccdc5912ca1479cea4",
     "src/watched_session.py": "7740ac79f1abb5d1f7ceaf96f9213f83baed2a1e30e5c0613ecc2a83a7b622ad",
-    "tests/test_ablation_cpu.py": "503cf9b8aef0f1145516d11f26fcab1fcf49eac347f183289218ccc2dabe4402",
+    "tests/test_ablation_cpu.py": "36c702e698d175a8b40dc4856c25236b996b4713cb73b6bccaa0fd56c1e65167",
     "tests/test_world_size.py": "741c0cb1ecfd4e2d6e778c0f58deb539d9f31ba8fba0bab0f5d44217e11707d6"
   },
   "status": "SOURCE_IDENTITY_NOT_GPU_ACCEPTANCE"

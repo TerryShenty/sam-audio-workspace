@@ -137,8 +137,8 @@ def test_arm_losses_match_definition(arm, monkeypatch):
             assert torch.equal(calls[1]['time'], torch.zeros(2))
             pred0 = j.sam.lin(torch.cat([calls[1]['noisy'], calls[1]['time'][:, None, None].expand(2, 6, 1), j.cond.expand(2, 6, 4)], -1))
             v0 = velocity(calls[1])
+            assert torch.equal(calls[1]['noisy'][0], calls[1]['noisy'][1]), 't=0 inputs of A and B must be identical in every non-baseline arm'
             if contrast:
-                assert torch.equal(calls[1]['noisy'][0], calls[1]['noisy'][1]), 't=0 inputs of A and B must be identical'
                 from sam_audio.native_finetuning.benchmark_utils import per_target_mse
                 extra = 2.0 * per_target_mse(pred0[0:1] - pred0[1:2], v0[0:1] - v0[1:2], mask[0:1]).mean()
             if dual:

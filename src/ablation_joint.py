@@ -2,12 +2,15 @@
 
 Every arm keeps the V6 per-example loss  .5*FM_target + .5*FM_residual + .1*CE
 and the V6 random-time flow state (t ~ U(0,1), independent noise per example).
-Arms only ADD terms; nothing in the sealed V6 runtime is edited.
+Arms only ADD terms; nothing in the sealed V6 runtime is edited. The arms form a 2x2:
+FM at random t only (baseline, contrastive) vs FM at random t and t = 0 (dual_t0,
+dual_t0_contrastive), each without / with D. D is only ever computed at t = 0.
 
   baseline              V6 loss.
   dual_t0               FM terms are the equal average of the random-t state and a
                         second state at t = 0 (pure noise input) for the same
-                        example: FM = .5*FM(t~U) + .5*FM(t=0).
+                        example: FM = .5*FM(t~U) + .5*FM(t=0). A and B share the
+                        t = 0 noise (as in the contrastive arms).
   contrastive           V6 loss + lambda * D, with D the t = 0 A/B difference loss
                         || (v_A - v_B) - (c_A - c_B) ||^2 over all 256 channels.
                         A and B are the two targets of ONE mixture and get the SAME
@@ -106,7 +109,8 @@ class AblationJoint(SAMBatchJoint):
         pred, velocity = run(random_states)
         t, r = fm_terms(pred, velocity, mask)
         t_random, r_random = t.detach(), r.detach()
-        pred0, velocity0 = run(zero_time_states(clean, shared_noise=contrast))
+        # All non-baseline arms give A and B the SAME t = 0 noise, so arm 4 differs from arm 2 only by D.
+        pred0, velocity0 = run(zero_time_states(clean, shared_noise=True))
         t0, r0 = fm_terms(pred0, velocity0, mask)
         if dual:
             t, r = .5 * (t + t0), .5 * (r + r0)
