@@ -1,6 +1,6 @@
 {
   "animal": {
-    "repo": "TerryShenty/sam-audio-animal3000-ab",
+    "repo": "TerryShen/sam-audio-animal3000-ab",
     "revision": "main",
     "note": "3,000 synthetic two-animal videos, 6,000 A/B referring targets; mixture = target_A + target_B. Pin the revision to a commit once the upload is verified."
   },
