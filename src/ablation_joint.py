@@ -16,6 +16,11 @@ Arms only ADD terms; nothing in the sealed V6 runtime is edited.
   dual_t0_contrastive   dual_t0 FM average + lambda * D; the t = 0 forward (shared
                         noise) serves both terms.
 
+Speed: the random-t and t = 0 states run as two batch-2 SAM calls on purpose. The V6
+compiled SAM region (production_regional_compile.py) only covers batch 1-2 at 250/256/500
+frames; one merged batch-4 call would fall back to the slower uncompiled path. The Qwen
+condition is computed once per pair and shared by both SAM calls.
+
 Time convention follows SAM Audio: x_t = (1-(1-sigma)t)*noise + t*clean, so t = 0
 is pure noise. Source of D: the seven-module A/B small test
 (animal3000_s7_test_20261110/s7_test.py), lambda = 1.

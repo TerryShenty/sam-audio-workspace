@@ -19,6 +19,8 @@ t = 0 is pure noise in SAM Audio's convention, so at t = 0 the A and B inputs ar
   - `check`: 200 training videos / 400 targets that are also trained on (can the model learn its training set?). Checkpoint selection uses this set.
   - `gs_benchmark`: all General Sound prompts of the referring benchmark (181 videos / 323 targets / 413 prompts at commit `54c3fda5`), real videos, report only.
 
+**Speed choices.** Training keeps the accepted V6 fast path (compiled SAM region, NF4/INT8 Qwen kernels) unchanged. In the three non-baseline arms the random-t and t = 0 SAM passes run as two batch-2 calls that reuse one Qwen condition: the V6 compiled SAM region covers batch 1–2 only, so a merged batch-4 call would be slower. Validation runs 8 rows per GPU by default (`ABL_VALIDATION_BATCH`), longest rows first; on CUDA OOM a batch is split in half and retried down to 1, no row is dropped, and splits are recorded in `oom_batch_splits`. Batches above 2, and rows that are not 250/256/500 latent frames (most GS clips), use the uncompiled SAM path; per-row noise seeds keep results independent of batching up to numerical differences.
+
 **Scoring** ([`src/referring_metrics_v2.py`](src/referring_metrics_v2.py)): aligned SI-SDR (±50 ms), no epsilon in the ratio and no clipping of per-row values; an all-zero prediction is undefined (`pred_silent`, a failure) instead of 0 dB; quiet but non-zero outputs are scored normally and only flagged; a silent reference is excluded and counted; if the reference equals the mixture, SI-SDRi is undefined. Summaries: mean with values below −30 dB counted as −30 dB (**selection metric**, on `check`), share below −30 dB, finite mean, median/IQR, SI-SDRi failure rates, clip-bootstrap CI.
 
 ## Steps
@@ -66,7 +68,7 @@ Repeat for `dual_t0`, `contrastive`, `dual_t0_contrastive` with their own output
 - `checkpoints/step-…` — complete state (model, optimizer, scheduler, EMA, all-rank RNG, sampler position, configuration); kept, never deleted automatically.
 
 ## What has and has not been checked
-- CPU tests (`python -m pytest -q tests/test_ablation_cpu.py`): pair sampler coverage/resume for 1–8 ranks, each arm's loss against its definition on a stand-in SAM (identical t = 0 inputs for A/B, gradients reach all parameters), scorer floor/zero-prediction/no-clip/undefined SI-SDRi, data-contract builder, fail-closed loader, epoch-budget loop.
+- CPU tests (`python -m pytest -q tests/test_ablation_cpu.py`, 17 tests): validation OOM batch splitting, pair sampler coverage/resume for 1–8 ranks, each arm's loss against its definition on a stand-in SAM (identical t = 0 inputs for A/B, gradients reach all parameters), scorer floor/zero-prediction/no-clip/undefined SI-SDRi, data-contract builder, fail-closed loader, epoch-budget loop.
 - **Not yet run on GPU**: cache builders, full 30B training of any arm, validation memory, speed. The two extra SAM forward/backward passes in `dual_t0*`/`contrastive*` raise activation memory; run a short job first and check per-GPU memory. V6 timing numbers do not transfer to these arms.
 
 ## Code map

@@ -257,3 +257,23 @@ def test_run_loop_validates_each_epoch_and_stops_at_budget(monkeypatch, tmp_path
     assert result['reason'] == 'epoch_budget_complete' and result['completed_epochs'] == 3
     assert [e for e, _ in epochs_seen] == [1, 2, 3]  # 6 pairs, 4 per update: epoch boundaries cross updates, none skipped
     assert session.saved[-1] == session.trainer.step_number
+
+
+# ------------------------------------------------------------ validation batching
+def test_validation_oom_split_keeps_every_row_in_order():
+    from ablation_validation import generate_with_fallback
+    class OOM(Exception):
+        pass
+    calls = []
+    def guarded(entries):
+        calls.append(len(entries))
+        if len(entries) > 2:
+            raise OOM()
+        return [dict(sample_id=e['item']['sample_id']) for e in entries]
+    rows = [dict(sample_id=f's{i}', protocol={'noise_seed': i}) for i in range(8)]
+    fallbacks = []
+    out = generate_with_fallback(guarded, rows, fallbacks, rank=0, on_attempt=lambda: None, oom=OOM, empty_cache=lambda: None)
+    assert [o['sample_id'] for o in out] == [r['sample_id'] for r in rows]
+    assert [f['size'] for f in fallbacks] == [8, 4, 4] and calls == [8, 4, 2, 2, 4, 2, 2]
+    with pytest.raises(OOM):
+        generate_with_fallback(lambda e: (_ for _ in ()).throw(OOM()), rows[:1], [], rank=0, on_attempt=lambda: None, oom=OOM, empty_cache=lambda: None)

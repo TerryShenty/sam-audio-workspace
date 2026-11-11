@@ -18,7 +18,7 @@ def main():
     a.add_argument('--gpus', type=int, default=4)
     a.add_argument('--epochs', type=int, default=30)
     a.add_argument('--contrastive-weight', type=float, default=1.0)
-    a.add_argument('--validation-batch', type=int, default=1, choices=(1, 2, 4, 8))
+    a.add_argument('--validation-batch', type=int, default=8, choices=(1, 2, 4, 8))
     a.add_argument('--output', type=Path, required=True)
     a.add_argument('--resume', type=Path, help='checkpoint directory from an earlier run of the SAME arm and GPU count')
     a = a.parse_args()

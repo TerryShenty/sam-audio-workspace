@@ -19,6 +19,6 @@ export TOKENIZERS_PARALLELISM=false PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 env_root="$(dirname "$(dirname "$ABL_PYTHON")")"
 if [[ -d "$env_root/media/lib" ]]; then export LD_LIBRARY_PATH="$env_root/media/lib:${LD_LIBRARY_PATH:-}"; export PATH="$env_root/media/bin:$PATH"; fi
 cd "$ABL_PACKAGE"
-args=(--arm "$ABL_ARM" --gpus "${ABL_GPUS:-4}" --epochs "${ABL_EPOCHS:-30}" --output "$ABL_OUTPUT")
+args=(--arm "$ABL_ARM" --gpus "${ABL_GPUS:-4}" --epochs "${ABL_EPOCHS:-30}" --validation-batch "${ABL_VALIDATION_BATCH:-8}" --output "$ABL_OUTPUT")
 if [[ -n "${ABL_RESUME:-}" ]]; then args+=(--resume "$ABL_RESUME"); fi
 exec "$ABL_PYTHON" scripts/ablation_launch.py "${args[@]}"
