@@ -1,0 +1,27 @@
+{
+  "animal": {
+    "repo": "TerryShen/sam-audio-animal3000-ab",
+    "revision": "7e1b15b19941f4bad4b4fb2ebbf44fefd9734936",
+    "note": "3,000 synthetic two-animal videos, 6,000 A/B referring targets; mixture = target_A + target_B. Revision verified: all 12,000 media SHA256 match the staged SHA256SUMS."
+  },
+  "benchmark": {
+    "repo": "sam-audio-research/sam-audio-referring-benchmark",
+    "revision": "54c3fda5764258ae9fb2b9aa8ebb35226e95421c",
+    "gs_dataset_names": [
+      "general_sound",
+      "generalsound",
+      "gs",
+      "general sound"
+    ],
+    "note": "Private test set. Used only for separately reported validation; never trained on."
+  },
+  "check_set": {
+    "videos": 200,
+    "targets": 400,
+    "seed": 20261110,
+    "note": "taken FROM the training set and still trained on"
+  },
+  "epochs": 30,
+  "contrastive_weight": 1.0,
+  "selection": "check-set aligned SI-SDR mean with values below -30 dB counted as -30 dB (live weights)"
+}
